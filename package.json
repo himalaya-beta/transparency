@@ -1,7 +1,12 @@
 {
-	"name": "create-t3-enhanced",
+	"name": "transparency",
 	"version": "0.1.0",
 	"private": true,
+	"author": {
+		"name": "riolly",
+		"email": "alberto.riolly@gmail.com",
+		"url": "https://github.com/riolly"
+	},
 	"scripts": {
 		"build": "next build",
 		"dev": "next dev",

@@ -35,11 +35,11 @@ const Home: NextPage = () => {
 									summarizing the verbose and confusing terms that company
 									provide.
 								</p>
-								<div className='mt-4 ml-4 items-center space-y-3 sm:space-x-4 md:ml-0 md:mt-0'>
-									<button className='rounded-full border-[0.2rem] border-violet-500 px-5 py-2 shadow-lg'>
+								<div className='mt-4 ml-4 h-fit items-center space-y-3 pb-4 sm:space-x-4 md:ml-0 md:mt-0'>
+									<button className='rounded-full border-[0.2rem] border-purple-500 px-5 py-2 shadow-lg transition ease-out hover:border-violet-200 hover:text-purple-300 focus:border-violet-500 focus:outline-none focus:ring-2 focus:ring-white active:translate-y-2 active:text-white'>
 										Discover app
 									</button>
-									<button className='block rounded-full bg-gradient-to-br from-purple-900 via-violet-600 px-6 py-2 shadow-lg sm:inline'>
+									<button className='block rounded-full bg-violet-500 px-6 py-2 shadow-lg transition ease-out hover:bg-violet-700 focus:outline-none focus:ring-2 focus:ring-purple-500 focus:ring-offset-2 active:translate-y-2  active:bg-violet-900 sm:inline'>
 										Join our community
 									</button>
 								</div>

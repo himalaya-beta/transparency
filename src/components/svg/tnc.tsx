@@ -1875,7 +1875,7 @@ export default function TNC({className}: {className: string}) {
 						/>
 						<g
 							id='question'
-							className='animate__animated animate__flash animate__infinite animate__slower animate__delay-1s'
+							className='animate__animated animate__flash animate__infinite animate__slower '
 						>
 							<path
 								d='M382.65,273.36a5.74,5.74,0,0,1-1.22,3.55c-.55.79-1.23,1.52-1.8,2.26a3.67,3.67,0,0,0-.81,2.23,1.44,1.44,0,0,1-.22.7,1,1,0,0,1-.3.3.8.8,0,0,1-.4.11h-.49a.92.92,0,0,1-.4-.07.9.9,0,0,1-.34-.22,1.2,1.2,0,0,1-.23-.34,1.1,1.1,0,0,1-.08-.4,7.09,7.09,0,0,1,.35-2.55,6.81,6.81,0,0,1,1.22-2.06c.49-.6,1-1.17,1.49-1.78a3.11,3.11,0,0,0,.6-1.94,3,3,0,0,0-.73-1.88,2.13,2.13,0,0,0-1.52-.63,2.17,2.17,0,0,0-1.53.63,3.45,3.45,0,0,0-.88,1.47,2.39,2.39,0,0,1-.22.6.77.77,0,0,1-.34.33.8.8,0,0,1-.46.07l-1.14-.21a.51.51,0,0,1-.37-.2.56.56,0,0,1-.14-.41,4.56,4.56,0,0,1,.29-1.59,6.23,6.23,0,0,1,1.36-2.35,4,4,0,0,1,2.33-1.27,5.09,5.09,0,0,1,3.1.38,4.83,4.83,0,0,1,2.14,2.1A6,6,0,0,1,382.65,273.36Z'
@@ -1988,7 +1988,7 @@ export default function TNC({className}: {className: string}) {
 						/>
 						<g
 							id='exclamation'
-							className='animate__animated animate__flash animate__infinite animate__slower animate__delay-1s'
+							className='animate__animated animate__flash animate__infinite animate__slower '
 						>
 							<path
 								d='M411.82,223.29a14.67,14.67,0,0,1-.13,2c-.07.84-.16,1.66-.25,2.49s-.19,1.72-.29,2.57-.16,1.48-.27,2.22a1.88,1.88,0,0,1-.62,1.21,1.42,1.42,0,0,1-1.17.37,1.55,1.55,0,0,1-.59-.21,1.57,1.57,0,0,1-.44-.45,2.56,2.56,0,0,1-.4-1.14c-.09-.87-.19-1.73-.29-2.66s-.22-2.05-.33-3.07c-.08-.74-.16-1.5-.23-2.24a5.25,5.25,0,0,1,.23-2.58,2.44,2.44,0,0,1,1.57-1.48,2.36,2.36,0,0,1,2.89,1.52A3,3,0,0,1,411.82,223.29Z'
@@ -2088,7 +2088,7 @@ export default function TNC({className}: {className: string}) {
 							d='M404.16,189.49l4.54,9.88,8.42-8.85c.3-.31.09-1.1-.4-1.54l-2.58-2.36c-.34-.31-.71-.34-.87-.07l-4.57,7.71-2-4.75a1.36,1.36,0,0,0-.86-.85l-1.32-.26C404.06,188.31,403.87,188.86,404.16,189.49Z'
 							transform='translate(-327.87 -80.23)'
 							fill='#fff'
-							className='animate__animated animate__flash animate__infinite animate__slower animate__delay-1s'
+							className='animate__animated animate__flash animate__infinite animate__slower '
 						/>
 						<path
 							id='one'

@@ -1,7 +1,11 @@
 import type {NextPage} from 'next'
 import Head from 'next/head'
 
-import TNC from '/public/images/tnc.svg'
+// import TNC from '/public/images/tnc.svg'
+
+import TNC from '../components/svg/tnc'
+
+import 'animate.css'
 
 const Home: NextPage = () => {
 	return (

@@ -17,8 +17,8 @@ const Home: NextPage = () => {
 			<main className=''>
 				<section className='relative h-screen bg-gradient-to-br from-gray-900  via-purple-900 to-violet-600'>
 					<div className='sbg-red-300/[0.5] absolute top-1/2 -translate-y-[50%] md:container md:left-1/2 md:max-w-screen-xl md:-translate-x-1/2 md:-translate-y-[60%]'>
-						<div className='mx-4 grid grid-cols-12 md:mx-0'>
-							<div className='sbg-blue-300/[0.5] animate__animated animate__fadeInUp  relative col-span-12 flex flex-col gap-2 self-center overflow-hidden text-white md:col-span-7 md:ml-16 md:gap-4 lg:px-16'>
+						<div className='mx-4 grid grid-cols-12 overflow-hidden md:mx-0'>
+							<div className='sbg-blue-300/[0.5] animate__animated animate__fadeInUp  relative col-span-12 flex flex-col gap-2 self-center text-white md:col-span-7 md:ml-16 md:gap-4 lg:px-16'>
 								<h1 className='text-3xl md:text-5xl'>
 									Term and condition <br />
 									made{' '}

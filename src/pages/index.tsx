@@ -1,8 +1,6 @@
 import type {NextPage} from 'next'
 import Head from 'next/head'
 
-// import TNC from '/public/images/tnc.svg'
-
 import TNC from '../components/svg/tnc'
 
 import 'animate.css'
@@ -23,17 +21,20 @@ const Home: NextPage = () => {
 							<div className='sbg-blue-300/[0.5] relative col-span-12 flex flex-col gap-2 self-center overflow-hidden text-white md:col-span-7 md:ml-16 md:gap-4 lg:px-16'>
 								<h1 className='text-3xl md:text-5xl'>
 									Term and condition <br />
-									made
-									<span className='italic'> transparent</span>
+									made{' '}
+									<span className='animate-gradient bg-[linear-gradient(-45deg,#84cc16,#10b981,#06b6d4,#6366f1,#a855f7,#ec4899,#f43f5e)] bg-clip-text italic text-transparent [background-size:600%] [background-position:100%_0%]'>
+										transparent
+									</span>
 								</h1>
 								<TNC className='mx-auto my-8 w-72 sm:my-16 md:absolute md:left-[1000%]' />
 								<h2 className='text-lg sm:text-center sm:text-xl md:text-left md:text-2xl'>
 									Search app. Read highlights. Decide!
 								</h2>
-								<p className='ml-4 text-sm sm:mx-4 sm:text-justify sm:text-base md:ml-0'>
+								<p className='ml-4 text-sm sm:mx-4 sm:text-justify sm:text-base  md:ml-0 md:text-left'>
 									<span className='hidden sm:inline'>
 										No more getting abused by irresponsible companies who force
-										us to agree on something we don&apos;t want. <br />
+										us to agree on something we don&apos;t want.{' '}
+										<br className='hidden md:inline' />
 									</span>
 									With the community, transparency give you the concise points,
 									summarizing the verbose and confusing terms that company

@@ -15,7 +15,6 @@
 
 	p {
 		@apply font-body;
-		@apply font-light;
 	}
 
 	html {

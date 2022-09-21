@@ -24,7 +24,7 @@ const Home: NextPage = () => {
 								<h1 className='text-3xl md:text-5xl'>
 									Term and condition <br />
 									made{' '}
-									<span className='animate-gradient bg-[linear-gradient(-45deg,#84cc16,#10b981,#06b6d4,#6366f1,#a855f7,#ec4899,#f43f5e)] bg-clip-text italic text-transparent [background-size:600%] [background-position:100%_0%]'>
+									<span className='animate-gradient bg-rainbow bg-zoom-in bg-clip-text italic text-transparent'>
 										transparent
 									</span>
 								</h1>

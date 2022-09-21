@@ -7,21 +7,40 @@ module.exports = {
 				heading: ['Poppins', 'sans-serif'],
 				body: ['Inter', 'sans-serif'],
 			},
+			backgroundImage: {
+				rainbow:
+					'linear-gradient(-45deg,#84cc16,#10b981,#06b6d4,#6366f1,#a855f7,#ec4899,#f43f5e)',
+			},
+			backgroundSize: {
+				'zoom-in': '600% 600%',
+			},
 			animation: {
-				gradient: 'gradient 4s ease-in-out infinite',
+				gradient: 'gradient 7s ease-in-out infinite',
 				'bounce-delay': 'bounce-delay 4s infinite',
 				'ping-delay': 'ping-delay 4s -1.2s cubic-bezier(0, 0, 0.2, 1) infinite',
 			},
 			keyframes: {
 				gradient: {
-					'0%': {
-						backgroundPosition: '0% 0%',
+					'14.25%': {
+						'background-position': 'left top',
 					},
-					'50%': {
-						backgroundPosition: '100% 0%',
+					'28.5%': {
+						'background-position': 'center bottom',
+					},
+					'42.75%': {
+						'background-position': 'center top',
+					},
+					'57%': {
+						'background-position': 'right bottom',
+					},
+					'71.25%': {
+						'background-position': 'left center',
+					},
+					'85.5%': {
+						'background-position': 'right center',
 					},
 					'100%': {
-						backgroundPosition: '0% 0%',
+						'background-position': 'left top',
 					},
 				},
 				'ping-delay': {

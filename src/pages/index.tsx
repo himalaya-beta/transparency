@@ -18,9 +18,9 @@ const Home: NextPage = () => {
 
 			<main className=''>
 				<section className='relative h-screen bg-gradient-to-br from-gray-900  via-purple-900 to-violet-600'>
-					<div className='sbg-red-300/[0.5] absolute top-1/2 -translate-y-[50%] md:container md:left-1/2 md:max-w-screen-xl md:-translate-x-1/2 md:-translate-y-[60%]'>
-						<div className='sbg-red-200 mx-4 grid grid-cols-12 overflow-hidden pb-8 md:mx-0'>
-							<div className='sbg-blue-300/[0.5] animate__animated animate__fadeInUp  relative col-span-12 flex flex-col gap-2 self-center text-white md:col-span-7 md:ml-16 md:gap-4 lg:px-16'>
+					<div className='absolute top-1/2 -translate-y-[50%] md:container md:left-1/2 md:max-w-screen-xl md:-translate-x-1/2 md:-translate-y-[60%]'>
+						<div className='mx-4 grid grid-cols-12 overflow-hidden pb-8 md:mx-0'>
+							<div className='animate__animated animate__fadeInUp  relative col-span-12 flex flex-col gap-2 self-center text-white md:col-span-7 md:ml-16 md:gap-4 lg:px-16'>
 								<h1 className='text-3xl md:text-5xl'>
 									Term and condition <br />
 									made{' '}
@@ -45,16 +45,19 @@ const Home: NextPage = () => {
 								<div className='mt-4 flex flex-col items-start gap-4 overflow-visible px-8 sm:flex-row sm:px-4 md:px-0'>
 									<button className='flex items-center gap-2 rounded-full border-[0.2rem] border-purple-500 px-5 py-2 shadow-lg transition duration-500 ease-out hover:border-violet-200 hover:shadow-purple-200 focus:border-violet-500 focus:outline-none focus:ring-2 focus:ring-white active:translate-y-2 active:text-white'>
 										Discover app
-										<MagnifyingGlass className='h-5 fill-violet-200' />
+										<span className='relative h-5'>
+											<MagnifyingGlass className='h-5 fill-violet-200' />
+											<MagnifyingGlass className='absolute top-0.5 left-0.5 h-5 animate-ping-delay fill-violet-200' />
+										</span>
 									</button>
 									<button className='flex items-center gap-2 rounded-full bg-violet-500 px-6 py-2.5 shadow-lg transition duration-500 ease-out  hover:bg-violet-700 hover:shadow-purple-200 focus:outline-none focus:ring-2 focus:ring-purple-500 focus:ring-offset-2 active:translate-y-2  active:bg-violet-900 sm:flex'>
 										Join our community
-										<PeopleGroup className='h-5 fill-purple-200' />
+										<PeopleGroup className='h-5 animate-bounce-delay fill-purple-200' />
 									</button>
 								</div>
 							</div>
 
-							<div className='sbg-green-300/[0.5] animate__animated animate__fadeInRight hidden justify-self-center [animation-delay:300ms] md:col-span-5 md:inline'>
+							<div className='animate__animated animate__fadeInRight hidden justify-self-center [animation-delay:300ms] md:col-span-5 md:inline'>
 								<TNC className='w-96' />
 							</div>
 						</div>

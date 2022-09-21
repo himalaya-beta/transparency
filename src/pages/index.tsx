@@ -23,26 +23,31 @@ const Home: NextPage = () => {
 							<div className='animate__animated animate__fadeInUp  relative col-span-12 flex flex-col gap-2 self-center text-white md:col-span-7 md:ml-16 md:gap-4 lg:px-16'>
 								<h1 className='text-3xl md:text-5xl'>
 									Term and condition <br />
-									made{' '}
+									made&nbsp;
 									<span className='animate-gradient bg-rainbow bg-zoom-in bg-clip-text italic text-transparent'>
 										transparent
 									</span>
 								</h1>
-								<TNC className='mx-auto my-8 w-72 sm:my-16 md:absolute md:left-[1000%]' />
-								<h2 className='text-lg sm:text-center sm:text-xl md:text-left md:text-2xl'>
-									Search app. Read highlights. Decide!
+								<TNC className='mx-auto my-8 w-72 sm:my-16 sm:w-80 md:absolute md:left-[1000%]' />
+								<h2 className='animate__animated animate__fadeInLeft animate__delay-1s text-lg child:underline-offset-4 sm:text-center sm:text-xl sm:child:underline-offset-8 md:text-left md:text-2xl'>
+									Search
+									<span className='underline decoration-red-500 decoration-wavy'>
+										&nbsp;app
+									</span>
+									.&nbsp;Read <mark>&nbsp;highlights&nbsp;</mark>.&nbsp;
+									<span className='underline decoration-2'>Decide</span>!
 								</h2>
-								<p className='ml-4 text-sm sm:mx-4 sm:text-justify sm:text-base  md:ml-0 md:text-left'>
+								<p className='animate__animated animate__fadeInLeft animate__delay-2s ml-4 text-sm sm:mx-4 sm:text-justify sm:text-base md:-mt-2 md:ml-0 md:text-left'>
 									<span className='hidden sm:inline'>
 										No more getting abused by irresponsible companies who force
-										us to agree on something we don&apos;t want.{' '}
+										us to agree on something we don&apos;t want.&nbsp;
 										<br className='hidden md:inline' />
 									</span>
 									With the community, transparency give you the concise points,
 									summarizing the verbose and confusing terms that company
 									provide.
 								</p>
-								<div className='mt-4 flex flex-col items-start gap-4 overflow-visible px-8 sm:flex-row sm:px-4 md:px-0'>
+								<div className='animate__animated animate__fadeInLeft animate__delay-3s mt-4 flex flex-col items-start gap-4 overflow-visible px-4 sm:flex-row sm:px-4 md:px-0'>
 									<button className='flex items-center gap-2 rounded-full border-[0.2rem] border-purple-500 px-5 py-2 shadow-lg transition duration-500 ease-out hover:border-violet-200 hover:shadow-purple-200 focus:border-violet-500 focus:outline-none focus:ring-2 focus:ring-white active:translate-y-2 active:text-white'>
 										Discover app
 										<span className='relative h-5'>

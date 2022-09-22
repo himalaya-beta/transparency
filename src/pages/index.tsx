@@ -48,14 +48,14 @@ const Home: NextPage = () => {
 									provide.
 								</p>
 								<div className='animate__animated animate__fadeInLeft animate__delay-3s mt-4 flex flex-col items-start gap-4 overflow-visible px-4 sm:flex-row sm:px-4 md:px-0'>
-									<button className='flex items-center gap-2 rounded-full border-[0.2rem] border-purple-500 px-5 py-2 shadow-lg transition duration-500 ease-out hover:border-violet-200 hover:shadow-purple-200 focus:border-violet-500 focus:outline-none focus:ring-2 focus:ring-white active:translate-y-2 active:text-white'>
+									<button className='flex items-center gap-2 rounded-full border-[0.2rem] border-purple-500 px-5 py-2 shadow-lg transition ease-out hover:border-violet-200 hover:shadow-purple-200 focus:border-violet-500 focus:outline-none focus:ring-2 focus:ring-white active:translate-y-2 active:text-white active:shadow-md active:shadow-purple-200'>
 										Discover app
 										<span className='relative h-5'>
 											<MagnifyingGlass className='h-5 fill-violet-200' />
 											<MagnifyingGlass className='absolute top-0.5 left-0.5 h-5 animate-ping-delay fill-violet-200' />
 										</span>
 									</button>
-									<button className='flex items-center gap-2 rounded-full bg-violet-500 px-6 py-2.5 shadow-lg transition duration-500 ease-out  hover:bg-violet-700 hover:shadow-purple-200 focus:outline-none focus:ring-2 focus:ring-purple-500 focus:ring-offset-2 active:translate-y-2  active:bg-violet-900 sm:flex'>
+									<button className='flex items-center gap-2 rounded-full bg-violet-500 px-6 py-2.5 shadow-lg transition ease-out  hover:bg-violet-700 hover:shadow-purple-200 focus:outline-none focus:ring-2 focus:ring-purple-500 focus:ring-offset-2 active:translate-y-2  active:bg-violet-900 active:shadow-md active:shadow-purple-200 sm:flex'>
 										Join our community
 										<PeopleGroup className='h-5 animate-bounce-delay fill-purple-200' />
 									</button>

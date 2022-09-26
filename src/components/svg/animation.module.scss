@@ -1,0 +1,5 @@
+@use '../../styles/animation/flash.module.scss';
+
+.flash {
+	animation: flash flash.$interval ease-in infinite;
+}

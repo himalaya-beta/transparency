@@ -5,7 +5,7 @@ import TNC from '../components/svg/tnc'
 import MagnifyingGlass from '/public/images/magnifying-glass.svg'
 import PeopleGroup from '/public/images/people-group.svg'
 
-import 'animate.css'
+import animate from '../styles/index.module.scss'
 
 const Home: NextPage = () => {
 	return (
@@ -57,7 +57,9 @@ const Home: NextPage = () => {
 									</button>
 									<button className='flex items-center gap-2 rounded-full bg-violet-500 px-6 py-2.5 shadow-lg transition ease-out  hover:bg-violet-700 hover:shadow-purple-200 focus:outline-none focus:ring-2 focus:ring-purple-500 focus:ring-offset-2 active:translate-y-2  active:bg-violet-900 active:shadow-md active:shadow-purple-200 sm:flex'>
 										Join our community
-										<PeopleGroup className='h-5 animate-bounce-delay fill-purple-200' />
+										<PeopleGroup
+											className={`${animate.bouncing} h-5 fill-purple-200`}
+										/>
 									</button>
 								</div>
 							</div>

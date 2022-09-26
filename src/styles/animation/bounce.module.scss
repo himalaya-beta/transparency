@@ -1,0 +1,61 @@
+$delay: 2s !default;
+$duration: 1s !default;
+$interval: calc($delay + $duration);
+
+$key-20-ori: 0.2;
+$key-40-ori: 0.4;
+$key-43-ori: 0.43;
+$key-53-ori: 0.53;
+$key-70-ori: 0.7;
+$key-80-ori: 0.8;
+$key-90-ori: 0.9;
+
+$key-start: calc($delay/$interval * 100%);
+$key-20: calc($key-start + ($duration * $key-20-ori / $interval) * 100%);
+$key-40: calc($key-start + ($duration * $key-40-ori / $interval) * 100%);
+$key-43: calc($key-start + ($duration * $key-43-ori / $interval) * 100%);
+$key-53: calc($key-start + ($duration * $key-53-ori / $interval) * 100%);
+$key-70: calc($key-start + ($duration * $key-70-ori / $interval) * 100%);
+$key-80: calc($key-start + ($duration * $key-80-ori / $interval) * 100%);
+$key-90: calc($key-start + ($duration * $key-90-ori / $interval) * 100%);
+$key-end: 100%;
+
+// @debug 'start: #{$key-start}';
+// @debug '20: #{$key-20}';
+// @debug '40: #{$key-40}';
+// @debug '43: #{$key-43}';
+// @debug '53: #{$key-53}';
+// @debug '70: #{$key-70}';
+// @debug '80: #{$key-80}';
+// @debug '90: #{$key-90}';
+// @debug 'end: #{$key-end}';
+
+@keyframes bounce {
+	#{$key-start},
+	#{$key-20},
+	#{$key-53},
+	#{$key-end} {
+		animation-timing-function: cubic-bezier(0.215, 0.61, 0.355, 1);
+		transform: translate3d(0, 0, 0);
+	}
+
+	#{$key-40},
+	#{$key-43} {
+		animation-timing-function: cubic-bezier(0.755, 0.05, 0.855, 0.06);
+		transform: translate3d(0, -16px, 0) scaleY(1.1);
+	}
+
+	#{$key-70} {
+		animation-timing-function: cubic-bezier(0.755, 0.05, 0.855, 0.06);
+		transform: translate3d(0, -8px, 0) scaleY(1.05);
+	}
+
+	#{$key-80} {
+		transition-timing-function: cubic-bezier(0.215, 0.61, 0.355, 1);
+		transform: translate3d(0, 0, 0) scaleY(0.95);
+	}
+
+	#{$key-90} {
+		transform: translate3d(0, -4px, 0) scaleY(1.02);
+	}
+}

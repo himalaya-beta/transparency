@@ -1,0 +1,5 @@
+@use './animation/bounce.module.scss';
+
+.bouncing {
+	animation: bounce bounce.$interval infinite;
+}

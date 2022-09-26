@@ -1,32 +1,32 @@
-$delay: 3s !default;
+$delay: 1s !default;
 $duration: 1s !default;
 $interval: calc($delay + $duration);
 
-$key-1-ori: 0.25;
-$key-2-ori: 0.5;
-$key-3-ori: 0.75;
+$key-25-ori: 0.25;
+$key-50-ori: 0.5;
+$key-75-ori: 0.75;
 
 $key-start: calc($delay/$interval * 100%);
-$key-1: calc($key-start + ($duration * $key-1-ori / $interval) * 100%);
-$key-2: calc($key-start + ($duration * $key-2-ori / $interval) * 100%);
-$key-3: calc($key-start + ($duration * $key-3-ori / $interval) * 100%);
+$key-25: calc($key-start + ($duration * $key-25-ori / $interval) * 100%);
+$key-50: calc($key-start + ($duration * $key-50-ori / $interval) * 100%);
+$key-75: calc($key-start + ($duration * $key-75-ori / $interval) * 100%);
 $key-end: 100%;
 
 // @debug 'start: #{$key-start}';
-// @debug 'first: #{$key-1}';
-// @debug 'second: #{$key-2}';
-// @debug 'third: #{$key-3}';
+// @debug 'first: #{$key-25}';
+// @debug 'second: #{$key-50}';
+// @debug 'third: #{$key-75}';
 // @debug 'end: #{$key-end}';
 
 @keyframes flash {
 	#{$key-start},
-	#{$key-2},
+	#{$key-50},
 	#{$key-end} {
 		opacity: 1;
 	}
 
-	#{$key-1},
-	#{$key-3} {
+	#{$key-25},
+	#{$key-75} {
 		opacity: 0;
 	}
 }

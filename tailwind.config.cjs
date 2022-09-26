@@ -17,34 +17,6 @@ module.exports = {
 			backgroundSize: {
 				'zoom-in': '600% 600%',
 			},
-			animation: {
-				gradient: 'gradient 7s ease-in-out infinite',
-			},
-			keyframes: {
-				gradient: {
-					'14.25%': {
-						'background-position': 'left top',
-					},
-					'28.5%': {
-						'background-position': 'center bottom',
-					},
-					'42.75%': {
-						'background-position': 'center top',
-					},
-					'57%': {
-						'background-position': 'right bottom',
-					},
-					'71.25%': {
-						'background-position': 'left center',
-					},
-					'85.5%': {
-						'background-position': 'right center',
-					},
-					'100%': {
-						'background-position': 'left top',
-					},
-				},
-			},
 		},
 	},
 	plugins: [

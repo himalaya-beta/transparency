@@ -1,5 +1,6 @@
 @use './animation/bounce.module.scss';
 @use './animation/ping.module.scss';
+@use './animation/zigzag.module.scss';
 
 .bouncing {
 	animation: bounce bounce.$interval infinite;
@@ -7,4 +8,8 @@
 
 .pinging {
 	animation: ping ping.$interval cubic-bezier(0, 0, 0.2, 1) infinite;
+}
+
+.zigzag {
+	animation: zigzag 7s ease-in-out infinite;
 }

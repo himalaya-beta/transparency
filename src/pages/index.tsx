@@ -24,7 +24,9 @@ const Home: NextPage = () => {
 								<h1 className='text-3xl md:text-5xl'>
 									Term and condition <br />
 									made&nbsp;
-									<span className='animate-gradient bg-rainbow bg-zoom-in bg-clip-text italic text-transparent'>
+									<span
+										className={`${animate.zigzag} bg-rainbow bg-zoom-in bg-clip-text italic text-transparent`}
+									>
 										transparent
 									</span>
 								</h1>

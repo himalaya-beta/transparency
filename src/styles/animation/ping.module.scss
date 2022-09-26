@@ -1,0 +1,20 @@
+$delay: 2s !default;
+$duration: 1s !default;
+$interval: calc($delay + $duration);
+
+$key-75-ori: 0.75;
+
+$key-start: calc($delay/$interval * 100%);
+$key-75: calc($key-start - ($duration * $key-75-ori / $interval) * 100%);
+$key-end: 100%;
+
+// @debug 'first: #{$key-75}';
+// @debug 'end: #{$key-end}';
+
+@keyframes ping {
+	#{$key-75},
+	#{$key-end} {
+		transform: scale(2);
+		opacity: 0;
+	}
+}

@@ -1,5 +1,10 @@
 @use './animation/bounce.module.scss';
+@use './animation/ping.module.scss';
 
 .bouncing {
 	animation: bounce bounce.$interval infinite;
+}
+
+.pinging {
+	animation: ping ping.$interval cubic-bezier(0, 0, 0.2, 1) infinite;
 }

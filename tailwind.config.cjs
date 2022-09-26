@@ -19,7 +19,6 @@ module.exports = {
 			},
 			animation: {
 				gradient: 'gradient 7s ease-in-out infinite',
-				'ping-delay': 'ping-delay 3s cubic-bezier(0, 0, 0.2, 1) infinite',
 			},
 			keyframes: {
 				gradient: {
@@ -43,12 +42,6 @@ module.exports = {
 					},
 					'100%': {
 						'background-position': 'left top',
-					},
-				},
-				'ping-delay': {
-					'18.75%, 100%': {
-						transform: 'scale(2)',
-						opacity: 0,
 					},
 				},
 			},

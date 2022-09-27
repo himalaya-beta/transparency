@@ -20,7 +20,7 @@ const Home: NextPage = () => {
 				<section className='relative h-screen bg-gradient-to-br from-gray-900 via-purple-900 to-violet-600'>
 					<div className='absolute top-1/2 -translate-y-[50%] md:container md:left-1/2 md:max-w-screen-xl md:-translate-x-1/2 md:-translate-y-[60%]'>
 						<div className='mx-4 grid grid-cols-12 overflow-hidden pb-8 md:mx-0'>
-							<div className='relative col-span-12 flex flex-col gap-2 self-center text-white md:col-span-7 md:ml-16 md:gap-4 lg:px-16'>
+							<div className='relative col-span-12 flex flex-col gap-2 self-center text-white md:col-span-7 md:ml-12 md:gap-4 lg:ml-8 lg:px-16'>
 								<h1
 									className={`${animate.h1} whitespace-nowrap text-3xl md:text-5xl lg:text-6xl`}
 								>
@@ -78,7 +78,7 @@ const Home: NextPage = () => {
 								</div>
 							</div>
 
-							<div className='hidden justify-self-center md:col-span-5 md:-mr-[55%] md:mt-72 md:inline lg:mt-64 lg:-mr-[48%] xl:mt-24 xl:mr-0'>
+							<div className='hidden justify-self-center md:col-span-5 md:-mr-[55%] md:mt-72 md:inline lg:mt-64 lg:-mr-[45%] xl:mt-24 xl:mr-0'>
 								<TNC
 									className={`${animate.tnc} w-[26rem] max-w-full lg:w-[28rem] xl:w-[30rem]`}
 								/>

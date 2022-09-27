@@ -1,6 +1,6 @@
 import React from 'react'
 
-import animate from '../../styles/svg/tnc.module.scss'
+import animate from 'styles/svg/tnc.module.scss'
 
 export default function TNC({className}: {className: string}) {
 	return (

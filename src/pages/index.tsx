@@ -1,11 +1,11 @@
 import type {NextPage} from 'next'
 import Head from 'next/head'
 
-import TNC from '../components/svg/tnc'
-import MagnifyingGlass from '/public/images/magnifying-glass.svg'
-import PeopleGroup from '/public/images/people-group.svg'
+import TNC from '@components/svg/tnc'
+import MagnifyingGlass from '@images/magnifying-glass.svg'
+import PeopleGroup from '@images/people-group.svg'
 
-import animate from '../styles/index.module.scss'
+import animate from '@styles/index.module.scss'
 
 const Home: NextPage = () => {
 	return (

@@ -1,5 +1,15 @@
-@use '../animation/flash.module.scss';
+@use '../animation/flash.module.scss' with (
+	$delay: 2s
+);
 
-.flashing {
+.flashing1 {
 	animation: flash flash.$interval ease-in infinite;
+}
+
+.flashing2 {
+	animation: flash flash.$interval 1s ease-in infinite;
+}
+
+.flashing3 {
+	animation: flash flash.$interval 2s ease-in infinite;
 }

@@ -40,9 +40,11 @@ const Home: NextPage = () => {
 										transparent
 									</span>
 								</h1>
+
 								<TNC
 									className={`${animate.tnc} mx-auto my-8 w-72 sm:my-16 sm:w-80 md:absolute md:left-[1000%]`}
 								/>
+
 								<h2
 									className={`${animate.h2} whitespace-nowrap text-lg child:underline-offset-8 sm:text-center sm:text-xl md:text-left md:text-2xl`}
 								>
@@ -57,6 +59,7 @@ const Home: NextPage = () => {
 									.&nbsp;Decide
 									<span className='text-pink-500'>!</span>
 								</h2>
+
 								<p
 									className={`${animate.p} ml-4 text-gray-200/[0.8] sm:mx-4 sm:text-justify sm:text-base md:ml-0 md:text-left`}
 								>
@@ -69,6 +72,7 @@ const Home: NextPage = () => {
 									summarizing the verbose and confusing terms that company
 									provide.
 								</p>
+
 								<div
 									className={`${animate.button} mt-4 flex flex-col items-start gap-4 overflow-visible px-4 sm:flex-row sm:px-4 md:px-0`}
 								>

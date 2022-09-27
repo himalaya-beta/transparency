@@ -22,7 +22,7 @@ const Home: NextPage = () => {
 						<div className='mx-4 grid grid-cols-12 overflow-hidden pb-8 md:mx-0'>
 							<div className='relative col-span-12 flex flex-col gap-2 self-center text-white md:col-span-7 md:ml-12 md:gap-4 lg:ml-8 lg:px-16'>
 								<h1
-									className={`${animate.h1} whitespace-nowrap text-3xl md:text-5xl lg:text-6xl`}
+									className={`${animate.h1} whitespace-nowrap text-3xl md:w-[32rem] md:text-5xl lg:w-[40rem] lg:text-6xl`}
 								>
 									<span>
 										<span className='absolute text-transparent'>

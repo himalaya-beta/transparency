@@ -1,6 +1,7 @@
 @use './animation/bounce.module.scss';
 @use './animation/ping.module.scss';
 @use './animation/zigzag.module.scss';
+@use './animation/fade.module.scss';
 
 .bouncing {
 	animation: bounce bounce.$interval infinite;
@@ -13,3 +14,40 @@
 .zigzag {
 	animation: zigzag 7s ease-in-out infinite;
 }
+
+$lead: 0.5s;
+
+$delay: -0.2s;
+$duration: 1.2s;
+.tnc {
+	animation: fadeIn $duration $delay ease-out backwards;
+}
+@debug $delay;
+
+$delay: calc($duration + $delay - $lead);
+$duration: 1.6s;
+.h1 {
+	animation: fadeIn $duration $delay ease-out backwards;
+}
+@debug $delay;
+
+$delay: calc($duration + $delay - $lead);
+$duration: 1.6s;
+.h2 {
+	animation: fadeIn $duration $delay ease-out backwards;
+}
+@debug $delay;
+
+$delay: calc($duration + $delay - $lead);
+$duration: 0.8s;
+.p {
+	animation: fadeIn $duration $delay ease-out backwards;
+}
+@debug $delay;
+
+// $delay: calc($duration + $delay - $lead);
+$duration: 0.8s;
+.button {
+	animation: fadeIn $duration $delay ease-out backwards;
+}
+@debug $delay;

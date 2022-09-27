@@ -50,8 +50,12 @@ const Home: NextPage = () => {
 									<span className='underline decoration-pink-500 decoration-wavy'>
 										&nbsp;app
 									</span>
-									.&nbsp;Read <mark>&nbsp;highlights&nbsp;</mark>.&nbsp;
-									<span className=''>Decide</span>!
+									.&nbsp;Read&nbsp;
+									<mark className='bg-pink-500 text-white'>
+										&nbsp;highlights&nbsp;
+									</mark>
+									.&nbsp;Decide
+									<span className='text-pink-500'>!</span>
 								</h2>
 								<p
 									className={`${animate.p} ml-4 text-gray-200/[0.8] sm:mx-4 sm:text-justify sm:text-base md:ml-0 md:text-left`}

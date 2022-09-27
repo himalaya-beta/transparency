@@ -24,8 +24,16 @@ const Home: NextPage = () => {
 								<h1
 									className={`${animate.h1} whitespace-nowrap text-3xl md:text-5xl lg:text-6xl`}
 								>
-									Term and condition <br />
-									made&nbsp;
+									<span>
+										<span className='absolute text-transparent'>
+											Terms & conditions
+											<span className='hidden'>
+												, privacy policy, terms of service, and data agreement
+											</span>
+										</span>
+										<span className={animate.typewriter} />
+									</span>
+									<br /> made&nbsp;
 									<span
 										className={`${animate.zigzag} bg-rainbow bg-zoom-in bg-clip-text italic text-transparent`}
 									>

@@ -2,6 +2,7 @@
 @use './animation/ping.module.scss';
 @use './animation/zigzag.module.scss';
 @use './animation/fade.module.scss';
+@import './animation/typed.module.scss';
 
 .bouncing {
 	animation: bounce bounce.$interval infinite;
@@ -51,3 +52,20 @@ $duration: 0.8s;
 	animation: fadeIn $duration $delay ease-out backwards;
 }
 @debug $delay;
+
+.typewriter {
+	@include typed(
+		'Term & conditions',
+		'Privacy policy',
+		'Terms of service',
+		'Data agreement',
+		(
+			pause-deleted: 0.33,
+		),
+		(
+			caret-color: #ec4899,
+			caret-width: 0.25rem,
+			caret-speed: 0.75,
+		)
+	);
+}

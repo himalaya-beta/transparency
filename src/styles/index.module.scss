@@ -24,15 +24,15 @@ $duration: 1.2s;
 }
 @debug $delay;
 
-$delay: calc($duration + $delay - $lead);
-$duration: 1.6s;
+$delay: calc($duration + $delay - ($lead + 0.3s));
+$duration: 1.2s;
 .h1 {
 	animation: fadeIn $duration $delay ease-out backwards;
 }
 @debug $delay;
 
 $delay: calc($duration + $delay - $lead);
-$duration: 1.6s;
+$duration: 1.2s;
 .h2 {
 	animation: fadeIn $duration $delay ease-out backwards;
 }

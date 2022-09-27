@@ -2628,9 +2628,10 @@ export default function TNC({className}: {className: string}) {
 						<path
 							d='M334.29,102.13l35.5,20.24v-1.92l-35.5-20.24Zm0-4.44,35.5,20.25V116l-35.5-20.25Zm0-4.43,35.5,20.25v-1.92l-35.5-20.25Zm0-12.26v1.92l35.5,20.24v-1.92Zm0,25.56,35.5,20.24v-1.92l-35.5-20.24Zm0-17.73,35.5,20.24v-1.92l-35.5-20.24Zm0,22.16,35.5,20.25v-1.92l-35.5-20.25Zm0,25.12,35.5,20.24v-1.92l-35.5-20.24Zm0-11.82,35.5,20.24v-1.92l-35.5-20.24Zm0,7.39,35.5,20.24V150l-35.5-20.24Zm0-11.82,35.5,20.24v-1.92l-35.5-20.24Zm0-4.44,35.5,20.25v-1.92l-35.5-20.25Z'
 							transform='translate(-327.87 -80.23)'
-							opacity='0.2'
+							opacity='0.1'
 							fill='url(#linear-gradient-74)'
 							style={{mixBlendMode: 'screen'}}
+							className='md:hidden xl:inline'
 						/>
 						<g opacity='0.2' style={{mixBlendMode: 'screen'}}>
 							<path
@@ -2639,7 +2640,7 @@ export default function TNC({className}: {className: string}) {
 								fill='url(#linear-gradient-75)'
 							/>
 						</g>
-						<g>
+						<g className='md:hidden xl:inline'>
 							<path
 								d='M354.48,165c0,.08,0,.16,0,0Z'
 								transform='translate(-327.87 -80.23)'
@@ -2674,6 +2675,7 @@ export default function TNC({className}: {className: string}) {
 							fill='#9f19ab'
 							opacity='0.5'
 							style={{mixBlendMode: 'color-dodge'}}
+							className='md:hidden xl:inline'
 						/>
 					</g>
 				</g>

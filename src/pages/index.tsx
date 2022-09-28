@@ -1,6 +1,7 @@
 import type {NextPage} from 'next'
 import Head from 'next/head'
 
+import {ButtonFilled, ButtonOutlined} from '@components/button'
 import TNC from '@components/svg/tnc'
 import MagnifyingGlass from '@images/magnifying-glass.svg'
 import PeopleGroup from '@images/people-group.svg'
@@ -76,7 +77,7 @@ const Home: NextPage = () => {
 								<div
 									className={`${animate.button} mt-4 flex flex-col items-start gap-4 overflow-visible px-4 sm:flex-row sm:px-4 md:px-0`}
 								>
-									<button className='flex items-center gap-2 whitespace-nowrap rounded-full border-[0.2rem] border-purple-500 px-5 py-2 shadow-lg transition ease-out hover:border-violet-200 hover:shadow-purple-200 focus:border-violet-500 focus:outline-none focus:ring-2 focus:ring-white active:translate-y-2 active:text-white active:shadow-md active:shadow-purple-200'>
+									<ButtonOutlined>
 										Discover app
 										<span className='relative h-5'>
 											<MagnifyingGlass className='h-5 fill-violet-200' />
@@ -84,13 +85,13 @@ const Home: NextPage = () => {
 												className={`${animate.pinging} absolute top-0.5 left-0.5 h-5 fill-violet-200`}
 											/>
 										</span>
-									</button>
-									<button className='flex items-center gap-2 whitespace-nowrap rounded-full bg-violet-500 px-6 py-2.5 shadow-lg transition ease-out hover:bg-violet-700 hover:shadow-purple-200 focus:outline-none focus:ring-2 focus:ring-purple-500 focus:ring-offset-2 active:translate-y-2 active:bg-violet-900 active:shadow-md active:shadow-purple-200 sm:flex'>
+									</ButtonOutlined>
+									<ButtonFilled>
 										Join our community
 										<PeopleGroup
 											className={`${animate.bouncing} h-5 fill-purple-200`}
 										/>
-									</button>
+									</ButtonFilled>
 								</div>
 							</div>
 

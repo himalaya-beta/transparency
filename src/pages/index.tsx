@@ -23,27 +23,27 @@ const Home: NextPage = () => {
 						<div className='mx-4 grid grid-cols-12 overflow-hidden pb-8 md:mx-0'>
 							<div className='relative col-span-12 flex flex-col gap-8 self-center text-white md:col-span-7 md:ml-12 md:gap-16 lg:ml-16 lg:px-0 xl:pl-10'>
 								<div
-									className={`${animate.glassMain} absolute h-full w-full opacity-0 child:absolute md:opacity-100`}
+									className={`${animate.glassMain} absolute -z-10 h-[26rem] w-full opacity-0 child:absolute md:opacity-100`}
 								>
 									<div
-										className={`${animate.glassDecor} child:glass child:glass-back -top-[20%] -left-[24%] -z-30 flex gap-3 child:h-28 child:rounded-xl	lg:-left-[18%] xl:-top-[20%] xl:-left-[14%] xl:child:h-36`}
+										className={`${animate.glassBack} child:glass child:glass-back -top-[20%] -left-[24%] flex gap-3 child:h-28 child:rounded-xl	lg:-left-[18%] xl:-top-[20%] xl:-left-[14%] xl:child:h-36`}
 									>
 										<div className='w-48 xl:w-52' />
 										<div className='w-20 xl:w-24' />
 									</div>
-									<div className='glass -top-12 -left-[55%] -z-20 h-[23.5rem] w-[46rem] rounded-3xl lg:-left-20 xl:-left-14' />
+									<div className='glass -top-12 -left-[55%] h-[23.5rem] w-[46rem] rounded-3xl lg:-left-20 xl:-left-14' />
 									<div
-										className={`${animate.glassDecor} child:glass -right-[20%] bottom-[17%] -z-30 flex gap-2 child:-z-20 child:h-11 child:rounded-lg lg:bottom-[14%] lg:-right-[18%] xl:right-[6%] xl:-z-20`}
+										className={`${animate.glassFront} child:glass -right-[20%] bottom-[17%] flex gap-2 child:h-11 child:rounded-lg lg:bottom-[14%] lg:-right-[18%] xl:right-[6%]`}
 									>
 										<div className='w-12' />
 										<div className='w-24' />
 									</div>
 								</div>
 
-								<div className='flex flex-col gap-2 md:gap-4 xl:gap-5'>
-									<h1
-										className={`${animate.h1} whitespace-nowrap text-3xl md:w-[32rem] md:text-5xl lg:w-[40rem] lg:text-6xl`}
-									>
+								<div
+									className={`${animate.glassMain} ${animate.focus} flex flex-col gap-2 md:gap-4 xl:gap-5`}
+								>
+									<h1 className='whitespace-nowrap text-3xl md:w-[32rem] md:text-5xl lg:w-[40rem] lg:text-6xl'>
 										<span>
 											<span className='absolute text-transparent'>
 												Terms & conditions
@@ -80,9 +80,7 @@ const Home: NextPage = () => {
 										<span className='text-pink-500'>!</span>
 									</h2>
 
-									<p
-										className={`${animate.p} ml-4 text-gray-300 sm:mx-4 sm:text-justify sm:text-base md:ml-0 md:min-w-[28rem] md:text-left lg:min-w-[33rem]`}
-									>
+									<p className='ml-4 text-gray-300 sm:mx-4 sm:text-justify sm:text-base md:ml-0 md:min-w-[28rem] md:text-left lg:min-w-[33rem]'>
 										<span className='hidden sm:inline'>
 											No more getting abused by irresponsible companies who
 											force us to agree on something we don&apos;t want.&nbsp;
@@ -95,7 +93,7 @@ const Home: NextPage = () => {
 								</div>
 
 								<div
-									className={`${animate.button} mt-4 flex flex-col items-start gap-4 overflow-visible px-4 sm:flex-row sm:px-4 md:px-0 xl:-ml-6`}
+									className={`${animate.button} flex flex-col items-start gap-4 overflow-visible px-4 sm:flex-row sm:px-4 md:mt-4 md:px-0 xl:-ml-6`}
 								>
 									<ButtonOutlined>
 										Join our community

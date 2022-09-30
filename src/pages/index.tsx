@@ -34,7 +34,7 @@ const Home: NextPage = () => {
 								transitionSpeed={600}
 								tiltMaxAngleX={10}
 								tiltMaxAngleY={15}
-								className='relative col-span-12 flex flex-col gap-8 self-center text-white preserve-3d md:col-span-7 md:ml-12 md:gap-16 lg:ml-16 lg:px-0 xl:pl-10'
+								className='group relative col-span-12 flex flex-col gap-8 self-center text-white preserve-3d md:col-span-7 md:ml-12 md:gap-16 lg:ml-16 lg:px-0 xl:pl-10'
 							>
 								<div
 									className={`${animate.glassMain} absolute -z-10 h-[26rem] w-full opacity-0 preserve-3d child:absolute md:opacity-100`}
@@ -45,7 +45,10 @@ const Home: NextPage = () => {
 										<div className='w-48 xl:w-52' />
 										<div className='w-20 xl:w-24' />
 									</div>
-									<div className='glass -top-12 -left-[45%] h-[23.5rem] w-[46rem] rounded-3xl lg:-left-16 xl:-left-14' />
+									<div className=' -top-12 -left-[45%] h-[23.5rem] w-[46rem] child:absolute child:h-full child:w-full child:rounded-3xl lg:-left-16 xl:-left-14'>
+										<div className='glass'></div>
+										<div className='opacity-0 shadow-glowing transition-all duration-1000 group-hover:opacity-70'></div>
+									</div>
 									<div
 										className={`${animate.glassFront} child:glass -right-[20%] bottom-[22%] flex gap-2 backdrop-blur move-forth-lg child:h-11 child:rounded-lg lg:bottom-[14%] lg:-right-[18%] xl:right-[6%]`}
 									>

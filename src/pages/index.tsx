@@ -123,17 +123,20 @@ const Home: NextPage = () => {
 										onClick={() => console.log('Join our community')}
 									>
 										Join our community
-										<PeopleGroup
-											className={`${animate.bouncing} h-5 fill-purple-200`}
-										/>
+										<span className='relative h-5 child:h-full child:fill-violet-200'>
+											<PeopleGroup />
+											<PeopleGroup
+												className={`${animate.pingingA} absolute top-0 left-0`}
+											/>
+										</span>
 									</ButtonOutlined>
 
 									<ButtonFilled onClick={() => console.log('Discover app')}>
 										Discover app
-										<span className='relative h-5'>
-											<MagnifyingGlass className='h-5 fill-violet-200' />
+										<span className='relative h-5 child:h-full child:fill-violet-200'>
+											<MagnifyingGlass />
 											<MagnifyingGlass
-												className={`${animate.pinging} absolute top-0.5 left-0.5 h-5 fill-violet-200`}
+												className={`${animate.pingingB} absolute top-0.5 left-0.5`}
 											/>
 										</span>
 									</ButtonFilled>

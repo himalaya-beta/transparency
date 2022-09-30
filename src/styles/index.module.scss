@@ -51,7 +51,7 @@ $duration: 1s;
 	animation: fadeInRight $duration $delay ease-out backwards;
 }
 
-$delay: calc($duration + $delay + 2.2s);
+$delay: calc($duration + $delay + 1.8s);
 $duration: 0.6s;
 $sm-lead: 0.6s;
 .h2 {

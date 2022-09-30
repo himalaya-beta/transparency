@@ -14,8 +14,12 @@ $md: 768px;
 	animation: ping ping.$interval cubic-bezier(0, 0, 0.2, 1) infinite;
 }
 
+.pingingAA {
+	animation: ping-restricted ping.$interval cubic-bezier(0, 0, 0.2, 1) infinite;
+}
+
 .pingingB {
-	animation: ping ping.$interval 0.2s cubic-bezier(0, 0, 0.2, 1) infinite;
+	animation: ping ping.$interval 0.25s cubic-bezier(0, 0, 0.2, 1) infinite;
 }
 
 .zigzag {

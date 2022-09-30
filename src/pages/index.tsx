@@ -45,13 +45,22 @@ const Home: NextPage = () => {
 									className={`${animate.glassMain} absolute -z-10 h-[26rem] w-full opacity-0 preserve-3d child:absolute md:opacity-100`}
 								>
 									<div
-										className={`${animate.glassBack} child:glass -top-[22%] -left-[24%] flex origin-bottom-right gap-3 transition-all duration-500 move-back-lg group-hover:translate-z-[-12rem] child:h-28 child:rounded-xl	lg:-left-[18%] xl:-top-[20%] xl:-left-[14%] xl:child:h-36`}
+										className={`${animate.glassBack} child:glass -top-[22%] -left-[24%] flex origin-bottom-right gap-4 transition-all duration-500 move-back-lg group-hover:translate-z-[-12rem] child:h-28 child:rounded-xl	lg:-left-[18%] xl:-top-[20%] xl:-left-[14%] xl:child:h-36`}
 									>
 										<div className='w-48 xl:w-52' />
 										<div className='w-20 xl:w-24' />
+										<div
+											className={`${animate.pingingB} absolute w-48 border-2 border-white/50 xl:w-52`}
+										/>
+										<div
+											className={`${animate.pingingB} absolute left-52 w-20 border-2 border-white/50 xl:w-24`}
+										/>
 									</div>
 									<div className='-top-12 -left-[45%] h-[23.5rem] w-[46rem] child:absolute child:h-full child:w-full child:rounded-3xl lg:-left-16 xl:-left-14'>
-										<div className='glass glass-opaque'></div>
+										<div className='glass glass-opaque' />
+										<div
+											className={`${animate.pingingAA} border-4 border-white/50`}
+										/>
 										<div className='opacity-0 shadow-glowing transition-all duration-1000 group-hover:opacity-70'></div>
 									</div>
 									<div
@@ -59,6 +68,12 @@ const Home: NextPage = () => {
 									>
 										<div className='w-12' />
 										<div className='w-24' />
+										<div
+											className={`${animate.pingingB} absolute w-12 border-2 border-white/50`}
+										/>
+										<div
+											className={`${animate.pingingB} absolute left-14 w-24 border-2 border-white/50`}
+										/>
 									</div>
 								</div>
 

@@ -40,17 +40,17 @@ const Home: NextPage = () => {
 									className={`${animate.glassMain} absolute -z-10 h-[26rem] w-full opacity-0 preserve-3d child:absolute md:opacity-100`}
 								>
 									<div
-										className={`${animate.glassBack} child:glass -top-[22%] -left-[24%] flex gap-3 move-back-lg child:h-28 child:rounded-xl	lg:-left-[18%] xl:-top-[20%] xl:-left-[14%] xl:child:h-36`}
+										className={`${animate.glassBack} child:glass -top-[22%] -left-[24%] flex origin-bottom-right gap-3 transition-all duration-500 move-back-lg group-hover:translate-z-[-12rem] child:h-28 child:rounded-xl	lg:-left-[18%] xl:-top-[20%] xl:-left-[14%] xl:child:h-36`}
 									>
 										<div className='w-48 xl:w-52' />
 										<div className='w-20 xl:w-24' />
 									</div>
-									<div className=' -top-12 -left-[45%] h-[23.5rem] w-[46rem] child:absolute child:h-full child:w-full child:rounded-3xl lg:-left-16 xl:-left-14'>
+									<div className='-top-12 -left-[45%] h-[23.5rem] w-[46rem] child:absolute child:h-full child:w-full child:rounded-3xl lg:-left-16 xl:-left-14'>
 										<div className='glass'></div>
 										<div className='opacity-0 shadow-glowing transition-all duration-1000 group-hover:opacity-70'></div>
 									</div>
 									<div
-										className={`${animate.glassFront} child:glass -right-[20%] bottom-[22%] flex gap-2 backdrop-blur move-forth-lg child:h-11 child:rounded-lg lg:bottom-[14%] lg:-right-[18%] xl:right-[6%]`}
+										className={`${animate.glassFront} child:glass -right-[20%] bottom-[22%] flex gap-2 backdrop-blur transition-all duration-500 move-forth-lg group-hover:translate-z-48 child:h-11 child:rounded-lg lg:bottom-[14%] lg:-right-[18%] xl:right-[6%]`}
 									>
 										<div className='w-12' />
 										<div className='w-24' />

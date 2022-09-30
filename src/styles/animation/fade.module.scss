@@ -51,6 +51,17 @@
 	}
 }
 
+@keyframes zoomIn {
+	from {
+		opacity: 0;
+		transform: scale3d(0.5, 0.5, 0.5);
+	}
+
+	50% {
+		opacity: 1;
+	}
+}
+
 @keyframes reveal {
 	from {
 		opacity: 0;

@@ -1,7 +1,10 @@
+import {useState} from 'react'
 import type {NextPage} from 'next'
 import Head from 'next/head'
 
 import Tilt from 'react-parallax-tilt'
+
+import useDeviceDetect from '@utils/hooks/use-device-detect'
 
 import {ButtonFilled, ButtonOutlined} from '@components/button'
 import TNC from '@components/svg/tnc'
@@ -9,10 +12,10 @@ import MagnifyingGlass from '@images/magnifying-glass.svg'
 import PeopleGroup from '@images/people-group.svg'
 
 import animate from '@styles/index.module.scss'
-import useDeviceDetect from '@utils/hooks/use-device-detect'
 
 const Home: NextPage = () => {
 	const {isMobile, isPhone} = useDeviceDetect()
+	const [isHover, setIsHover] = useState(false)
 
 	return (
 		<>
@@ -34,6 +37,8 @@ const Home: NextPage = () => {
 								transitionSpeed={600}
 								tiltMaxAngleX={10}
 								tiltMaxAngleY={15}
+								onEnter={() => setIsHover(true)}
+								onLeave={() => setIsHover(false)}
 								className='group relative col-span-12 flex flex-col gap-8 self-center text-white preserve-3d md:col-span-7 md:ml-12 md:gap-16 lg:ml-16 lg:px-0 xl:pl-10'
 							>
 								<div
@@ -137,7 +142,8 @@ const Home: NextPage = () => {
 
 							<div className='hidden justify-self-center md:col-span-5 md:ml-8 md:-mr-[55%] md:mt-72 md:inline lg:-ml-10 lg:mt-72 xl:mt-32 xl:-mr-36'>
 								<TNC
-									className={`${animate.tncBig} w-[26rem] max-w-full lg:w-[28rem] xl:w-[30rem]`}
+									isContentHover={isHover}
+									className={`${animate.tncBig} w-[26rem] max-w-full overflow-visible lg:w-[28rem] xl:w-[30rem]`}
 								/>
 							</div>
 						</div>

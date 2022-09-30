@@ -46,7 +46,7 @@ const Home: NextPage = () => {
 										<div className='w-20 xl:w-24' />
 									</div>
 									<div className='-top-12 -left-[45%] h-[23.5rem] w-[46rem] child:absolute child:h-full child:w-full child:rounded-3xl lg:-left-16 xl:-left-14'>
-										<div className='glass'></div>
+										<div className='glass glass-opaque'></div>
 										<div className='opacity-0 shadow-glowing transition-all duration-1000 group-hover:opacity-70'></div>
 									</div>
 									<div

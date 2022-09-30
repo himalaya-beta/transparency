@@ -31,7 +31,20 @@
 		@apply border-2 border-white/10 bg-white bg-opacity-[0.15] shadow-lg shadow-white/40 backdrop-blur;
 	}
 
-	.glass-back {
-		@apply bg-opacity-30;
+	.glass-opaque {
+		@apply bg-opacity-20;
+	}
+
+	.glow {
+		filter: drop-shadow(2px 2px 4px rgba(255, 255, 255, 0.8))
+			drop-shadow(-4px -10px 12px rgba(255, 0, 255, 0.6))
+			drop-shadow(2px 8px 12px rgba(0, 255, 255, 0.7));
+	}
+
+	.button-3d {
+		@apply md:hover:translate-z-12 md:active:translate-z-[-2rem];
+		@media (pointer: none), (pointer: coarse) {
+			@apply md:hover:translate-z-0 md:active:translate-z-[-8rem];
+		}
 	}
 }

@@ -18,3 +18,11 @@ $key-end: 100%;
 		opacity: 0;
 	}
 }
+
+@keyframes ping-restricted {
+	#{$key-75},
+	#{$key-end} {
+		transform: scale(1);
+		opacity: 0;
+	}
+}

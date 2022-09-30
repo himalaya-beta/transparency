@@ -10,26 +10,47 @@ $md: 768px;
 	animation: bounce bounce.$interval infinite;
 }
 
-.pinging {
+.pingingA {
 	animation: ping ping.$interval cubic-bezier(0, 0, 0.2, 1) infinite;
+}
+
+.pingingAA {
+	animation: ping-restricted ping.$interval cubic-bezier(0, 0, 0.2, 1) infinite;
+}
+
+.pingingB {
+	animation: ping ping.$interval 0.25s cubic-bezier(0, 0, 0.2, 1) infinite;
 }
 
 .zigzag {
 	animation: zigzag 7s ease-in-out infinite;
 }
 
-$delay: -0.3s;
-$duration: 1s;
+$delay: -0s;
+$duration: 1.2s;
 .glassMain {
 	@media (min-width: $md) {
-		animation: fadeIn $duration $delay ease-in-out backwards;
+		animation: zoomIn $duration $delay ease-in-out backwards;
+	}
+}
+.content {
+	animation: focus $duration $delay ease-out backwards;
+	@media (min-width: $md) {
+		animation: zoomIn $duration $delay ease-in-out backwards,
+			focus $duration ($delay + 1.5s) ease-out backwards;
 	}
 }
 .tnc {
 	animation: fadeInTopRight $duration calc($delay + 0s) ease-out backwards;
+	@media (min-width: $md) {
+		animation: none;
+	}
+}
+.tncBig {
+	animation: fadeInTopRight $duration calc($delay + 0s) ease-out backwards;
 }
 
-$delay: calc($duration + $delay - 0.2s);
+$delay: calc($duration + $delay);
 $duration: 1s;
 .glassBack {
 	animation: fadeInLeft $duration $delay ease-out backwards;
@@ -38,19 +59,9 @@ $duration: 1s;
 	animation: fadeInRight $duration $delay ease-out backwards;
 }
 
-$delay: calc($duration + $delay - 0.2s);
-$duration: 1s;
-$sm-lead: 1s;
-.focus {
-	animation: focus $duration ($delay - $sm-lead) ease-out backwards;
-	@media (min-width: $md) {
-		animation: focus $duration $delay ease-out backwards;
-	}
-}
-
-$delay: calc($duration + $delay + 2.2s);
+$delay: calc($duration + $delay + 1.8s);
 $duration: 0.6s;
-$sm-lead: ($sm-lead + 0.6s);
+$sm-lead: 0.6s;
 .h2 {
 	animation: reveal $duration ($delay - $sm-lead) ease-in-out backwards;
 	@media (min-width: $md) {

@@ -47,7 +47,7 @@ $__typed-pauses-chars: (
 			$dur-char-bwd *
 			($char-nth - $fwd-length);
 	}
-	@return ($time / $dur-total * 100 + $modifier) + '%';
+	@return calc($time / $dur-total * 100 + $modifier) + '%';
 }
 @function __typed-get-all-keys($lists...) {
 	$all-keys: ();

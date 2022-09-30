@@ -2,7 +2,13 @@ import React from 'react'
 
 import animate from 'styles/svg/tnc.module.scss'
 
-export default function TNC({className}: {className: string}) {
+export default function TNC({
+	className,
+	isContentHover,
+}: {
+	className: string
+	isContentHover?: boolean
+}) {
 	return (
 		<svg
 			className={className}
@@ -1227,7 +1233,11 @@ export default function TNC({className}: {className: string}) {
 							transform='translate(-327.87 -80.23)'
 						/>
 					</g>
-					<g>
+					<g
+						className={`transition-all duration-700 ${
+							isContentHover ? 'glow' : 'filter-none'
+						}`}
+					>
 						<path
 							d='M518.59,381.44l-79.13-45.68c-8.93-5.16-16.17-19-16.17-30.88V94.14c0-6-5-7.39-2-9.56.12-.08,7.07-3.24,7.2-3.29,3.24-1.24,6.71-1.8,10.93.63l79.13,45.69c8.92,5.15,16.16,19,16.16,30.88V369.23c0,6.32-2,10.83-5.3,12.89-.19.12-8.56,4.1-8.78,4.18C517.79,387.26,522.49,383.7,518.59,381.44Z'
 							transform='translate(-327.87 -80.23)'

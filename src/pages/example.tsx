@@ -1,4 +1,4 @@
-import QueryWrapper from '@components/wrapper'
+import QueryWrapper from '@components/query-wrapper'
 import {trpc} from '@utils/trpc'
 
 export default function ExamplePage() {

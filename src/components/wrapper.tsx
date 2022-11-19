@@ -1,6 +1,7 @@
 import React from 'react'
 import {type DefaultErrorShape} from '@trpc/server'
 import {type DefaultErrorData} from '@trpc/server/dist/error/formatter'
+import {type UseTRPCQueryResult} from '@trpc/react-query/shared'
 
 type ErrorType = {
 	message: string
@@ -8,11 +9,7 @@ type ErrorType = {
 	shape?: DefaultErrorShape | null | null
 }
 
-type Props<T> = {
-	isLoading: boolean
-	isError: boolean
-	data?: T
-	error: ErrorType | null
+type Props<T> = UseTRPCQueryResult<T, ErrorType> & {
 	children: (entry: T) => JSX.Element
 }
 

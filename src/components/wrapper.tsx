@@ -10,7 +10,7 @@ type ErrorType = {
 }
 
 type Props<T> = UseTRPCQueryResult<T, ErrorType> & {
-	children: (entry: T) => JSX.Element
+	children: (data: T) => JSX.Element
 }
 
 const QueryWrapper = <T,>({

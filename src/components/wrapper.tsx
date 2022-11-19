@@ -11,6 +11,9 @@ type ErrorType = {
 
 type Props<T> = UseTRPCQueryResult<T, ErrorType> & {
 	children: (data: T) => JSX.Element
+	Loading?: JSX.Element
+	Empty?: JSX.Element
+	Error?: (error: ErrorType) => JSX.Element
 }
 
 const QueryWrapper = <T,>({
@@ -18,15 +21,18 @@ const QueryWrapper = <T,>({
 	isError,
 	data,
 	error,
+	Loading: CustomLoading,
+	Empty: CustomEmpty,
+	Error: CustomError,
 	children,
 }: Props<T>) => {
 	if (isLoading) {
-		return <Loading />
+		return <Loading CustomLoading={CustomLoading} />
 	} else if (isError) {
-		return <Error error={error} />
+		return <Error error={error} CustomError={CustomError} />
 	} else if (data) {
 		return (Array.isArray(data) && data.length === 0) || data === null ? (
-			<Empty />
+			<Empty CustomEmpty={CustomEmpty} />
 		) : (
 			children(data)
 		)
@@ -34,25 +40,36 @@ const QueryWrapper = <T,>({
 	return <React.Fragment />
 }
 
-const Loading = () => (
-	<div>
-		<p>Loading...</p>
-	</div>
-)
+const Loading = ({CustomLoading}: {CustomLoading?: JSX.Element}) =>
+	CustomLoading ?? (
+		<div>
+			<p>Loading...</p>
+		</div>
+	)
 
-const Error = ({error}: {error: ErrorType | null}) => (
-	<div>
-		<p>
-			[{error?.data?.httpStatus}] {error?.data?.code} at {error?.data?.path}
-		</p>
-		<pre>{error?.message}</pre>
-	</div>
-)
+const Error = ({
+	error,
+	CustomError,
+}: {
+	error: ErrorType
+	CustomError?: (error: ErrorType) => JSX.Element
+}) =>
+	CustomError ? (
+		CustomError(error)
+	) : (
+		<div>
+			<p>
+				[{error?.data?.httpStatus}] {error?.data?.code} at {error?.data?.path}
+			</p>
+			<pre>{error?.message}</pre>
+		</div>
+	)
 
-const Empty = () => (
-	<div>
-		<p>There is not data</p>
-	</div>
-)
+const Empty = ({CustomEmpty}: {CustomEmpty?: JSX.Element}) =>
+	CustomEmpty ?? (
+		<div>
+			<p>There is not data</p>
+		</div>
+	)
 
 export default QueryWrapper

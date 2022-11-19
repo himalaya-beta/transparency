@@ -3,6 +3,10 @@
 @tailwind utilities;
 
 @layer base {
+	html {
+		-webkit-tap-highlight-color: transparent;
+	}
+
 	h1,
 	h2,
 	h3,
@@ -15,10 +19,6 @@
 
 	p {
 		@apply font-body;
-	}
-
-	html {
-		-webkit-tap-highlight-color: transparent;
 	}
 }
 

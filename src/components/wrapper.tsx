@@ -6,7 +6,7 @@ import {type UseTRPCQueryResult} from '@trpc/react-query/shared'
 type ErrorType = {
 	message: string
 	data?: DefaultErrorData | null
-	shape?: DefaultErrorShape | null | null
+	shape?: DefaultErrorShape | null
 }
 
 type Props<T> = UseTRPCQueryResult<T, ErrorType> & {

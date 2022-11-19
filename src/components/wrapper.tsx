@@ -1,34 +1,23 @@
 import React from 'react'
 
-// TODO: How can we get the types (Example) automatically
-type Example = {
-	id: string
-	title: string
-	content: string
-}
-
-type Props = {
+type Props<T> = {
 	isLoading: boolean
 	isError: boolean
-	data: Example[] | undefined
-	children: (entry: Example) => JSX.Element
+	data: T | undefined
+	children: (entry: T) => JSX.Element
 }
 
-const QueryWrapper = ({isLoading, isError, data, children}: Props) => {
+const QueryWrapper = <T,>({isLoading, isError, data, children}: Props<T>) => {
 	if (isLoading) return <p>Loading ...</p>
 	else if (isError) return <p>Error</p>
 	else if (data) {
-		return data.length === 0 ? (
+		return (Array.isArray(data) && data.length === 0) || data === null ? (
 			<p>Empty</p>
 		) : (
-			<>
-				{data.map((entry) =>
-					React.cloneElement(children(entry), {key: entry.id})
-				)}
-			</>
+			children(data)
 		)
 	}
-	return <></>
+	return <React.Fragment />
 }
 
 export default QueryWrapper

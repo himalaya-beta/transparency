@@ -45,7 +45,10 @@ const Loading = () => (
 
 const Error = ({error}: {error: ErrorType | null}) => (
 	<div>
-		<p>Error: {error?.message}</p>
+		<p>
+			[{error?.data?.httpStatus}] {error?.data?.code} at {error?.data?.path}
+		</p>
+		<pre>{error?.message}</pre>
 	</div>
 )
 

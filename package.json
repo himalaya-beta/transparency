@@ -38,6 +38,7 @@
     "@commitlint/config-conventional": "^17.2.0",
     "@next/bundle-analyzer": "^13.0.3",
     "@svgr/webpack": "^6.5.1",
+    "@tailwindcss/line-clamp": "^0.4.2",
     "@types/node": "^18.11.9",
     "@types/react": "^18.0.25",
     "@types/react-dom": "^18.0.9",

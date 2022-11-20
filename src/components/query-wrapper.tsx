@@ -21,6 +21,7 @@ const QueryWrapper = <T,>({
 	isError,
 	data,
 	error,
+	refetch,
 	Loading: CustomLoading,
 	Empty: CustomEmpty,
 	Error: CustomError,
@@ -29,7 +30,7 @@ const QueryWrapper = <T,>({
 	if (isLoading) {
 		return <Loading CustomLoading={CustomLoading} />
 	} else if (isError) {
-		return <Error error={error} CustomError={CustomError} />
+		return <Error error={error} CustomError={CustomError} refetch={refetch} />
 	} else if (data) {
 		return (Array.isArray(data) && data.length === 0) || data === null ? (
 			<Empty CustomEmpty={CustomEmpty} />
@@ -50,18 +51,28 @@ const Loading = ({CustomLoading}: {CustomLoading?: JSX.Element}) =>
 const Error = ({
 	error,
 	CustomError,
+	refetch,
 }: {
 	error: ErrorType
 	CustomError?: (error: ErrorType) => JSX.Element
+	refetch: () => void
 }) =>
 	CustomError ? (
 		CustomError(error)
 	) : (
 		<div>
-			<p className='text-gray-200'>
-				[{error?.data?.httpStatus}] {error?.data?.code} at {error?.data?.path}
-			</p>
-			<pre>{error?.message}</pre>
+			{error.data && (
+				<p className='text-gray-200'>
+					[{error.data.httpStatus}] {error.data.code} at {error.data.path}
+				</p>
+			)}
+			<pre className='text-gray-200'>{error.message}</pre>
+			<button
+				onClick={() => refetch()}
+				className='mt-2 rounded border px-2 text-gray-200'
+			>
+				Retry
+			</button>
 		</div>
 	)
 

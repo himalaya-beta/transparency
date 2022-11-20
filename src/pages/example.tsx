@@ -21,7 +21,7 @@ export default function ExamplePage() {
 					<h1 className='text-3xl text-gray-50'>Examples</h1>
 					<QueryWrapper {...examplesQuery}>
 						{(examples) => (
-							<div className='grid grid-cols-3 gap-x-4 gap-y-6'>
+							<div className='grid grid-cols-3 gap-4'>
 								{examples.map(({id, title, content}) => (
 									<Card key={id} title={title} content={content} />
 								))}

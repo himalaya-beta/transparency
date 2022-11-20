@@ -9,6 +9,7 @@
       "@animation/*": ["styles/animation/*"],
       "@styles/*": ["styles/*"],
       "@utils/*": ["utils/*"],
+      "@type/*": ["types/*"],
       "@server/*": ["server/*"],
       "@images/*": ["../public/images/*"]
     },

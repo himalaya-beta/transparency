@@ -14,30 +14,31 @@ import {
 	createExampleInputSchema,
 	type createExampleInputType,
 } from '@type/example'
+import PlainLayout from 'layouts/plain'
 
 export default function ExamplePage() {
 	const examplesQuery = trpc.example.getExamples.useQuery()
 
 	return (
-		<div className='min-h-screen bg-gradient-to-br from-purple-900 to-gray-900 py-12'>
-			<main className='container mx-auto'>
-				<div className='glass mx-auto max-w-screen-lg space-y-8 rounded-xl bg-red-200/50 p-8'>
-					<h1 className='text-3xl text-gray-50'>Examples</h1>
-					<QueryWrapper {...examplesQuery}>
-						{(examples) => (
-							<div className='grid grid-cols-3 gap-4'>
-								{examples.map(({id, title, content}) => (
-									<Card key={id} title={title} content={content} />
-								))}
-							</div>
-						)}
-					</QueryWrapper>
+		<div className='glass mx-auto max-w-screen-lg space-y-8 rounded-xl bg-red-200/50 p-8'>
+			<h1 className='text-3xl text-gray-50'>Examples</h1>
+			<QueryWrapper {...examplesQuery}>
+				{(examples) => (
+					<div className='grid grid-cols-3 gap-4'>
+						{examples.map(({id, title, content}) => (
+							<Card key={id} title={title} content={content} />
+						))}
+					</div>
+				)}
+			</QueryWrapper>
 
-					<CreateExampleForm />
-				</div>
-			</main>
+			<CreateExampleForm />
 		</div>
 	)
+}
+
+ExamplePage.getLayout = function getLayout(page: React.ReactElement) {
+	return <PlainLayout>{page}</PlainLayout>
 }
 
 const Card = ({title, content}: {title: string; content: string}) => {

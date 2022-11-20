@@ -5,11 +5,15 @@ import QueryWrapper from '@components/query-wrapper'
 
 import {trpc} from '@utils/trpc'
 
-import {SubmitHandler, useForm} from 'react-hook-form'
+import {useForm, type SubmitHandler} from 'react-hook-form'
 import {zodResolver} from '@hookform/resolvers/zod'
 import {ErrorMessage} from '@hookform/error-message'
-import {createExampleSchema, createExampleType} from '../types/example'
 import {capFirstChar} from '@utils/literal'
+
+import {
+	createExampleInputSchema,
+	type createExampleInputType,
+} from '@type/example'
 
 export default function ExamplePage() {
 	const examplesQuery = trpc.example.getExamples.useQuery()
@@ -48,7 +52,7 @@ const Card = ({title, content}: {title: string; content: string}) => {
 }
 
 type InputProps = React.TextareaHTMLAttributes<HTMLTextAreaElement> & {
-	name: keyof createExampleType
+	name: keyof createExampleInputType
 }
 
 const CreateExampleForm = () => {
@@ -57,9 +61,9 @@ const CreateExampleForm = () => {
 		reset,
 		handleSubmit,
 		formState: {errors},
-	} = useForm<createExampleType>({
+	} = useForm<createExampleInputType>({
 		mode: 'onTouched',
-		resolver: zodResolver(createExampleSchema),
+		resolver: zodResolver(createExampleInputSchema),
 	})
 
 	const {mutate} = trpc.example.createExample.useMutation({
@@ -72,7 +76,7 @@ const CreateExampleForm = () => {
 		},
 	})
 
-	const onSubmit: SubmitHandler<createExampleType> = async (data) => {
+	const onSubmit: SubmitHandler<createExampleInputType> = async (data) => {
 		mutate(data)
 	}
 

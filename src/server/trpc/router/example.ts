@@ -1,7 +1,7 @@
 import {z} from 'zod'
 import {router, publicProcedure} from '../trpc'
 
-import {createExampleSchema} from 'types/example'
+import {createExampleInputSchema} from 'types/example'
 
 export const exampleRouter = router({
 	getExamples: publicProcedure.query(({ctx}) => {
@@ -13,7 +13,7 @@ export const exampleRouter = router({
 			return ctx.prisma.example.findUnique({where: {id: input.id}})
 		}),
 	createExample: publicProcedure
-		.input(createExampleSchema)
+		.input(createExampleInputSchema)
 		.mutation(({ctx, input}) => {
 			return ctx.prisma.example.create({data: input})
 		}),

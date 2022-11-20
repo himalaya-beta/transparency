@@ -43,7 +43,7 @@ const QueryWrapper = <T,>({
 const Loading = ({CustomLoading}: {CustomLoading?: JSX.Element}) =>
 	CustomLoading ?? (
 		<div>
-			<p>Loading...</p>
+			<p className='text-gray-200'>Loading...</p>
 		</div>
 	)
 
@@ -58,7 +58,7 @@ const Error = ({
 		CustomError(error)
 	) : (
 		<div>
-			<p>
+			<p className='text-gray-200'>
 				[{error?.data?.httpStatus}] {error?.data?.code} at {error?.data?.path}
 			</p>
 			<pre>{error?.message}</pre>
@@ -68,7 +68,7 @@ const Error = ({
 const Empty = ({CustomEmpty}: {CustomEmpty?: JSX.Element}) =>
 	CustomEmpty ?? (
 		<div>
-			<p>There is not data</p>
+			<p className='text-gray-200'>There is not data</p>
 		</div>
 	)
 

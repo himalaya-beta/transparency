@@ -1,6 +1,7 @@
 import React from 'react'
 import {useRouter} from 'next/router'
 import PlainLayout from 'layouts/plain'
+import GlassContainerLayout from 'layouts/glass-container'
 
 const ExampleDetailsPage = () => {
 	const {query} = useRouter()
@@ -15,5 +16,7 @@ const ExampleDetailsPage = () => {
 export default ExampleDetailsPage
 
 ExampleDetailsPage.getLayout = (page: React.ReactElement) => (
-	<PlainLayout>{page}</PlainLayout>
+	<PlainLayout>
+		<GlassContainerLayout>{page}</GlassContainerLayout>
+	</PlainLayout>
 )

@@ -18,12 +18,13 @@ import {
 	type createExampleInputType,
 } from '@type/example'
 import PlainLayout from 'layouts/plain'
+import GlassContainerLayout from 'layouts/glass-container'
 
 export default function ExamplePage() {
 	const examplesQuery = trpc.example.getExamples.useQuery()
 
 	return (
-		<div className='glass mx-auto max-w-screen-lg space-y-8 rounded-xl bg-red-200/50 p-8'>
+		<div className='space-y-8'>
 			<h1 className='text-3xl text-gray-50'>Examples</h1>
 			<QueryWrapper {...examplesQuery}>
 				{(examples) => (
@@ -41,7 +42,11 @@ export default function ExamplePage() {
 }
 
 ExamplePage.getLayout = function getLayout(page: React.ReactElement) {
-	return <PlainLayout>{page}</PlainLayout>
+	return (
+		<PlainLayout>
+			<GlassContainerLayout>{page}</GlassContainerLayout>
+		</PlainLayout>
+	)
 }
 
 const Card = ({slug, title, content}: ExampleType) => {

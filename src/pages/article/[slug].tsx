@@ -55,6 +55,7 @@ export const getStaticProps: GetStaticProps<{
 			article,
 			// cannot send date on json :(
 		},
+		// revalidate: 1,
 	}
 }
 
@@ -85,7 +86,7 @@ const ArticleDetailsPage = ({
 
 	const {mutate: updateArticle} = trpc.article.updateArticle.useMutation({
 		onError: (err) => alert(err.message),
-		onSuccess: () => setIsEdit(false),
+		onSuccess: () => router.push('/article'),
 	})
 
 	const defaultValues = {

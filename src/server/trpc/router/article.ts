@@ -3,6 +3,7 @@ import {router, publicProcedure} from '../trpc'
 
 import {createArticleInputSchema, updateArticleInputSchema} from 'types/article'
 import {slugify} from '@utils/literal'
+import {BASE_URL} from '@utils/route'
 
 const requiredIdSchema = z.object({id: z.string()})
 
@@ -29,8 +30,8 @@ export const articleRouter = router({
 		}),
 	updateArticle: publicProcedure
 		.input(updateArticleInputSchema)
-		.mutation(({ctx, input}) =>
-			ctx.prisma.article.update({
+		.mutation(async ({ctx, input}) => {
+			const updated = await ctx.prisma.article.update({
 				where: {id: input.id},
 				data: {
 					title: input.title,
@@ -38,7 +39,14 @@ export const articleRouter = router({
 					slug: slugify(input.title) + '_' + input.id,
 				},
 			})
-		),
+			await fetch(`${BASE_URL}/api/revalidate`, {
+				method: 'POST',
+				body: JSON.stringify({
+					path: `/article/${updated.slug}`,
+				}),
+			})
+			return updated
+		}),
 	deleteArticle: publicProcedure
 		.input(requiredIdSchema)
 		.mutation(({ctx, input}) =>

@@ -8,4 +8,10 @@ export const createArticleInputSchema = z.object({
 
 export type CreateArticleInputType = z.infer<typeof createArticleInputSchema>
 
+export const updateArticleInputSchema = createArticleInputSchema.extend({
+	id: z.string(),
+})
+
+export type UpdateArticleInputType = z.infer<typeof updateArticleInputSchema>
+
 export type ArticleType = Exclude<RouterOutputs['article']['getArticle'], null>

@@ -1,7 +1,7 @@
 import {z} from 'zod'
 import {router, publicProcedure} from '../trpc'
 
-import {createArticleInputSchema} from 'types/article'
+import {createArticleInputSchema, updateArticleInputSchema} from 'types/article'
 import {slugify} from '@utils/literal'
 
 const requiredIdSchema = z.object({id: z.string()})
@@ -27,6 +27,18 @@ export const articleRouter = router({
 				},
 			})
 		}),
+	updateArticle: publicProcedure
+		.input(updateArticleInputSchema)
+		.mutation(({ctx, input}) =>
+			ctx.prisma.article.update({
+				where: {id: input.id},
+				data: {
+					title: input.title,
+					content: input.content,
+					slug: slugify(input.title) + '_' + input.id,
+				},
+			})
+		),
 	deleteArticle: publicProcedure
 		.input(requiredIdSchema)
 		.mutation(({ctx, input}) =>

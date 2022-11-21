@@ -6,7 +6,7 @@ export default function GlassContainerLayout({
 	children: React.ReactNode
 }) {
 	return (
-		<div className='glass mx-auto max-w-screen-lg space-y-8 rounded-xl bg-red-200/50 p-8'>
+		<div className='glass mx-auto max-w-screen-lg space-y-8 rounded-xl p-8'>
 			{children}
 		</div>
 	)

@@ -5,9 +5,11 @@ import QueryWrapper from '@components/query-wrapper'
 
 import {trpc} from '@utils/trpc'
 
+import Link from 'next/link'
 import {useForm, type SubmitHandler} from 'react-hook-form'
 import {zodResolver} from '@hookform/resolvers/zod'
 import {ErrorMessage} from '@hookform/error-message'
+
 import {capFirstChar} from '@utils/literal'
 
 import {
@@ -42,14 +44,15 @@ ExamplePage.getLayout = function getLayout(page: React.ReactElement) {
 	return <PlainLayout>{page}</PlainLayout>
 }
 
-const Card = ({title, content}: ExampleType) => {
+const Card = ({id, title, content}: ExampleType) => {
 	return (
-		<div
+		<Link
+			href={`./example/${id}`}
 			className={`hover:glass max-h-72 space-y-4 rounded-lg border-2 border-white/25 bg-white/10 p-6 transition-colors`}
 		>
 			<h2 className='text-xl text-gray-50'>{title}</h2>
 			<p className='text-gray-200 line-clamp-6'>{content}</p>
-		</div>
+		</Link>
 	)
 }
 

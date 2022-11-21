@@ -4,15 +4,15 @@ import {router, publicProcedure} from '../trpc'
 import {createArticleInputSchema} from 'types/article'
 import {slugify} from '@utils/literal'
 
+const requiredIdSchema = z.object({id: z.string()})
+
 export const articleRouter = router({
-	getArticles: publicProcedure.query(({ctx}) => {
-		return ctx.prisma.article.findMany()
-	}),
+	getArticles: publicProcedure.query(({ctx}) => ctx.prisma.article.findMany()),
 	getArticle: publicProcedure
-		.input(z.object({id: z.string()}))
-		.query(({ctx, input}) => {
-			return ctx.prisma.article.findUnique({where: {id: input.id}})
-		}),
+		.input(requiredIdSchema)
+		.query(({ctx, input}) =>
+			ctx.prisma.article.findUnique({where: {id: input.id}})
+		),
 	createArticle: publicProcedure
 		.input(createArticleInputSchema)
 		.mutation(async ({ctx, input}) => {
@@ -27,4 +27,9 @@ export const articleRouter = router({
 				},
 			})
 		}),
+	deleteArticle: publicProcedure
+		.input(requiredIdSchema)
+		.mutation(({ctx, input}) =>
+			ctx.prisma.article.delete({where: {id: input.id}})
+		),
 })

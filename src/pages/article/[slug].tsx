@@ -1,12 +1,15 @@
 import React from 'react'
 import {GetStaticPaths, GetStaticProps, InferGetStaticPropsType} from 'next'
+import {useRouter} from 'next/router'
 
 import {prisma} from '@server/db/client'
+import {trpc} from '@utils/trpc'
+import {extractIdFromSlug} from '@utils/literal'
 
 import PlainLayout from 'layouts/plain'
 import GlassContainerLayout from 'layouts/glass-container'
-
-import {extractIdFromSlug} from '@utils/literal'
+import {ButtonFilled} from '@components/button'
+import {MdDelete as DeleteIcon} from 'react-icons/md'
 
 import {type ArticleType} from '@type/article'
 type ArticleSimplifiedType = Omit<ArticleType, 'createdAt' | 'updatedAt'>
@@ -51,10 +54,25 @@ export const getStaticPaths: GetStaticPaths = async () => {
 const ArticleDetailsPage = ({
 	article,
 }: InferGetStaticPropsType<typeof getStaticProps>) => {
+	const router = useRouter()
+
+	const {mutate} = trpc.article.deleteArticle.useMutation({
+		onError: (err) => alert(err.message),
+		onSuccess: () => router.push('/article'),
+	})
+
 	return (
 		<div className='space-y-8'>
 			<h1 className='text-3xl text-gray-50'>{article.title}</h1>
 			<p className='text-white'>{article.content}</p>
+			<div>
+				<ButtonFilled
+					onClick={() => mutate({id: article.id})}
+					className='bg-gray-200 text-red-500 hover:bg-red-500 hover:text-gray-200'
+				>
+					Delete <DeleteIcon />
+				</ButtonFilled>
+			</div>
 		</div>
 	)
 }

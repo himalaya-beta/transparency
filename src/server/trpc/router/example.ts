@@ -2,6 +2,7 @@ import {z} from 'zod'
 import {router, publicProcedure} from '../trpc'
 
 import {createExampleInputSchema} from 'types/example'
+import {slugify} from '@utils/literal'
 
 export const exampleRouter = router({
 	getExamples: publicProcedure.query(({ctx}) => {
@@ -15,6 +16,8 @@ export const exampleRouter = router({
 	createExample: publicProcedure
 		.input(createExampleInputSchema)
 		.mutation(({ctx, input}) => {
-			return ctx.prisma.example.create({data: input})
+			return ctx.prisma.example.create({
+				data: {...input, slug: slugify(input.title)},
+			})
 		}),
 })

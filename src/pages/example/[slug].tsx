@@ -5,7 +5,11 @@ import PlainLayout from 'layouts/plain'
 const ExampleDetailsPage = () => {
 	const {query} = useRouter()
 
-	return <div>Example #{query.id}</div>
+	return (
+		<div>
+			<p className='text-white'>Example #{query.slug}</p>
+		</div>
+	)
 }
 
 export default ExampleDetailsPage

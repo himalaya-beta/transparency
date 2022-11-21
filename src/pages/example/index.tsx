@@ -44,10 +44,10 @@ ExamplePage.getLayout = function getLayout(page: React.ReactElement) {
 	return <PlainLayout>{page}</PlainLayout>
 }
 
-const Card = ({id, title, content}: ExampleType) => {
+const Card = ({slug, title, content}: ExampleType) => {
 	return (
 		<Link
-			href={`./example/${id}`}
+			href={`./example/${slug}`}
 			className={`hover:glass max-h-72 space-y-4 rounded-lg border-2 border-white/25 bg-white/10 p-6 transition-colors`}
 		>
 			<h2 className='text-xl text-gray-50'>{title}</h2>

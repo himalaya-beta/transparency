@@ -55,7 +55,7 @@ export const getStaticProps: GetStaticProps<{
 			article,
 			// cannot send date on json :(
 		},
-		// revalidate: 1,
+		revalidate: 60,
 	}
 }
 

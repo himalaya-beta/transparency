@@ -6,8 +6,9 @@ import {prisma} from '@server/db/client'
 import PlainLayout from 'layouts/plain'
 import GlassContainerLayout from 'layouts/glass-container'
 
-import {type ArticleType} from '@type/article'
+import {extractIdFromSlug} from '@utils/literal'
 
+import {type ArticleType} from '@type/article'
 type ArticleSimplifiedType = Omit<ArticleType, 'createdAt' | 'updatedAt'>
 
 export const getStaticProps: GetStaticProps<{
@@ -15,8 +16,10 @@ export const getStaticProps: GetStaticProps<{
 }> = async ({params}) => {
 	if (!params?.slug) return {notFound: true}
 
-	const article = await prisma.article.findFirst({
-		where: {slug: params.slug as string},
+	const id = extractIdFromSlug(params.slug as string)
+
+	const article = await prisma.article.findUnique({
+		where: {id},
 		select: {
 			id: true,
 			slug: true,

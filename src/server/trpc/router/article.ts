@@ -15,9 +15,16 @@ export const articleRouter = router({
 		}),
 	createArticle: publicProcedure
 		.input(createArticleInputSchema)
-		.mutation(({ctx, input}) => {
-			return ctx.prisma.article.create({
+		.mutation(async ({ctx, input}) => {
+			const articleNew = await ctx.prisma.article.create({
 				data: {...input, slug: slugify(input.title)},
+			})
+			// embed id to slug for getStaticProps and any other fetching
+			return ctx.prisma.article.update({
+				where: {id: articleNew.id},
+				data: {
+					slug: articleNew.slug + '_' + articleNew.id,
+				},
 			})
 		}),
 })

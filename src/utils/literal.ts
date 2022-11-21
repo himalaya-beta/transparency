@@ -11,3 +11,7 @@ export const slugify = (str: string) => {
 		.replace(/[^\d a-z]/g, '') // remove all chars not letters, numbers and spaces (to be replaced)
 		.replace(/\s+/g, '-') // separator
 }
+
+export const extractIdFromSlug = (str: string) => {
+	return str.slice(str.lastIndexOf('_') + 1)
+}

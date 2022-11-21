@@ -3,19 +3,19 @@ import {useRouter} from 'next/router'
 import PlainLayout from 'layouts/plain'
 import GlassContainerLayout from 'layouts/glass-container'
 
-const ExampleDetailsPage = () => {
+const ArticleDetailsPage = () => {
 	const {query} = useRouter()
 
 	return (
 		<div>
-			<p className='text-white'>Example #{query.slug}</p>
+			<p className='text-white'>Article #{query.slug}</p>
 		</div>
 	)
 }
 
-export default ExampleDetailsPage
+export default ArticleDetailsPage
 
-ExampleDetailsPage.getLayout = (page: React.ReactElement) => (
+ArticleDetailsPage.getLayout = (page: React.ReactElement) => (
 	<PlainLayout>
 		<GlassContainerLayout>{page}</GlassContainerLayout>
 	</PlainLayout>

@@ -13,35 +13,35 @@ import {ErrorMessage} from '@hookform/error-message'
 import {capFirstChar} from '@utils/literal'
 
 import {
-	createExampleInputSchema,
-	type ExampleType,
-	type createExampleInputType,
-} from '@type/example'
+	createArticleInputSchema,
+	type ArticleType,
+	type CreateArticleInputType,
+} from '@type/article'
 import PlainLayout from 'layouts/plain'
 import GlassContainerLayout from 'layouts/glass-container'
 
-export default function ExamplePage() {
-	const examplesQuery = trpc.example.getExamples.useQuery()
+export default function ArticlePage() {
+	const articlesQuery = trpc.article.getArticles.useQuery()
 
 	return (
 		<div className='space-y-8'>
-			<h1 className='text-3xl text-gray-50'>Examples</h1>
-			<QueryWrapper {...examplesQuery}>
-				{(examples) => (
+			<h1 className='text-3xl text-gray-50'>Articles</h1>
+			<QueryWrapper {...articlesQuery}>
+				{(articles) => (
 					<div className='grid grid-cols-3 gap-4'>
-						{examples.map((example) => (
-							<Card key={example.id} {...example} />
+						{articles.map((article) => (
+							<Card key={article.id} {...article} />
 						))}
 					</div>
 				)}
 			</QueryWrapper>
 
-			<CreateExampleForm />
+			<CreateArticleForm />
 		</div>
 	)
 }
 
-ExamplePage.getLayout = function getLayout(page: React.ReactElement) {
+ArticlePage.getLayout = function getLayout(page: React.ReactElement) {
 	return (
 		<PlainLayout>
 			<GlassContainerLayout>{page}</GlassContainerLayout>
@@ -49,10 +49,10 @@ ExamplePage.getLayout = function getLayout(page: React.ReactElement) {
 	)
 }
 
-const Card = ({slug, title, content}: ExampleType) => {
+const Card = ({slug, title, content}: ArticleType) => {
 	return (
 		<Link
-			href={`./example/${slug}`}
+			href={`./article/${slug}`}
 			className={`hover:glass max-h-72 space-y-4 rounded-lg border-2 border-white/25 bg-white/10 p-6 transition-colors`}
 		>
 			<h2 className='text-xl text-gray-50'>{title}</h2>
@@ -62,21 +62,21 @@ const Card = ({slug, title, content}: ExampleType) => {
 }
 
 type InputProps = React.TextareaHTMLAttributes<HTMLTextAreaElement> & {
-	name: keyof createExampleInputType
+	name: keyof CreateArticleInputType
 }
 
-const CreateExampleForm = () => {
+const CreateArticleForm = () => {
 	const {
 		register,
 		reset,
 		handleSubmit,
 		formState: {errors},
-	} = useForm<createExampleInputType>({
+	} = useForm<CreateArticleInputType>({
 		mode: 'onTouched',
-		resolver: zodResolver(createExampleInputSchema),
+		resolver: zodResolver(createArticleInputSchema),
 	})
 
-	const {mutate} = trpc.example.createExample.useMutation({
+	const {mutate} = trpc.article.createArticle.useMutation({
 		onError: (error) => {
 			alert(JSON.stringify(error.message))
 		},
@@ -86,7 +86,7 @@ const CreateExampleForm = () => {
 		},
 	})
 
-	const onSubmit: SubmitHandler<createExampleInputType> = async (data) => {
+	const onSubmit: SubmitHandler<CreateArticleInputType> = async (data) => {
 		mutate(data)
 	}
 

@@ -12,7 +12,7 @@ datasource db {
     referentialIntegrity = "prisma"
 }
 
-model Example {
+model Article {
     id        String   @id @default(cuid())
     title     String
     slug      String

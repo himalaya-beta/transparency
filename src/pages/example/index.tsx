@@ -12,6 +12,7 @@ import {capFirstChar} from '@utils/literal'
 
 import {
 	createExampleInputSchema,
+	type ExampleType,
 	type createExampleInputType,
 } from '@type/example'
 import PlainLayout from 'layouts/plain'
@@ -25,8 +26,8 @@ export default function ExamplePage() {
 			<QueryWrapper {...examplesQuery}>
 				{(examples) => (
 					<div className='grid grid-cols-3 gap-4'>
-						{examples.map(({id, title, content}) => (
-							<Card key={id} title={title} content={content} />
+						{examples.map((example) => (
+							<Card key={example.id} {...example} />
 						))}
 					</div>
 				)}
@@ -41,7 +42,7 @@ ExamplePage.getLayout = function getLayout(page: React.ReactElement) {
 	return <PlainLayout>{page}</PlainLayout>
 }
 
-const Card = ({title, content}: {title: string; content: string}) => {
+const Card = ({title, content}: ExampleType) => {
 	return (
 		<div
 			className={`hover:glass max-h-72 space-y-4 rounded-lg border-2 border-white/25 bg-white/10 p-6 transition-colors`}

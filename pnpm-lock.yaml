@@ -24,6 +24,7 @@ specifiers:
   commitlint-config-gitmoji: ^2.2.6
   cssnano: ^5.1.14
   cuid: ^2.1.8
+  dayjs: ^1.11.6
   eslint: 8.27.0
   eslint-config-next: 13.0.3
   eslint-config-prettier: ^8.5.0
@@ -59,6 +60,7 @@ dependencies:
   '@trpc/react-query': 10.0.0-rc.8_bd5nqhlee2rdtlo5aa5wyumt5u
   '@trpc/server': 10.0.0-rc.8
   cuid: 2.1.8
+  dayjs: 1.11.6
   next: 13.0.3_vgii64pd2ccbnbx2v3ro5gbin4
   next-auth: 4.16.4_ogpkrxaz2lg6nectum6dl66tn4
   react: 18.2.0
@@ -3099,6 +3101,10 @@ packages:
     resolution: {integrity: sha512-2iy1EkLdlBzQGvbweYRFxmFath8+K7+AKB0TlhHWkNuH+TmovaMH/Wp7V7R4u7f4SnX3OgLsU9t1NI9ioDnUpg==}
     engines: {node: '>=8'}
     dev: true
+
+  /dayjs/1.11.6:
+    resolution: {integrity: sha512-zZbY5giJAinCG+7AGaw0wIhNZ6J8AhWuSXKvuc1KAyMiRsvGQWqh4L+MomvhdAYjN+lqvVCMq1I41e3YHvXkyQ==}
+    dev: false
 
   /debug/2.6.9:
     resolution: {integrity: sha512-bC7ElrdJaJnPbAP+1EotYvqZsb3ecl5wi6Bfi6BJTUcNowp6cvspg0jXznRTKDjm/E7AdgFBVeAPVMNcKGsHMA==}

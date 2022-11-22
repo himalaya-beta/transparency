@@ -1,5 +1,9 @@
 import {ButtonHTMLAttributes, DetailedHTMLProps} from 'react'
-import {WrapperProps} from 'types/component'
+
+type WrapperProps = {
+	children: React.ReactNode
+	className?: string
+}
 
 export interface ButtonProps
 	extends DetailedHTMLProps<

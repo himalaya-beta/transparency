@@ -56,7 +56,7 @@ export const getStaticProps: GetStaticProps<{
 		props: {
 			article,
 		},
-		revalidate: 60,
+		revalidate: true,
 	}
 }
 
@@ -86,7 +86,7 @@ const ArticleDetailsPage = ({
 		trpc.article.update.useMutation({
 			onError: (err) => alert(err.message),
 			onSuccess: () => {
-				router.reload()
+				router.push('/article')
 			},
 		})
 

@@ -65,7 +65,7 @@ const CreateArticleForm = () => {
 		resolver: zodResolver(CreateArticleSchema),
 	})
 
-	const {mutate} = trpc.article.create.useMutation({
+	const {mutate, isLoading} = trpc.article.create.useMutation({
 		onError: (error) => {
 			alert(JSON.stringify(error.message))
 		},
@@ -91,6 +91,7 @@ const CreateArticleForm = () => {
 				<Button
 					type='submit'
 					variant='outlined'
+					isLoading={isLoading}
 					className='w-fit text-gray-200'
 				>
 					Create <CreateIcon className='text-lg text-white' />

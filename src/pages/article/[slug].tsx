@@ -83,17 +83,19 @@ const ArticleDetailsPage = ({
 	const router = useRouter()
 	const [isEdit, setIsEdit] = React.useState(false)
 
-	const {mutate: deleteArticle} = trpc.article.delete.useMutation({
-		onError: (err) => alert(err.message),
-		onSuccess: () => router.push('/article'),
-	})
+	const {mutate: deleteArticle, isLoading: isDeleteLoading} =
+		trpc.article.delete.useMutation({
+			onError: (err) => alert(err.message),
+			onSuccess: () => router.push('/article'),
+		})
 
-	const {mutate: updateArticle} = trpc.article.update.useMutation({
-		onError: (err) => alert(err.message),
-		onSuccess: () => {
-			router.reload()
-		},
-	})
+	const {mutate: updateArticle, isLoading: isUpdateLoading} =
+		trpc.article.update.useMutation({
+			onError: (err) => alert(err.message),
+			onSuccess: () => {
+				router.reload()
+			},
+		})
 
 	const defaultValues = {
 		id: article.id,
@@ -128,7 +130,12 @@ const ArticleDetailsPage = ({
 					<TextAreaInput name='content' rows={5} />
 
 					<div className='flex gap-4'>
-						<Button variant='outlined' className='w-fit text-gray-200'>
+						<Button
+							type='submit'
+							variant='outlined'
+							isLoading={isUpdateLoading}
+							className='w-fit text-gray-200'
+						>
 							Update <CreateIcon className='text-lg text-white' />
 						</Button>
 						<Button
@@ -147,6 +154,7 @@ const ArticleDetailsPage = ({
 					<div className='flex gap-4'>
 						<Button
 							variant='filled'
+							isLoading={isDeleteLoading}
 							onClick={() => deleteArticle({id: article.id})}
 							className='bg-gray-200 text-red-500 hover:bg-red-500 hover:text-gray-200'
 						>

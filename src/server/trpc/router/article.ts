@@ -35,7 +35,7 @@ export const articleRouter = router({
 				})
 				.then(async (updated) => {
 					const response = await revalidate('article', updated.slug)
-					console.log('trpc >>>', response)
+					console.log('json >>>', response)
 					return updated
 				})
 

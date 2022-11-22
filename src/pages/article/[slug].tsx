@@ -5,7 +5,6 @@ import {useRouter} from 'next/router'
 import {prisma} from '@server/db/client'
 import {trpc} from '@utils/trpc'
 import {extractIdFromSlug} from '@server/utils/route'
-import {capFirstChar} from '@utils/literal'
 
 import PlainLayout from 'layouts/plain'
 import GlassContainerLayout from 'layouts/glass-container'
@@ -26,11 +25,8 @@ type ArticleSimplifiedType = Omit<ArticleType, 'createdAt' | 'updatedAt'>
 
 import {SubmitErrorHandler, useForm, type SubmitHandler} from 'react-hook-form'
 import {zodResolver} from '@hookform/resolvers/zod'
-import {ErrorMessage} from '@hookform/error-message'
-
-type InputProps = React.TextareaHTMLAttributes<HTMLTextAreaElement> & {
-	name: keyof UpdateArticleType
-}
+import FormWrapper from '@components/form'
+import TextAreaInput from '@components/textarea-input'
 
 export const getStaticProps: GetStaticProps<{
 	article: ArticleSimplifiedType
@@ -97,12 +93,7 @@ const ArticleDetailsPage = ({
 		content: article.content,
 	}
 
-	const {
-		register,
-		reset,
-		handleSubmit,
-		formState: {errors},
-	} = useForm<UpdateArticleType>({
+	const methods = useForm<UpdateArticleType>({
 		resolver: zodResolver(UpdateArticleSchema),
 		defaultValues,
 	})
@@ -111,38 +102,23 @@ const ArticleDetailsPage = ({
 		updateArticle(data)
 	}
 
-	const Input = ({name, ...props}: InputProps) => {
-		return (
-			<div className='flex flex-col'>
-				<label htmlFor={name} className='text-gray-50'>
-					{capFirstChar(name)}
-				</label>
-				<textarea
-					id={name}
-					className='rounded py-2 px-4 outline-violet-500'
-					{...register(name)}
-					{...props}
-				/>
-				<ErrorMessage
-					name={name}
-					errors={errors}
-					render={({message}) => (
-						<small className='font-medium text-red-500'>{message}</small>
-					)}
-				/>
-			</div>
-		)
+	const onCancel = () => {
+		methods.reset()
+		setIsEdit(false)
 	}
 
 	return (
 		<div className='space-y-8'>
 			{isEdit ? (
-				<form
-					onSubmit={handleSubmit(onValid, onInvalid)}
+				<FormWrapper
+					methods={methods}
+					onValid={onValid}
+					onInvalid={onInvalid}
 					className='col-span-full flex flex-col gap-4 md:col-span-2'
 				>
-					<Input name='title' />
-					<Input name='content' rows={5} />
+					<TextAreaInput name='title' />
+					<TextAreaInput name='content' rows={5} />
+
 					<div className='flex gap-4'>
 						<Button variant='outlined' className='w-fit text-gray-200'>
 							Update <CreateIcon className='text-lg text-white' />
@@ -150,15 +126,12 @@ const ArticleDetailsPage = ({
 						<Button
 							variant='outlined'
 							className='w-fit text-gray-200'
-							onClick={() => {
-								reset()
-								setIsEdit(false)
-							}}
+							onClick={() => onCancel()}
 						>
 							Cancel <CancelIcon className='text-lg text-white' />
 						</Button>
 					</div>
-				</form>
+				</FormWrapper>
 			) : (
 				<>
 					<h1 className='text-3xl text-gray-50'>{article.title}</h1>

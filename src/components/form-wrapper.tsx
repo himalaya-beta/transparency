@@ -10,11 +10,13 @@ type Props<T extends FieldValues> = {
 	className: string
 	children: React.ReactNode
 	methods: UseFormReturn<T>
-	onValid: SubmitHandler<T>
-	onInvalid?: SubmitErrorHandler<T>
+	onValidSubmit: SubmitHandler<T>
+	onInvalidSubmit?: SubmitErrorHandler<T>
 }
 
-const defaultOnValid: SubmitErrorHandler<Record<any, any>> = (error) => {
+const defaultOnInValidSubmit: SubmitErrorHandler<Record<any, any>> = (
+	error
+) => {
 	console.log(error)
 }
 
@@ -22,13 +24,13 @@ const FormWrapper = <T extends FieldValues>({
 	children,
 	className,
 	methods,
-	onValid,
-	onInvalid = defaultOnValid,
+	onValidSubmit,
+	onInvalidSubmit = defaultOnInValidSubmit,
 }: Props<T>) => {
 	return (
 		<FormProvider {...methods}>
 			<form
-				onSubmit={methods.handleSubmit(onValid, onInvalid)}
+				onSubmit={methods.handleSubmit(onValidSubmit, onInvalidSubmit)}
 				className={className}
 			>
 				{children}

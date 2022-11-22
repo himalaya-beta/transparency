@@ -28,11 +28,7 @@ import {
 // cannot send date format (createdAt & updatedAt)
 type ArticleSimplifiedType = Omit<ArticleType, 'createdAt' | 'updatedAt'>
 
-import {
-	useForm,
-	type SubmitHandler,
-	type SubmitErrorHandler,
-} from 'react-hook-form'
+import {useForm, type SubmitHandler} from 'react-hook-form'
 import {zodResolver} from '@hookform/resolvers/zod'
 import FormWrapper from '@components/form-wrapper'
 import TextAreaInput from '@components/textarea-input'
@@ -104,7 +100,7 @@ const ArticleDetailsPage = ({
 		defaultValues,
 	})
 
-	const onValid: SubmitHandler<UpdateArticleType> = (data) => {
+	const onValidSubmit: SubmitHandler<UpdateArticleType> = (data) => {
 		updateArticle(data)
 	}
 
@@ -118,7 +114,7 @@ const ArticleDetailsPage = ({
 			{isEdit ? (
 				<FormWrapper
 					methods={methods}
-					onValid={onValid}
+					onValidSubmit={onValidSubmit}
 					className='col-span-full flex flex-col gap-4 md:col-span-2'
 				>
 					<TextAreaInput name='title' />

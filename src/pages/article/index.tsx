@@ -6,11 +6,7 @@ import PlainLayout from 'layouts/nav-top'
 import GlassContainerLayout from 'layouts/glass-container'
 import QueryWrapper from '@components/query-wrapper'
 
-import {
-	useForm,
-	type SubmitHandler,
-	type SubmitErrorHandler,
-} from 'react-hook-form'
+import {useForm, type SubmitHandler} from 'react-hook-form'
 import {zodResolver} from '@hookform/resolvers/zod'
 
 import FormWrapper from '@components/form-wrapper'
@@ -72,7 +68,7 @@ const CreateArticleForm = ({refetchList}: {refetchList: () => void}) => {
 		},
 	})
 
-	const onValid: SubmitHandler<CreateArticleType> = (data) => {
+	const onValidSubmit: SubmitHandler<CreateArticleType> = (data) => {
 		mutate(data)
 	}
 
@@ -80,7 +76,7 @@ const CreateArticleForm = ({refetchList}: {refetchList: () => void}) => {
 		<div className='grid grid-cols-4'>
 			<FormWrapper
 				methods={methods}
-				onValid={onValid}
+				onValidSubmit={onValidSubmit}
 				className='col-span-full flex flex-col gap-4 md:col-span-2'
 			>
 				<TextAreaInput name='title' />

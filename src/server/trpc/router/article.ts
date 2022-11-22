@@ -1,7 +1,7 @@
 import {z} from 'zod'
 
 import {router, publicProcedure} from '../trpc'
-import {revalidate, slugify} from '@server/utils/page'
+import {revalidate, slugify} from '@server/utils/route'
 
 import {CreateArticleSchema, UpdateArticleSchema} from 'types/article'
 

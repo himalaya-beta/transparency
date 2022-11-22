@@ -4,7 +4,7 @@ import {useRouter} from 'next/router'
 
 import {prisma} from '@server/db/client'
 import {trpc} from '@utils/trpc'
-import {extractIdFromSlug} from '@server/utils/page'
+import {extractIdFromSlug} from '@server/utils/route'
 import {capFirstChar} from '@utils/literal'
 
 import PlainLayout from 'layouts/plain'

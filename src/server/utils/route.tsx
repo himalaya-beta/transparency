@@ -15,6 +15,7 @@ export async function revalidate(
 			path: `/${page}/${urlParam ?? ''}`,
 		}),
 	}).then((response) => {
+		console.log('util >>>', response)
 		return response.json()
 	})
 }

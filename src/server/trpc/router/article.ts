@@ -24,7 +24,7 @@ export const articleRouter = router({
 			})
 		}),
 	update: publicProcedure.input(UpdateArticleSchema).mutation(
-		({ctx, input}) =>
+		async ({ctx, input}) =>
 			ctx.prisma.article
 				.update({
 					where: {id: input.id},
@@ -35,7 +35,7 @@ export const articleRouter = router({
 				})
 				.then(async (updated) => {
 					const response = await revalidate('article', updated.slug)
-					console.log(response)
+					console.log('trpc >>>', response)
 					return updated
 				})
 

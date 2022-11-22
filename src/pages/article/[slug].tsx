@@ -56,6 +56,7 @@ export const getStaticProps: GetStaticProps<{
 		props: {
 			article,
 		},
+		revalidate: 60,
 	}
 }
 

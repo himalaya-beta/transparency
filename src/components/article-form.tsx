@@ -8,13 +8,10 @@ import {capFirstChar} from '@utils/literal'
 import {ButtonOutlined} from '@components/button'
 import {MdCreate as Create} from 'react-icons/md'
 
-import {
-	createArticleInputSchema,
-	type CreateArticleInputType,
-} from '@type/article'
+import {CreateArticleSchema, type CreateArticleType} from '@type/article'
 
 type InputProps = React.TextareaHTMLAttributes<HTMLTextAreaElement> & {
-	name: keyof CreateArticleInputType
+	name: keyof CreateArticleType
 }
 
 const CreateArticleForm = () => {
@@ -23,9 +20,9 @@ const CreateArticleForm = () => {
 		reset,
 		handleSubmit,
 		formState: {errors},
-	} = useForm<CreateArticleInputType>({
+	} = useForm<CreateArticleType>({
 		mode: 'onTouched',
-		resolver: zodResolver(createArticleInputSchema),
+		resolver: zodResolver(CreateArticleSchema),
 	})
 
 	const {mutate} = trpc.article.create.useMutation({
@@ -38,7 +35,7 @@ const CreateArticleForm = () => {
 		},
 	})
 
-	const onSubmit: SubmitHandler<CreateArticleInputType> = (data) => {
+	const onSubmit: SubmitHandler<CreateArticleType> = (data) => {
 		mutate(data)
 	}
 

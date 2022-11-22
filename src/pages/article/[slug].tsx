@@ -18,8 +18,8 @@ import {
 } from 'react-icons/md'
 
 import {
-	updateArticleInputSchema,
-	type UpdateArticleInputType,
+	UpdateArticleSchema,
+	type UpdateArticleType,
 	type ArticleType,
 } from '@type/article'
 type ArticleSimplifiedType = Omit<ArticleType, 'createdAt' | 'updatedAt'>
@@ -29,7 +29,7 @@ import {zodResolver} from '@hookform/resolvers/zod'
 import {ErrorMessage} from '@hookform/error-message'
 
 type InputProps = React.TextareaHTMLAttributes<HTMLTextAreaElement> & {
-	name: keyof UpdateArticleInputType
+	name: keyof UpdateArticleType
 }
 
 export const getStaticProps: GetStaticProps<{
@@ -69,7 +69,7 @@ export const getStaticPaths: GetStaticPaths = async () => {
 	}
 }
 
-const onInvalid: SubmitErrorHandler<UpdateArticleInputType> = (error) => {
+const onInvalid: SubmitErrorHandler<UpdateArticleType> = (error) => {
 	console.log(error)
 }
 
@@ -102,12 +102,12 @@ const ArticleDetailsPage = ({
 		reset,
 		handleSubmit,
 		formState: {errors},
-	} = useForm<UpdateArticleInputType>({
-		resolver: zodResolver(updateArticleInputSchema),
+	} = useForm<UpdateArticleType>({
+		resolver: zodResolver(UpdateArticleSchema),
 		defaultValues,
 	})
 
-	const onValid: SubmitHandler<UpdateArticleInputType> = (data) => {
+	const onValid: SubmitHandler<UpdateArticleType> = (data) => {
 		updateArticle(data)
 	}
 

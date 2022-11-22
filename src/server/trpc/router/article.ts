@@ -3,7 +3,7 @@ import {z} from 'zod'
 import {router, publicProcedure} from '../trpc'
 import {revalidate, slugify} from '@server/utils/page'
 
-import {createArticleInputSchema, updateArticleInputSchema} from 'types/article'
+import {CreateArticleSchema, UpdateArticleSchema} from 'types/article'
 
 const requiredIdSchema = z.object({id: z.string()})
 
@@ -15,7 +15,7 @@ export const articleRouter = router({
 			ctx.prisma.article.findUnique({where: {id: input.id}})
 		),
 	create: publicProcedure
-		.input(createArticleInputSchema)
+		.input(CreateArticleSchema)
 		.mutation(async ({ctx, input}) =>
 			ctx.prisma.article
 				.create({
@@ -30,7 +30,7 @@ export const articleRouter = router({
 					})
 				)
 		),
-	update: publicProcedure.input(updateArticleInputSchema).mutation(
+	update: publicProcedure.input(UpdateArticleSchema).mutation(
 		async ({ctx, input}) =>
 			ctx.prisma.article
 				.update({

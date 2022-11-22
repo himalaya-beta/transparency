@@ -34,7 +34,8 @@ export const articleRouter = router({
 					},
 				})
 				.then(async (updated) => {
-					await revalidate('article', updated.slug)
+					const response = await revalidate('article', updated.slug)
+					console.log(response)
 					return updated
 				})
 

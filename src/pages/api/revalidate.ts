@@ -21,8 +21,9 @@ export default async function handler(
 	}
 
 	try {
-		await res.revalidate(body.path)
 		console.log('[REVALIDATE]', body.path)
+		const response = await res.revalidate(body.path)
+		console.log(response)
 		return res.status(200).json({...defaultRes, revalidated: true})
 	} catch (error) {
 		console.log('[REVALIDATE]', error)

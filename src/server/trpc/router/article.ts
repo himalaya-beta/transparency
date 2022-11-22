@@ -1,3 +1,4 @@
+import cuid from 'cuid'
 import {z} from 'zod'
 
 import {router, publicProcedure} from '../trpc'
@@ -16,22 +17,14 @@ export const articleRouter = router({
 		),
 	create: publicProcedure
 		.input(CreateArticleSchema)
-		.mutation(async ({ctx, input}) =>
-			ctx.prisma.article
-				.create({
-					data: {...input, slug: slugify(input.title)},
-				})
-				.then(({id, title}) =>
-					ctx.prisma.article.update({
-						where: {id},
-						data: {
-							slug: slugify(title, id),
-						},
-					})
-				)
-		),
+		.mutation(({ctx, input}) => {
+			const id = cuid()
+			return ctx.prisma.article.create({
+				data: {...input, id, slug: slugify(input.title, id)},
+			})
+		}),
 	update: publicProcedure.input(UpdateArticleSchema).mutation(
-		async ({ctx, input}) =>
+		({ctx, input}) =>
 			ctx.prisma.article
 				.update({
 					where: {id: input.id},

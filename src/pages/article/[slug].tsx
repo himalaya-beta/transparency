@@ -85,9 +85,8 @@ const ArticleDetailsPage = ({
 
 	const {mutate: updateArticle} = trpc.article.updateArticle.useMutation({
 		onError: (err) => alert(err.message),
-		onSuccess: (response) => {
-			alert(JSON.stringify(response))
-			router.push('/article')
+		onSuccess: () => {
+			router.reload()
 		},
 	})
 
@@ -95,7 +94,6 @@ const ArticleDetailsPage = ({
 		id: article.id,
 		title: article.title,
 		content: article.content,
-		oldSlug: article.slug,
 	}
 
 	const {
@@ -109,7 +107,7 @@ const ArticleDetailsPage = ({
 	})
 
 	const onValid: SubmitHandler<UpdateArticleInputType> = (data) => {
-		updateArticle({...data, oldSlug: article.slug})
+		updateArticle(data)
 	}
 
 	const Input = ({name, ...props}: InputProps) => {

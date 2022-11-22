@@ -14,12 +14,16 @@ type Props<T extends FieldValues> = {
 	onInvalid?: SubmitErrorHandler<T>
 }
 
+const defaultOnValid: SubmitErrorHandler<Record<any, any>> = (error) => {
+	console.log(error)
+}
+
 const FormWrapper = <T extends FieldValues>({
 	children,
 	className,
 	methods,
 	onValid,
-	onInvalid,
+	onInvalid = defaultOnValid,
 }: Props<T>) => {
 	return (
 		<FormProvider {...methods}>

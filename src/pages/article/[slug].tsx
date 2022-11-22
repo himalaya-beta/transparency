@@ -73,10 +73,6 @@ export const getStaticPaths: GetStaticPaths = async () => {
 	}
 }
 
-const onInvalid: SubmitErrorHandler<UpdateArticleType> = (error) => {
-	console.log(error)
-}
-
 const ArticleDetailsPage = ({
 	article,
 }: InferGetStaticPropsType<typeof getStaticProps>) => {
@@ -123,7 +119,6 @@ const ArticleDetailsPage = ({
 				<FormWrapper
 					methods={methods}
 					onValid={onValid}
-					onInvalid={onInvalid}
 					className='col-span-full flex flex-col gap-4 md:col-span-2'
 				>
 					<TextAreaInput name='title' />

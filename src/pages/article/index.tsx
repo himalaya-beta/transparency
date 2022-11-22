@@ -55,9 +55,6 @@ const Card = ({slug, title, content}: ArticleType) => {
 		</Link>
 	)
 }
-const onInvalid: SubmitErrorHandler<CreateArticleType> = (data) => {
-	console.log(data)
-}
 
 const CreateArticleForm = ({refetchList}: {refetchList: () => void}) => {
 	const methods = useForm<CreateArticleType>({
@@ -84,7 +81,6 @@ const CreateArticleForm = ({refetchList}: {refetchList: () => void}) => {
 			<FormWrapper
 				methods={methods}
 				onValid={onValid}
-				onInvalid={onInvalid}
 				className='col-span-full flex flex-col gap-4 md:col-span-2'
 			>
 				<TextAreaInput name='title' />

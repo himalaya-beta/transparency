@@ -14,4 +14,4 @@ export const updateArticleInputSchema = createArticleInputSchema.extend({
 
 export type UpdateArticleInputType = z.infer<typeof updateArticleInputSchema>
 
-export type ArticleType = Exclude<RouterOutputs['article']['getArticle'], null>
+export type ArticleType = Exclude<RouterOutputs['article']['fetchOne'], null>

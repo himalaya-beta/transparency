@@ -8,13 +8,13 @@ import {createArticleInputSchema, updateArticleInputSchema} from 'types/article'
 const requiredIdSchema = z.object({id: z.string()})
 
 export const articleRouter = router({
-	getArticles: publicProcedure.query(({ctx}) => ctx.prisma.article.findMany()),
-	getArticle: publicProcedure
+	fetchAll: publicProcedure.query(({ctx}) => ctx.prisma.article.findMany()),
+	fetchOne: publicProcedure
 		.input(requiredIdSchema)
 		.query(({ctx, input}) =>
 			ctx.prisma.article.findUnique({where: {id: input.id}})
 		),
-	createArticle: publicProcedure
+	create: publicProcedure
 		.input(createArticleInputSchema)
 		.mutation(async ({ctx, input}) =>
 			ctx.prisma.article
@@ -30,7 +30,7 @@ export const articleRouter = router({
 					})
 				)
 		),
-	updateArticle: publicProcedure.input(updateArticleInputSchema).mutation(
+	update: publicProcedure.input(updateArticleInputSchema).mutation(
 		async ({ctx, input}) =>
 			ctx.prisma.article
 				.update({
@@ -88,7 +88,7 @@ export const articleRouter = router({
 		// 	Promise.resolve(response)
 		// })
 	),
-	deleteArticle: publicProcedure
+	delete: publicProcedure
 		.input(requiredIdSchema)
 		.mutation(({ctx, input}) =>
 			ctx.prisma.article.delete({where: {id: input.id}})

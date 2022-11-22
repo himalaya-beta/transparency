@@ -28,7 +28,7 @@ const CreateArticleForm = () => {
 		resolver: zodResolver(createArticleInputSchema),
 	})
 
-	const {mutate} = trpc.article.createArticle.useMutation({
+	const {mutate} = trpc.article.create.useMutation({
 		onError: (error) => {
 			alert(JSON.stringify(error.message))
 		},

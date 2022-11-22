@@ -79,12 +79,12 @@ const ArticleDetailsPage = ({
 	const router = useRouter()
 	const [isEdit, setIsEdit] = React.useState(false)
 
-	const {mutate: deleteArticle} = trpc.article.deleteArticle.useMutation({
+	const {mutate: deleteArticle} = trpc.article.delete.useMutation({
 		onError: (err) => alert(err.message),
 		onSuccess: () => router.push('/article'),
 	})
 
-	const {mutate: updateArticle} = trpc.article.updateArticle.useMutation({
+	const {mutate: updateArticle} = trpc.article.update.useMutation({
 		onError: (err) => alert(err.message),
 		onSuccess: () => {
 			router.reload()

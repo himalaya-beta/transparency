@@ -10,7 +10,7 @@ import CreateArticleForm from '@components/article-form'
 import {ArticleType} from '@type/article'
 
 export default function ArticlePage() {
-	const articlesQuery = trpc.article.getArticles.useQuery()
+	const articlesQuery = trpc.article.fetchAll.useQuery()
 
 	return (
 		<div className='space-y-8'>

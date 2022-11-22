@@ -1,4 +1,5 @@
 import Link from 'next/link'
+import dayjs from 'dayjs'
 
 import {trpc} from '@utils/trpc'
 
@@ -40,13 +41,18 @@ export default function ArticlePage() {
 	)
 }
 
-const Card = ({slug, title, content}: ArticleType) => {
+const Card = ({slug, title, content, createdAt}: ArticleType) => {
 	return (
 		<Link
 			href={`./article/${slug}`}
-			className={`hover:glass max-h-72 space-y-4 rounded-lg border-2 border-white/25 bg-white/10 p-6 transition-colors`}
+			className={`hover:glass max-h-72 space-y-2 rounded-lg border-2 border-white/25 bg-white/10 p-6 transition-colors`}
 		>
-			<h2 className='text-xl text-gray-50'>{title}</h2>
+			<div className='flex flex-col'>
+				<h2 className='border-b-[1px] text-xl text-gray-50'>{title}</h2>
+				<time className='self-end border-t-2 text-sm text-gray-400'>
+					{dayjs(createdAt).format('MMM D, YYYY')}
+				</time>
+			</div>
 			<p className='text-gray-200 line-clamp-6'>{content}</p>
 		</Link>
 	)

@@ -3,13 +3,13 @@ import {useRouter} from 'next/router'
 import Link from 'next/link'
 
 import {capFirstChar} from '@utils/literal'
-import {MdArticle, MdHome} from 'react-icons/md'
+import {MdArticle as ArticleIcon, MdHome as HomeIcon} from 'react-icons/md'
 
 export default function PlainLayout({children}: {children: React.ReactNode}) {
 	const {pathname} = useRouter()
 	const routes = [
-		{href: '/', name: 'home', icon: <MdHome />},
-		{href: '/article', name: 'article', icon: <MdArticle />},
+		{href: '/', name: 'home', icon: <HomeIcon />},
+		{href: '/article', name: 'article', icon: <ArticleIcon />},
 	]
 
 	return (

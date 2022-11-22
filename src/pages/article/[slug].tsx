@@ -1,12 +1,16 @@
 import React from 'react'
-import {GetStaticPaths, GetStaticProps, InferGetStaticPropsType} from 'next'
 import {useRouter} from 'next/router'
+import {
+	type GetStaticPaths,
+	type GetStaticProps,
+	type InferGetStaticPropsType,
+} from 'next'
 
 import {prisma} from '@server/db/client'
 import {trpc} from '@utils/trpc'
 import {extractIdFromSlug} from '@server/utils/route'
 
-import PlainLayout from 'layouts/plain'
+import PlainLayout from 'layouts/nav-top'
 import GlassContainerLayout from 'layouts/glass-container'
 import Button from '@components/button'
 import {
@@ -21,11 +25,16 @@ import {
 	type UpdateArticleType,
 	type ArticleType,
 } from '@type/article'
+// cannot send date format (createdAt & updatedAt)
 type ArticleSimplifiedType = Omit<ArticleType, 'createdAt' | 'updatedAt'>
 
-import {SubmitErrorHandler, useForm, type SubmitHandler} from 'react-hook-form'
+import {
+	useForm,
+	type SubmitHandler,
+	type SubmitErrorHandler,
+} from 'react-hook-form'
 import {zodResolver} from '@hookform/resolvers/zod'
-import FormWrapper from '@components/form'
+import FormWrapper from '@components/form-wrapper'
 import TextAreaInput from '@components/textarea-input'
 
 export const getStaticProps: GetStaticProps<{
@@ -50,7 +59,6 @@ export const getStaticProps: GetStaticProps<{
 	return {
 		props: {
 			article,
-			// cannot send date on json :(
 		},
 	}
 }

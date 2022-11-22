@@ -1,7 +1,5 @@
 import {useState} from 'react'
-import type {NextPage} from 'next'
 import Head from 'next/head'
-
 import Tilt from 'react-parallax-tilt'
 
 import useDeviceDetect from '@utils/hooks/use-device-detect'
@@ -12,6 +10,8 @@ import MagnifyingGlass from '@images/magnifying-glass.svg'
 import PeopleGroup from '@images/people-group.svg'
 
 import animate from '@styles/index.module.scss'
+
+import {type NextPage} from 'next'
 
 const Home: NextPage = () => {
 	const {isMobile, isPhone} = useDeviceDetect()

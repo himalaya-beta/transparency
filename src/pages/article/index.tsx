@@ -2,11 +2,9 @@ import Link from 'next/link'
 
 import {trpc} from '@utils/trpc'
 
-import PlainLayout from 'layouts/plain'
+import PlainLayout from 'layouts/nav-top'
 import GlassContainerLayout from 'layouts/glass-container'
 import QueryWrapper from '@components/query-wrapper'
-
-import {ArticleType} from '@type/article'
 
 import {
 	useForm,
@@ -15,12 +13,16 @@ import {
 } from 'react-hook-form'
 import {zodResolver} from '@hookform/resolvers/zod'
 
-import FormWrapper from '@components/form'
+import FormWrapper from '@components/form-wrapper'
 import TextAreaInput from '@components/textarea-input'
 import Button from '@components/button'
-import {MdCreate as Create} from 'react-icons/md'
+import {MdCreate as CreateIcon} from 'react-icons/md'
 
-import {CreateArticleSchema, type CreateArticleType} from '@type/article'
+import {
+	CreateArticleSchema,
+	type CreateArticleType,
+	type ArticleType,
+} from '@type/article'
 
 export default function ArticlePage() {
 	const articlesQuery = trpc.article.fetchAll.useQuery()
@@ -91,7 +93,7 @@ const CreateArticleForm = () => {
 					variant='outlined'
 					className='w-fit text-gray-200'
 				>
-					Create <Create className='text-lg text-white' />
+					Create <CreateIcon className='text-lg text-white' />
 				</Button>
 			</FormWrapper>
 		</div>

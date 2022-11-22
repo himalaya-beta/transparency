@@ -15,8 +15,6 @@ export async function revalidate(
 			path: `/${page}/${urlParam ?? ''}`,
 		}),
 	}).then(async (response) => {
-		await fetch(`${BASE_URL}/${page}/${urlParam ?? ''}`)
-		console.log('resp >>>', response)
 		return response.json()
 	})
 }

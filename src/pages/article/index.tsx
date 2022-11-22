@@ -39,7 +39,7 @@ export default function ArticlePage() {
 					</div>
 				)}
 			</QueryWrapper>
-			<CreateArticleForm />
+			<CreateArticleForm refetchList={articlesQuery.refetch} />
 		</div>
 	)
 }
@@ -59,7 +59,7 @@ const onInvalid: SubmitErrorHandler<CreateArticleType> = (data) => {
 	console.log(data)
 }
 
-const CreateArticleForm = () => {
+const CreateArticleForm = ({refetchList}: {refetchList: () => void}) => {
 	const methods = useForm<CreateArticleType>({
 		mode: 'onTouched',
 		resolver: zodResolver(CreateArticleSchema),
@@ -70,6 +70,7 @@ const CreateArticleForm = () => {
 			alert(JSON.stringify(error.message))
 		},
 		onSuccess: () => {
+			refetchList()
 			methods.reset()
 		},
 	})

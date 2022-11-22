@@ -6,7 +6,7 @@ import Tilt from 'react-parallax-tilt'
 
 import useDeviceDetect from '@utils/hooks/use-device-detect'
 
-import {ButtonFilled, ButtonOutlined} from '@components/button'
+import Button from '@components/button'
 import TNC from '@components/svg/tnc'
 import MagnifyingGlass from '@images/magnifying-glass.svg'
 import PeopleGroup from '@images/people-group.svg'
@@ -134,7 +134,8 @@ const Home: NextPage = () => {
 								<div
 									className={`${animate.button} child:button-3d flex flex-col items-start gap-4 overflow-visible px-4 preserve-3d move-forth sm:flex-row sm:px-4 md:mt-4 md:px-0 xl:-ml-6`}
 								>
-									<ButtonOutlined
+									<Button
+										variant='outlined'
 										onClick={() => console.log('Join our community')}
 									>
 										Join our community
@@ -144,9 +145,12 @@ const Home: NextPage = () => {
 												className={`${animate.pingingA} absolute top-0 left-0`}
 											/>
 										</span>
-									</ButtonOutlined>
+									</Button>
 
-									<ButtonFilled onClick={() => console.log('Discover app')}>
+									<Button
+										variant='filled'
+										onClick={() => console.log('Discover app')}
+									>
 										Discover app
 										<span className='relative h-5 child:h-full child:fill-violet-200'>
 											<MagnifyingGlass />
@@ -154,7 +158,7 @@ const Home: NextPage = () => {
 												className={`${animate.pingingB} absolute top-0.5 left-0.5`}
 											/>
 										</span>
-									</ButtonFilled>
+									</Button>
 								</div>
 							</Tilt>
 

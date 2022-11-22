@@ -5,7 +5,7 @@ import {ErrorMessage} from '@hookform/error-message'
 import {trpc} from '@utils/trpc'
 import {capFirstChar} from '@utils/literal'
 
-import {ButtonOutlined} from '@components/button'
+import Button from '@components/button'
 import {MdCreate as Create} from 'react-icons/md'
 
 import {CreateArticleSchema, type CreateArticleType} from '@type/article'
@@ -70,9 +70,13 @@ const CreateArticleForm = () => {
 			>
 				<Input name='title' />
 				<Input name='content' rows={5} />
-				<ButtonOutlined className='w-fit text-gray-200' type='submit'>
+				<Button
+					variant='outlined'
+					className='w-fit text-gray-200'
+					type='submit'
+				>
 					Create <Create className='text-lg text-white' />
-				</ButtonOutlined>
+				</Button>
 			</form>
 		</div>
 	)

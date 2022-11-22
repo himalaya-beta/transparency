@@ -9,7 +9,7 @@ import {capFirstChar} from '@utils/literal'
 
 import PlainLayout from 'layouts/plain'
 import GlassContainerLayout from 'layouts/glass-container'
-import {ButtonFilled, ButtonOutlined} from '@components/button'
+import Button from '@components/button'
 import {
 	MdDelete as DeleteIcon,
 	MdUpdate as UpdateIcon,
@@ -144,10 +144,11 @@ const ArticleDetailsPage = ({
 					<Input name='title' />
 					<Input name='content' rows={5} />
 					<div className='flex gap-4'>
-						<ButtonOutlined className='w-fit text-gray-200'>
+						<Button variant='outlined' className='w-fit text-gray-200'>
 							Update <CreateIcon className='text-lg text-white' />
-						</ButtonOutlined>
-						<ButtonOutlined
+						</Button>
+						<Button
+							variant='outlined'
 							className='w-fit text-gray-200'
 							onClick={() => {
 								reset()
@@ -155,7 +156,7 @@ const ArticleDetailsPage = ({
 							}}
 						>
 							Cancel <CancelIcon className='text-lg text-white' />
-						</ButtonOutlined>
+						</Button>
 					</div>
 				</form>
 			) : (
@@ -163,18 +164,20 @@ const ArticleDetailsPage = ({
 					<h1 className='text-3xl text-gray-50'>{article.title}</h1>
 					<p className='text-white'>{article.content}</p>
 					<div className='flex gap-4'>
-						<ButtonFilled
+						<Button
+							variant='filled'
 							onClick={() => deleteArticle({id: article.id})}
 							className='bg-gray-200 text-red-500 hover:bg-red-500 hover:text-gray-200'
 						>
 							Delete <DeleteIcon />
-						</ButtonFilled>
-						<ButtonFilled
+						</Button>
+						<Button
+							variant='filled'
 							onClick={() => setIsEdit(true)}
 							className='bg-gray-200 text-violet-500 hover:bg-violet-500 hover:text-gray-200'
 						>
 							Update <UpdateIcon />
-						</ButtonFilled>
+						</Button>
 					</div>
 				</>
 			)}

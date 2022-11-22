@@ -26,7 +26,9 @@
 	.pb-safe {
 		padding-bottom: env(safe-area-inset-bottom);
 	}
+}
 
+@layer components {
 	.glass {
 		@apply border-2 border-white/10 bg-white bg-opacity-[0.15] shadow-lg shadow-white/40 backdrop-blur;
 	}

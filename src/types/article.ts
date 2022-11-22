@@ -10,6 +10,7 @@ export type CreateArticleInputType = z.infer<typeof createArticleInputSchema>
 
 export const updateArticleInputSchema = createArticleInputSchema.extend({
 	id: z.string(),
+	oldSlug: z.string(),
 })
 
 export type UpdateArticleInputType = z.infer<typeof updateArticleInputSchema>

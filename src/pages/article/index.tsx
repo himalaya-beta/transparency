@@ -66,7 +66,11 @@ const CreateArticleForm = ({refetchList}: {refetchList: () => void}) => {
 
 	const {mutate, isLoading} = trpc.article.create.useMutation({
 		onError: (error) => {
-			alert(JSON.stringify(error.message))
+			let message = error.message
+			if (error.data?.code === 'UNAUTHORIZED') {
+				message = 'You have to logged in to create article.'
+			}
+			alert(message)
 		},
 		onSuccess: () => {
 			refetchList()
@@ -79,11 +83,11 @@ const CreateArticleForm = ({refetchList}: {refetchList: () => void}) => {
 	}
 
 	return (
-		<div className='grid grid-cols-4'>
+		<div className='grid grid-cols-6'>
 			<FormWrapper
 				methods={methods}
 				onValidSubmit={onValidSubmit}
-				className='col-span-full flex flex-col gap-4 md:col-span-2'
+				className='col-span-full flex flex-col gap-4 md:col-span-4'
 			>
 				<TextAreaInput name='title' />
 				<TextAreaInput name='content' rows={5} />

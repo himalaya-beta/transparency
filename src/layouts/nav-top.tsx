@@ -1,14 +1,16 @@
 import React from 'react'
 import {useRouter} from 'next/router'
 import Link from 'next/link'
-import {useSession, signIn} from 'next-auth/react'
+import {useSession, signIn, signOut} from 'next-auth/react'
 import Image from 'next/image'
 
 import Button from '@components/button'
+import MenuButton from '@components/menu-button'
 import {
 	MdArticle as ArticleIcon,
 	MdHome as HomeIcon,
 	MdLogin as LoginIcon,
+	MdLogout as LogoutIcon,
 } from 'react-icons/md'
 
 import {capFirstChar} from '@utils/literal'
@@ -16,21 +18,24 @@ import {capFirstChar} from '@utils/literal'
 export default function PlainLayout({children}: {children: React.ReactNode}) {
 	const {pathname} = useRouter()
 	const routes = [
-		{href: '/', name: 'home', icon: <HomeIcon />},
-		{href: '/article', name: 'article', icon: <ArticleIcon />},
+		{href: '/', label: 'home', icon: <HomeIcon />},
+		{href: '/article', label: 'article', icon: <ArticleIcon />},
 	]
 
 	const {status, data} = useSession()
+	const menuItems = [
+		{label: 'Sign out', Icon: LogoutIcon, onClick: () => signOut()},
+	]
 
 	return (
 		<div className='min-h-screen bg-gradient-to-br from-purple-900 to-gray-900 '>
 			<div className='glass flex h-12 w-full items-center justify-between border-none  bg-opacity-30 shadow-sm'>
 				<div />
 				<nav className='flex h-fit gap-4'>
-					{routes.map(({href, name, icon}) => (
+					{routes.map(({href, label, icon}) => (
 						<Link
 							href={href}
-							key={name}
+							key={label}
 							className={`flex items-center gap-2 px-4 font-medium text-gray-50 ${
 								pathname === href
 									? 'pointer-events-none text-violet-300'
@@ -38,19 +43,21 @@ export default function PlainLayout({children}: {children: React.ReactNode}) {
 							}`}
 						>
 							<span className='text-xl'>{icon}</span>
-							<span>{capFirstChar(name)}</span>
+							<span>{capFirstChar(label)}</span>
 						</Link>
 					))}
 				</nav>
 				<div className='px-4'>
 					{status === 'authenticated' ? (
-						<Image
-							src={data.user?.image!}
-							alt='user picture'
-							width={32}
-							height={32}
-							className='rounded-full'
-						/>
+						<MenuButton menuItems={menuItems}>
+							<Image
+								src={data.user?.image!}
+								alt='user picture'
+								width={32}
+								height={32}
+								className='rounded-full'
+							/>
+						</MenuButton>
 					) : (
 						<Button
 							variant='filled'

@@ -1,7 +1,7 @@
 import cuid from 'cuid'
 import {z} from 'zod'
 
-import {router, publicProcedure} from '../trpc'
+import {router, publicProcedure, protectedProcedure} from '../trpc'
 import {revalidate, slugify} from '@server/utils/route'
 
 import {CreateArticleSchema, UpdateArticleSchema} from 'types/article'
@@ -15,7 +15,7 @@ export const articleRouter = router({
 		.query(({ctx, input}) =>
 			ctx.prisma.article.findUnique({where: {id: input.id}})
 		),
-	create: publicProcedure
+	create: protectedProcedure
 		.input(CreateArticleSchema)
 		.mutation(({ctx, input}) => {
 			const id = cuid()
@@ -23,7 +23,7 @@ export const articleRouter = router({
 				data: {...input, id, slug: slugify(input.title, id)},
 			})
 		}),
-	update: publicProcedure.input(UpdateArticleSchema).mutation(
+	update: protectedProcedure.input(UpdateArticleSchema).mutation(
 		async ({ctx, input}) =>
 			ctx.prisma.article
 				.update({
@@ -82,7 +82,7 @@ export const articleRouter = router({
 		// 	Promise.resolve(response)
 		// })
 	),
-	delete: publicProcedure
+	delete: protectedProcedure
 		.input(requiredIdSchema)
 		.mutation(({ctx, input}) =>
 			ctx.prisma.article.delete({where: {id: input.id}})

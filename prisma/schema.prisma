@@ -19,6 +19,8 @@ model Article {
     content   String   @db.Text
     createdAt DateTime @default(now())
     updatedAt DateTime @updatedAt
+    userId    String   @map("authorId")
+    user      User     @relation(fields: [userId], references: [id], map: "author")
 }
 
 // Necessary for Next auth
@@ -56,6 +58,7 @@ model User {
     image         String?
     accounts      Account[]
     sessions      Session[]
+    articles      Article[]
 }
 
 model VerificationToken {

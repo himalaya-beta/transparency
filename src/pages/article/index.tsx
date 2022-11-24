@@ -29,7 +29,7 @@ export default function ArticlePage() {
 			<h1 className='text-3xl text-gray-50'>Articles</h1>
 			<QueryWrapper {...articlesQuery}>
 				{(articles) => (
-					<div className='grid grid-cols-3 gap-4'>
+					<div className='grid grid-cols-6 gap-4'>
 						{articles.map((article) => (
 							<Card key={article.id} {...article} />
 						))}
@@ -45,7 +45,7 @@ const Card = ({slug, title, content, createdAt}: ArticleType) => {
 	return (
 		<Link
 			href={`./article/${slug}`}
-			className={`hover:glass max-h-96 space-y-2 overflow-hidden rounded-lg border-2 border-white/25 bg-white/10 p-6 transition-colors`}
+			className={`hover:glass col-span-full max-h-96 space-y-2 overflow-hidden rounded-lg border-2 border-white/25 bg-white/10 p-6 transition-colors md:col-span-3 lg:col-span-2`}
 		>
 			<div className='flex flex-col'>
 				<h2 className='border-b-[1px] pb-1 text-xl text-gray-50 line-clamp-2'>
@@ -89,7 +89,7 @@ const CreateArticleForm = ({refetchList}: {refetchList: () => void}) => {
 			<FormWrapper
 				methods={methods}
 				onValidSubmit={onValidSubmit}
-				className='col-span-full flex flex-col gap-4 md:col-span-4'
+				className='col-span-full flex flex-col gap-4 lg:col-span-4'
 			>
 				<TextAreaInput name='title' />
 				<TextAreaInput name='content' rows={5} />

@@ -7,7 +7,10 @@ import {trpc} from '@utils/trpc'
 import PlainLayout from 'layouts/nav-top'
 import GlassContainerLayout from 'layouts/glass-container'
 import QueryWrapper from '@components/query-wrapper'
-import {MdCreate as CreateIcon, MdStar as StarIcon} from 'react-icons/md'
+import {
+	MdCreate as CreateIcon,
+	//  MdStar as StarIcon
+} from 'react-icons/md'
 
 import {useForm, type SubmitHandler} from 'react-hook-form'
 import {zodResolver} from '@hookform/resolvers/zod'
@@ -52,7 +55,7 @@ const Card = ({slug, title, content, createdAt, author}: ArticleType) => {
 				<div className='absolute top-0 left-0'>
 					<div className='flex rounded-br-xl bg-black bg-opacity-20 shadow'>
 						<div className='flex w-16 items-center justify-center'>
-							<StarIcon className='text-sm text-yellow-300' />
+							{/* <StarIcon className='text-sm text-yellow-300' /> */}
 						</div>
 						<div className='py-0.5 px-4 text-sm text-white'>
 							<time className='text-sm text-gray-200'>

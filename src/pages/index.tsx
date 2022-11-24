@@ -1,11 +1,10 @@
 import {useState} from 'react'
 import Head from 'next/head'
-import Link from 'next/link'
 import Tilt from 'react-parallax-tilt'
 
 import useDeviceDetect from '@utils/hooks/use-device-detect'
 
-import Button from '@components/button'
+import Button, {LinkButton} from '@components/button'
 import TNC from '@components/svg/tnc'
 import MagnifyingGlass from '@images/magnifying-glass.svg'
 import PeopleGroup from '@images/people-group.svg'
@@ -150,17 +149,15 @@ const Home: NextPage = () => {
 										</span>
 									</Button>
 
-									<Link href='/article'>
-										<Button variant='filled'>
-											Discover app
-											<span className='relative h-5 child:h-full child:fill-violet-200'>
-												<MagnifyingGlass />
-												<MagnifyingGlass
-													className={`${animate.pingingB} absolute top-0.5 left-0.5`}
-												/>
-											</span>
-										</Button>
-									</Link>
+									<LinkButton variant='filled' href='/article'>
+										Discover app
+										<span className='relative h-5 child:h-full child:fill-violet-200'>
+											<MagnifyingGlass />
+											<MagnifyingGlass
+												className={`${animate.pingingB} absolute top-0.5 left-0.5`}
+											/>
+										</span>
+									</LinkButton>
 								</div>
 							</Tilt>
 

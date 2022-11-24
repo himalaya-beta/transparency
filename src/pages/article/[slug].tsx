@@ -25,8 +25,6 @@ import {
 	type UpdateArticleType,
 	type ArticleType,
 } from '@type/article'
-// cannot send date format (createdAt & updatedAt)
-type ArticleSimplifiedType = Omit<ArticleType, 'createdAt' | 'updatedAt'>
 
 import {useForm, type SubmitHandler} from 'react-hook-form'
 import {zodResolver} from '@hookform/resolvers/zod'
@@ -34,7 +32,7 @@ import FormWrapper from '@components/form-wrapper'
 import TextAreaInput from '@components/textarea-input'
 
 export const getStaticProps: GetStaticProps<{
-	article: ArticleSimplifiedType
+	article: ArticleType
 }> = async ({params}) => {
 	if (!params?.slug) return {notFound: true}
 
@@ -42,12 +40,7 @@ export const getStaticProps: GetStaticProps<{
 
 	const article = await prisma.article.findUnique({
 		where: {id},
-		select: {
-			id: true,
-			slug: true,
-			title: true,
-			content: true,
-		},
+		include: {author: {select: {name: true, image: true}}},
 	})
 
 	if (!article) return {notFound: true}

@@ -30,7 +30,7 @@ export default function PlainLayout({children}: {children: React.ReactNode}) {
 
 	return (
 		<div className='min-h-screen bg-gradient-to-br from-purple-900 to-gray-900 '>
-			<div className='glass flex h-12 w-full items-center justify-between border-none  bg-opacity-30 shadow-sm'>
+			<div className='glass flex h-12 w-full items-center justify-between border-t-0 bg-opacity-30 shadow-sm'>
 				<div />
 				<nav className='flex h-fit gap-4'>
 					{routes.map(({href, label, icon}) => (

@@ -19,7 +19,7 @@ const TextAreaInput = ({name, ...props}: InputProps) => {
 			</label>
 			<textarea
 				id={name}
-				className='rounded py-2 px-4 outline-violet-500'
+				className='rounded bg-gray-200/75 py-2 px-4 outline-violet-500'
 				{...register(name)}
 				{...props}
 			/>

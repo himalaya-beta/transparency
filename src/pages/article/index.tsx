@@ -1,4 +1,5 @@
 import Link from 'next/link'
+import Image from 'next/image'
 import dayjs from 'dayjs'
 
 import {trpc} from '@utils/trpc'
@@ -6,6 +7,7 @@ import {trpc} from '@utils/trpc'
 import PlainLayout from 'layouts/nav-top'
 import GlassContainerLayout from 'layouts/glass-container'
 import QueryWrapper from '@components/query-wrapper'
+import {MdCreate as CreateIcon, MdStar as StarIcon} from 'react-icons/md'
 
 import {useForm, type SubmitHandler} from 'react-hook-form'
 import {zodResolver} from '@hookform/resolvers/zod'
@@ -13,7 +15,6 @@ import {zodResolver} from '@hookform/resolvers/zod'
 import FormWrapper from '@components/form-wrapper'
 import TextAreaInput from '@components/textarea-input'
 import Button from '@components/button'
-import {MdCreate as CreateIcon} from 'react-icons/md'
 
 import {
 	CreateArticleSchema,
@@ -41,21 +42,41 @@ export default function ArticlePage() {
 	)
 }
 
-const Card = ({slug, title, content, createdAt}: ArticleType) => {
+const Card = ({slug, title, content, createdAt, author}: ArticleType) => {
 	return (
 		<Link
 			href={`./article/${slug}`}
-			className={`hover:glass col-span-full max-h-96 space-y-2 overflow-hidden rounded-lg border-2 border-white/25 bg-white/10 p-6 transition-colors md:col-span-3 lg:col-span-2`}
+			className={`hover:glass relative col-span-full max-h-96 overflow-hidden rounded rounded-br-3xl rounded-tl-2xl border-2 border-white/25 bg-white/10 p-6 pt-0 duration-100 md:col-span-3 lg:col-span-2`}
 		>
-			<div className='flex flex-col'>
-				<h2 className='border-b-[1px] pb-1 text-xl text-gray-50 line-clamp-2'>
-					{title}
-				</h2>
-				<time className='self-end border-t-2 pl-1 text-sm text-gray-200'>
-					{dayjs(createdAt).format('MMM D, YYYY')}
-				</time>
+			{author.image && (
+				<div className='absolute top-0 left-0'>
+					<div className='flex rounded-br-xl bg-black bg-opacity-20 shadow'>
+						<div className='flex w-16 items-center justify-center'>
+							<StarIcon className='text-sm text-yellow-300' />
+						</div>
+						<div className='py-0.5 px-4 text-sm text-white'>
+							<time className='text-sm text-gray-200'>
+								{dayjs(createdAt).format('MMM D, YYYY')}
+							</time>
+						</div>
+					</div>
+					<div className='h-16 w-16 rounded-br-xl bg-black bg-opacity-20 shadow-xl'>
+						<Image
+							className='rounded-tl-lg rounded-br-xl'
+							src={author.image}
+							alt='author picture'
+							width={96}
+							height={96}
+						/>
+					</div>
+				</div>
+			)}
+			<div className='mt-7 min-h-[3.5rem] w-full text-xl text-gray-50'>
+				<div className='float-left mr-2 h-12 w-12' />
+				<h2 className='line-clamp-2'>{title}</h2>
 			</div>
-			<p className='text-gray-200 line-clamp-6'>{content}</p>
+
+			<p className='mt-6 text-gray-200 line-clamp-6'>{content}</p>
 		</Link>
 	)
 }

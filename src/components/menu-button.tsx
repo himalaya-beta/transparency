@@ -1,7 +1,6 @@
 import {Menu, Transition} from '@headlessui/react'
 import React, {Fragment} from 'react'
 import {IconType} from 'react-icons/lib'
-import {MdDelete} from 'react-icons/md'
 
 type ItemType = {
 	label: string

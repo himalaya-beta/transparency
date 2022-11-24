@@ -87,6 +87,7 @@ const ArticleDetailsPage = ({
 		id: article.id,
 		title: article.title,
 		content: article.content,
+		authorId: article.authorId,
 	}
 
 	const methods = useForm<UpdateArticleType>({
@@ -140,7 +141,7 @@ const ArticleDetailsPage = ({
 						<Button
 							variant='filled'
 							isLoading={isDeleteLoading}
-							onClick={() => deleteArticle({id: article.id})}
+							onClick={() => deleteArticle(defaultValues)}
 							className='bg-gray-200 text-red-500 hover:bg-red-500 hover:text-gray-200'
 						>
 							Delete <DeleteIcon />

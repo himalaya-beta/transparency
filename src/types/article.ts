@@ -10,6 +10,7 @@ export type CreateArticleType = z.infer<typeof CreateArticleSchema>
 
 export const UpdateArticleSchema = CreateArticleSchema.extend({
 	id: z.string(),
+	authorId: z.string(),
 })
 
 export type UpdateArticleType = z.infer<typeof UpdateArticleSchema>

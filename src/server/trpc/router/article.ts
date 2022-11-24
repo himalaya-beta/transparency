@@ -5,8 +5,10 @@ import {router, publicProcedure, protectedProcedure} from '../trpc'
 import {revalidate, slugify} from '@server/utils/route'
 
 import {CreateArticleSchema, UpdateArticleSchema} from 'types/article'
+import {TRPCError} from '@trpc/server'
 
 const requiredIdSchema = z.object({id: z.string()})
+const requiredIdAuthorIdSchema = requiredIdSchema.extend({authorId: z.string()})
 
 export const articleRouter = router({
 	fetchAll: publicProcedure.query(({ctx}) =>
@@ -34,8 +36,13 @@ export const articleRouter = router({
 			})
 		}),
 	update: protectedProcedure.input(UpdateArticleSchema).mutation(
-		async ({ctx, input}) =>
-			ctx.prisma.article
+		async ({ctx, input}) => {
+			if (ctx.session.user.id !== input.authorId)
+				throw new TRPCError({
+					code: 'FORBIDDEN',
+					message: 'You are not allowed to update this article',
+				})
+			return ctx.prisma.article
 				.update({
 					where: {id: input.id},
 					data: {
@@ -48,6 +55,7 @@ export const articleRouter = router({
 					console.log('json >>>', response)
 					return updated
 				})
+		}
 
 		// RETAIN PUBLISHED ARTICLE PATH WHILE UPDATING ITS CONTENT
 		// const fetchOldArticles = ctx.prisma.article.findMany({
@@ -93,8 +101,13 @@ export const articleRouter = router({
 		// })
 	),
 	delete: protectedProcedure
-		.input(requiredIdSchema)
-		.mutation(({ctx, input}) =>
-			ctx.prisma.article.delete({where: {id: input.id}})
-		),
+		.input(requiredIdAuthorIdSchema)
+		.mutation(({ctx, input}) => {
+			if (ctx.session.user.id !== input.authorId)
+				throw new TRPCError({
+					code: 'FORBIDDEN',
+					message: 'You are not allowed to delete this article',
+				})
+			return ctx.prisma.article.delete({where: {id: input.id}})
+		}),
 })

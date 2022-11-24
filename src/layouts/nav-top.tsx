@@ -11,6 +11,7 @@ import {
 	MdHome as HomeIcon,
 	MdLogin as LoginIcon,
 	MdLogout as LogoutIcon,
+	MdPerson as PersonIcon,
 } from 'react-icons/md'
 
 import {capFirstChar} from '@utils/literal'
@@ -50,13 +51,19 @@ export default function PlainLayout({children}: {children: React.ReactNode}) {
 				<div className='px-4'>
 					{status === 'authenticated' ? (
 						<MenuButton menuItems={menuItems}>
-							<Image
-								src={data.user?.image!}
-								alt='user picture'
-								width={32}
-								height={32}
-								className='rounded-full'
-							/>
+							{data.user?.image ? (
+								<Image
+									src={data.user.image}
+									alt='user picture'
+									width={32}
+									height={32}
+									className='rounded-full'
+								/>
+							) : (
+								<div className='h-8 w-8 rounded-full bg-white p-1'>
+									<PersonIcon className='h-full w-full text-violet-500' />
+								</div>
+							)}
 						</MenuButton>
 					) : (
 						<Button

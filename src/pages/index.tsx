@@ -105,7 +105,8 @@ const Home: NextPage = () => {
 									</Tilt>
 
 									<h2
-										className={`${animate.h2} whitespace-nowrap text-lg child:underline-offset-8 sm:text-center sm:text-xl md:-mt-4 md:text-left md:text-2xl xl:-mt-6`}
+										className={`whitespace-nowrap text-lg child:underline-offset-8 sm:text-center sm:text-xl md:-mt-4 md:text-left md:text-2xl xl:-mt-6`}
+										// className={`${animate.h2} whitespace-nowrap text-lg child:underline-offset-8 sm:text-center sm:text-xl md:-mt-4 md:text-left md:text-2xl xl:-mt-6`}
 									>
 										Search
 										<span className='underline decoration-pink-500 decoration-wavy'>
@@ -132,7 +133,8 @@ const Home: NextPage = () => {
 								</div>
 
 								<div
-									className={`${animate.button} child:button-3d flex flex-col items-start gap-4 overflow-visible px-4 preserve-3d move-forth sm:flex-row sm:px-4 md:mt-4 md:px-0 xl:-ml-6`}
+									className={`${animate.glassMain} ${animate.content} child:button-3d flex flex-col items-start gap-4 overflow-visible px-4 preserve-3d move-forth sm:flex-row sm:px-4 md:mt-4 md:px-0 xl:-ml-6`}
+									// className={`${animate.button} child:button-3d flex flex-col items-start gap-4 overflow-visible px-4 preserve-3d move-forth sm:flex-row sm:px-4 md:mt-4 md:px-0 xl:-ml-6`}
 								>
 									<Button
 										variant='outlined'

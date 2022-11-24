@@ -40,6 +40,9 @@ const config = withBundleAnalyzer({
 
     return config
   },
+  experimental: {
+    swcPlugins: [['next-superjson-plugin', {excluded: []}]],
+  },
 })
 
 export default config

@@ -14,9 +14,7 @@ type Props<T extends FieldValues> = {
 	onInvalidSubmit?: SubmitErrorHandler<T>
 }
 
-const defaultOnInValidSubmit: SubmitErrorHandler<Record<any, any>> = (
-	error
-) => {
+const defaultOnInValidSubmit: SubmitErrorHandler<FieldValues> = (error) => {
 	console.log(error)
 }
 

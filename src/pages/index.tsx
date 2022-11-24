@@ -100,7 +100,7 @@ const Home: NextPage = () => {
 
 									<Tilt reset={false} tiltMaxAngleY={30}>
 										<TNC
-											className={`${animate.tnc} mx-auto my-8 w-72 sm:my-16 sm:w-80 md:absolute md:opacity-0`}
+											className={`${animate.tnc} mx-auto my-8 w-72 sm:my-16 sm:w-80 md:absolute md:left-full md:opacity-0`}
 										/>
 									</Tilt>
 

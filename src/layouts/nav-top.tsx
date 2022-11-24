@@ -36,10 +36,9 @@ export default function PlainLayout({children}: {children: React.ReactNode}) {
 					{routes.map(({href, label, icon}, i) => {
 						const isActive = pathname === href
 						return (
-							<>
+							<React.Fragment key={label}>
 								<Link
 									href={href}
-									key={label}
 									className={`flex items-start gap-2 px-2 font-medium text-gray-50 ${
 										isActive ? 'pointer-events-none' : 'hover:underline'
 									}`}
@@ -62,7 +61,7 @@ export default function PlainLayout({children}: {children: React.ReactNode}) {
 										&bull;
 									</span>
 								)}
-							</>
+							</React.Fragment>
 						)
 					})}
 				</nav>

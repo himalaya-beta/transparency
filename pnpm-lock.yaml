@@ -3,6 +3,7 @@ lockfileVersion: 5.4
 specifiers:
   '@commitlint/cli': ^17.3.0
   '@commitlint/config-conventional': ^17.3.0
+  '@formkit/auto-animate': 1.0.0-beta.5
   '@headlessui/react': ^1.7.4
   '@hookform/error-message': ^2.0.1
   '@hookform/resolvers': ^2.9.10
@@ -52,6 +53,7 @@ specifiers:
   zod: ^3.19.1
 
 dependencies:
+  '@formkit/auto-animate': 1.0.0-beta.5
   '@headlessui/react': 1.7.4_biqbaboplfbrettd7655fr4n2y
   '@hookform/error-message': 2.0.1_aj3bhefp47i77oprn6nc6dps3i
   '@hookform/resolvers': 2.9.10_react-hook-form@7.39.5
@@ -1675,6 +1677,10 @@ packages:
     transitivePeerDependencies:
       - supports-color
     dev: true
+
+  /@formkit/auto-animate/1.0.0-beta.5:
+    resolution: {integrity: sha512-WoSwyhAZPOe6RB/IgicOtCHtrWwEpfKIZ/H/nxpKfnZL9CB6hhhBGU5bCdMRw7YpAUF2CDlQa+WWh+gCqz5lDg==}
+    dev: false
 
   /@gitmoji/commit-types/1.1.5:
     resolution: {integrity: sha512-8D3FZMRY+gtYpTcHG1SOGmm9CFqxNh6rI9xDoCydxHxnWgqInbdF3nk9gibW5gXA58Hf2cVcJaLEcGOKLRAtmw==}

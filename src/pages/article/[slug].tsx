@@ -30,6 +30,7 @@ import {useForm, type SubmitHandler} from 'react-hook-form'
 import {zodResolver} from '@hookform/resolvers/zod'
 import FormWrapper from '@components/form-wrapper'
 import TextAreaInput from '@components/textarea-input'
+import {useAutoAnimate} from '@formkit/auto-animate/react'
 
 export const getStaticProps: GetStaticProps<{
 	article: ArticleType
@@ -104,8 +105,10 @@ const ArticleDetailsPage = ({
 		setIsEdit(false)
 	}
 
+	const [toggleAnimation] = useAutoAnimate<HTMLDivElement>()
+
 	return (
-		<div className='space-y-8'>
+		<div className='space-y-8' ref={toggleAnimation}>
 			{isEdit ? (
 				<FormWrapper
 					methods={methods}
@@ -126,6 +129,7 @@ const ArticleDetailsPage = ({
 						</Button>
 						<Button
 							variant='outlined'
+							type='reset'
 							className='w-fit text-gray-200'
 							onClick={() => onCancel()}
 						>

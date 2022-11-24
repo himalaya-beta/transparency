@@ -26,7 +26,9 @@ import {
 } from '@type/article'
 
 export default function ArticlePage() {
-	const articlesQuery = trpc.article.fetchAll.useQuery()
+	const articlesQuery = trpc.article.fetchAll.useQuery(undefined, {
+		refetchOnMount: false,
+	})
 
 	return (
 		<div className='space-y-8'>
@@ -49,7 +51,7 @@ const Card = ({slug, title, content, createdAt, author}: ArticleType) => {
 	return (
 		<Link
 			href={`./article/${slug}`}
-			className={`hover:glass relative col-span-full max-h-96 overflow-hidden rounded rounded-br-3xl rounded-tl-2xl border-2 border-white/25 bg-white/10 p-6 pt-0 duration-100 md:col-span-3 lg:col-span-2`}
+			className={`hover:glass relative col-span-full h-72 overflow-hidden rounded rounded-br-3xl rounded-tl-2xl border-2 border-white/25 bg-white/10 p-6 pt-0 duration-100 md:col-span-3 lg:col-span-2`}
 		>
 			{author.image && (
 				<div className='absolute top-0 left-0'>

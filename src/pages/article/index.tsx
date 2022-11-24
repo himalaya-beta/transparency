@@ -110,6 +110,11 @@ const CreateArticleForm = ({refetchList}: {refetchList: () => void}) => {
 
 	return (
 		<div className='grid grid-cols-6'>
+			<div className='col-span-full flex items-center justify-center gap-4 lg:col-span-4'>
+				<div className='h-[1px] w-auto grow rounded-full bg-violet-200/50' />
+				<p className='w-fit text-gray-50'>Create New Article</p>
+				<div className='h-[1px] w-auto grow rounded-full bg-violet-200/50' />
+			</div>
 			<FormWrapper
 				methods={methods}
 				onValidSubmit={onValidSubmit}

@@ -31,8 +31,8 @@ export default function PlainLayout({children}: {children: React.ReactNode}) {
 	return (
 		<div className='min-h-screen bg-gradient-to-br from-purple-900 to-gray-900 '>
 			<div className='glass flex h-12 w-full items-center justify-between border-t-0 bg-opacity-30 pt-1 underline-offset-4 shadow-sm'>
-				<div />
-				<nav className='flex h-fit gap-4'>
+				<div className='w-12' />
+				<nav className='flex h-fit gap-1 md:gap-4'>
 					{routes.map(({href, label, icon}, i) => {
 						const isActive = pathname === href
 						return (
@@ -58,7 +58,9 @@ export default function PlainLayout({children}: {children: React.ReactNode}) {
 									</span>
 								</Link>
 								{i !== routes.length - 1 && (
-									<span className='text-white'>&bull;</span>
+									<span className='invisible text-white md:visible'>
+										&bull;
+									</span>
 								)}
 							</>
 						)

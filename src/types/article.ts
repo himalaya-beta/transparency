@@ -2,8 +2,8 @@ import {z} from 'zod'
 import {RouterOutputs} from '@utils/trpc'
 
 export const CreateArticleSchema = z.object({
-	title: z.string().min(1),
-	content: z.string().min(1),
+	title: z.string().min(40, 'Title is not long enough'),
+	content: z.string().min(200, 'Description is not long enough'),
 })
 
 export type CreateArticleType = z.infer<typeof CreateArticleSchema>

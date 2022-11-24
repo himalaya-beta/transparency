@@ -45,11 +45,13 @@ const Card = ({slug, title, content, createdAt}: ArticleType) => {
 	return (
 		<Link
 			href={`./article/${slug}`}
-			className={`hover:glass max-h-72 space-y-2 rounded-lg border-2 border-white/25 bg-white/10 p-6 transition-colors`}
+			className={`hover:glass max-h-96 space-y-2 overflow-hidden rounded-lg border-2 border-white/25 bg-white/10 p-6 transition-colors`}
 		>
 			<div className='flex flex-col'>
-				<h2 className='border-b-[1px] text-xl text-gray-50'>{title}</h2>
-				<time className='self-end border-t-2 text-sm text-gray-400'>
+				<h2 className='border-b-[1px] pb-1 text-xl text-gray-50 line-clamp-2'>
+					{title}
+				</h2>
+				<time className='self-end border-t-2 pl-1 text-sm text-gray-200'>
 					{dayjs(createdAt).format('MMM D, YYYY')}
 				</time>
 			</div>

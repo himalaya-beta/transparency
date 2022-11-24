@@ -9,18 +9,28 @@ import {CreateArticleSchema, UpdateArticleSchema} from 'types/article'
 const requiredIdSchema = z.object({id: z.string()})
 
 export const articleRouter = router({
-	fetchAll: publicProcedure.query(({ctx}) => ctx.prisma.article.findMany()),
-	fetchOne: publicProcedure
-		.input(requiredIdSchema)
-		.query(({ctx, input}) =>
-			ctx.prisma.article.findUnique({where: {id: input.id}})
-		),
+	fetchAll: publicProcedure.query(({ctx}) =>
+		ctx.prisma.article.findMany({
+			include: {author: {select: {name: true, image: true}}},
+		})
+	),
+	fetchOne: publicProcedure.input(requiredIdSchema).query(({ctx, input}) =>
+		ctx.prisma.article.findUnique({
+			where: {id: input.id},
+			include: {author: {select: {name: true, image: true}}},
+		})
+	),
 	create: protectedProcedure
 		.input(CreateArticleSchema)
 		.mutation(({ctx, input}) => {
 			const id = cuid()
 			return ctx.prisma.article.create({
-				data: {...input, id, slug: slugify(input.title, id)},
+				data: {
+					...input,
+					id,
+					slug: slugify(input.title, id),
+					authorId: ctx.session.user.id,
+				},
 			})
 		}),
 	update: protectedProcedure.input(UpdateArticleSchema).mutation(

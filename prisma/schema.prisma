@@ -19,8 +19,8 @@ model Article {
     content   String   @db.Text
     createdAt DateTime @default(now())
     updatedAt DateTime @updatedAt
-    userId    String   @map("authorId")
-    user      User     @relation(fields: [userId], references: [id], map: "author")
+    authorId  String
+    author    User     @relation(fields: [authorId], references: [id])
 }
 
 // Necessary for Next auth

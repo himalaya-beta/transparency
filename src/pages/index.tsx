@@ -2,14 +2,14 @@ import {useState} from 'react'
 import Head from 'next/head'
 import Tilt from 'react-parallax-tilt'
 
-import useDeviceDetect from '@utils/hooks/use-device-detect'
+import useDeviceDetect from 'utils/hooks/use-device-detect'
 
-import Button, {LinkButton} from '@components/button'
-import TNC from '@components/svg/tnc'
+import {LinkButton, Button} from 'components/button'
+import TNC from 'components/svg/tnc'
 import MagnifyingGlass from '@images/magnifying-glass.svg'
 import PeopleGroup from '@images/people-group.svg'
 
-import animate from '@styles/index.module.scss'
+import animate from 'styles/index.module.scss'
 
 import {type NextPage} from 'next'
 

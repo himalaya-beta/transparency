@@ -1,3 +1,4 @@
+import {decrypt, type encrypt} from 'server/utils/crypto'
 import {NextApiRequest, NextApiResponse} from 'next'
 
 export default async function handler(
@@ -9,23 +10,24 @@ export default async function handler(
 		error?: unknown
 	}>
 ) {
-	const body = JSON.parse(req.body)
-	const defaultRes = {revalidated: false, path: body.path}
+	const body = JSON.parse(req.body) as ReturnType<typeof encrypt>
+	const decryptedPath = decrypt(body)
 
+	const defaultRes = {revalidated: false, path: decryptedPath}
 	if (req.method !== 'POST') {
 		return res.status(400).json({...defaultRes, message: 'Invalid HTTP method'})
 	}
 
-	if (!body.path) {
+	if (!decryptedPath) {
 		return res.status(400).json({...defaultRes, message: 'Path required'})
 	}
 
 	try {
-		console.log('[REVALIDATE]', body.path)
-		await res.revalidate(body.path)
+		await res.revalidate(decryptedPath)
+		console.log('[REVALIDATE SUCCESS]', decryptedPath)
 		return res.status(200).json({...defaultRes, revalidated: true})
 	} catch (error) {
-		console.log('[REVALIDATE]', error)
+		console.log('[REVALIDATE ERROR]', error)
 		return res
 			.status(500)
 			.json({...defaultRes, message: 'Invalidation error', error})

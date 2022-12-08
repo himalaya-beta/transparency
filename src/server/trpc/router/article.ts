@@ -2,7 +2,7 @@ import cuid from 'cuid'
 import {z} from 'zod'
 
 import {router, publicProcedure, protectedProcedure} from '../trpc'
-import {revalidate, slugify} from '@server/utils/route'
+import {revalidate, slugify} from 'server/utils/route'
 
 import {CreateArticleSchema, UpdateArticleSchema} from 'types/article'
 import {TRPCError} from '@trpc/server'
@@ -35,8 +35,9 @@ export const articleRouter = router({
 				},
 			})
 		}),
-	update: protectedProcedure.input(UpdateArticleSchema).mutation(
-		async ({ctx, input}) => {
+	update: protectedProcedure
+		.input(UpdateArticleSchema)
+		.mutation(async ({ctx, input}) => {
 			if (ctx.session.user.id !== input.authorId)
 				throw new TRPCError({
 					code: 'FORBIDDEN',
@@ -51,55 +52,11 @@ export const articleRouter = router({
 					},
 				})
 				.then(async (updated) => {
-					const response = await revalidate('article', updated.slug)
-					console.log('json >>>', response)
+					// TODO: Revert update on revalidation error
+					await revalidate('article', updated.slug)
 					return updated
 				})
-		}
-
-		// RETAIN PUBLISHED ARTICLE PATH WHILE UPDATING ITS CONTENT
-		// const fetchOldArticles = ctx.prisma.article.findMany({
-		// 	where: {id},
-		// 	select: {slug: true},
-		// })
-
-		// const [updated, olds] = await Promise.all([
-		// 	updateCurrentArticle,
-		// 	fetchOldArticles,
-		// ]).then((data) => {
-		// 	console.log('Finish updating current article & fetching old articles')
-		// 	console.log('UPDATED >>>')
-		// 	console.log(data[0])
-		// 	console.log('OLDS >>>>>>')
-		// 	console.log(data[1])
-		// 	return data
-		// })
-
-		// const revalidation: RevalidationResponses = []
-		// if (updated.slug === oldSlug) {
-		// 	revalidation.push(revalidate('article', updated.slug))
-		// } else {
-		// 	for (const old of olds) {
-		// 		revalidation.push(revalidate('article', old.slug))
-		// 	}
-		// }
-
-		// const response = new Promise<{
-		// 	data: typeof updated
-		// 	revalidation: RevalidationResponses
-		// }>((resolve) => {
-		// 	resolve({
-		// 		data: updated,
-		// 		revalidation,
-		// 	})
-		// })
-
-		// Promise.all(revalidation).then((revalidated) => {
-		// 	console.log('Finish revalidate all related articles')
-		// 	console.log(revalidated)
-		// 	Promise.resolve(response)
-		// })
-	),
+		}),
 	delete: protectedProcedure
 		.input(requiredIdAuthorIdSchema)
 		.mutation(({ctx, input}) => {

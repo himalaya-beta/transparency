@@ -13,19 +13,18 @@
 	h4,
 	h5,
 	h6 {
-		@apply font-heading;
-		@apply font-bold;
+		@apply font-heading font-bold text-light-head;
 	}
 
 	p {
-		@apply font-body;
+		@apply font-body text-light-body;
 	}
 
 	a,
 	input,
 	textarea,
 	button {
-		@apply outline-violet-500;
+		@apply outline-brand-500;
 	}
 }
 

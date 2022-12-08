@@ -19,13 +19,13 @@ type CustomButtonProps = NativeButtonProps & Extension
 type LinkButtonProps = LinkProps & Extension
 
 const base =
-	'relative whitespace-nowrap text-light-head w-fit rounded-xl shadow-md transition ease-out focus:outline-none focus:ring-2 active:translate-y-2 active:shadow-md active:shadow-primary-lighter disabled:pointer-events-none disabled:border-gray-600 disabled:border-2 disabled:bg-gray-400'
+	'relative whitespace-nowrap text-light-head w-fit rounded-xl shadow-md transition ease-out focus:outline-none focus:ring-2 active:translate-y-2 active:shadow-md active:shadow-brand-400 disabled:pointer-events-none disabled:border-gray-600 disabled:border-2 disabled:bg-gray-400'
 
 const outlined =
-	'border-[0.2rem] border-primary-normal px-5 py-2 hover:border-secondary-lighter hover:bg-primary-darker hover:shadow-primary-lightest focus:border-secondary-normal focus:ring-bg-light active:bg-primary-darkest'
+	'border-[0.2rem] border-brand-600 px-5 py-2 hover:border-brand-100 hover:bg-brand-700 hover:shadow-brand-200 focus:border-brand-100 focus:ring-bg-light active:bg-brand-900'
 
 const filled =
-	'bg-primary-normal px-6 py-2.5 hover:bg-primary-lighter hover:text-primary-darkest hover:shadow-primary-lightest focus:ring-secondary-normal focus:ring-offset-2 active:bg-primary-lightest'
+	'bg-brand-500 px-6 py-2.5 hover:bg-brand-400 hover:text-brand-900 hover:shadow-brand-200 ring-brand-600 hover:ring ring-offset-2 active:bg-brand-300'
 
 function Children({
 	isLoading,

@@ -26,7 +26,7 @@ const Home: NextPage = () => {
 			</Head>
 
 			<main className=''>
-				<section className='relative h-screen overflow-hidden bg-gradient-to-br from-gray-900 via-purple-900 to-violet-600'>
+				<section className='relative h-screen overflow-hidden bg-gradient-to-br from-dark-bg via-purple-900 to-violet-600'>
 					<div className='absolute top-1/2 -translate-y-[50%] overflow-x-visible md:container md:left-1/2 md:max-w-screen-xl md:-translate-x-1/2 md:-translate-y-[55%]'>
 						<div className='mx-4 grid grid-cols-12 pb-8 md:mx-0'>
 							<Tilt
@@ -120,7 +120,7 @@ const Home: NextPage = () => {
 										<span className='text-pink-500'>!</span>
 									</h2>
 
-									<p className='ml-4 text-gray-300 sm:mx-4 sm:text-justify sm:text-base md:ml-0 md:min-w-[28rem] md:text-left lg:min-w-[33rem]'>
+									<p className='ml-4 sm:mx-4 sm:text-justify sm:text-base md:ml-0 md:min-w-[28rem] md:text-left lg:min-w-[33rem]'>
 										<span className='hidden sm:inline'>
 											No more getting abused by irresponsible companies who
 											force us to agree on something we don&apos;t want.&nbsp;

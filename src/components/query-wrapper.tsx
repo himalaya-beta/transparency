@@ -63,7 +63,7 @@ const QueryWrapper = <T,>({
 }
 
 const Loading = ({CustomLoading}: {CustomLoading?: JSX.Element}) =>
-	CustomLoading ?? <p className='text-gray-200'>Loading...</p>
+	CustomLoading ?? <p>Loading...</p>
 
 const Error = ({
 	error,
@@ -79,21 +79,18 @@ const Error = ({
 	) : (
 		<>
 			{error.data && (
-				<p className='text-gray-200'>
+				<p>
 					[{error.data.httpStatus}] {error.data.code} at {error.data.path}
 				</p>
 			)}
-			<pre className='text-gray-200'>{error.message}</pre>
-			<button
-				onClick={() => refetch()}
-				className='mt-2 rounded border px-2 text-gray-200'
-			>
+			<pre>{error.message}</pre>
+			<button onClick={() => refetch()} className='mt-2 rounded border px-2'>
 				Retry
 			</button>
 		</>
 	)
 
 const Empty = ({CustomEmpty}: {CustomEmpty?: JSX.Element}) =>
-	CustomEmpty ?? <p className='text-gray-200'>There is not data</p>
+	CustomEmpty ?? <p>There is not data</p>
 
 export default QueryWrapper

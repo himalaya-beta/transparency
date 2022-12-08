@@ -53,14 +53,14 @@ export default function MenuButton({
 										onClick={onClick}
 										className={`
 											group flex w-fit items-center whitespace-nowrap rounded-md px-2 py-2 text-sm
-											${active ? 'bg-primary-normal text-light-head' : 'text-dark-head'}
+											${active ? 'bg-brand-600 text-light-head' : 'text-dark-head'}
 											${itemClassName}
 										`}
 									>
 										<Icon
 											className={`
 												mr-2 h-5 w-5 
-												${active ? 'text-secondary-lighter' : 'text-secondary-darker'}
+												${active ? 'text-brand-100' : 'text-brand-700'}
 												${iconClassName}
 											`}
 											aria-hidden='true'

@@ -48,8 +48,8 @@ export default function NavbarTopLayout({
 	]
 
 	return (
-		<div className='to-bg-dark relative min-h-screen bg-gradient-to-br from-primary-darkest to-secondary-darkest'>
-			<div className='fixed bottom-0 z-10 flex w-full items-center justify-between border-t-0 bg-primary-darkest/50 bg-opacity-30 py-2 underline-offset-4 shadow-sm backdrop-blur-lg md:relative md:bg-inherit'>
+		<div className='to-bg-dark relative min-h-screen bg-gradient-to-br from-brand-900 to-brand-600'>
+			<div className='fixed bottom-0 z-10 flex w-full items-center justify-between border-t-0 bg-brand-900/50 bg-opacity-30 py-2 underline-offset-4 shadow-sm backdrop-blur-lg md:relative md:bg-inherit'>
 				<div className='w-12' />
 				<nav className='flex h-fit items-center gap-2'>
 					{routes.map(({href, label, Icon, IconActive}, i) => {
@@ -115,7 +115,7 @@ function AuthButton({className}: {className?: string}) {
 						/>
 					) : (
 						<div className='h-8 w-8 rounded-full bg-light-bg p-1'>
-							<UserIcon className='h-full w-full text-secondary-normal' />
+							<UserIcon className='h-full w-full text-brand-500' />
 						</div>
 					)}
 				</MenuButton>

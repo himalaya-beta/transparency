@@ -39,7 +39,7 @@ export default function ArticlePage() {
 				imageUrl={`https://${process.env.NEXT_PUBLIC_VERCEL_URL}/images/articles.jpg`}
 			/>
 			<main className='container mx-auto max-w-screen-lg space-y-8 px-8 pb-10 md:pb-8'>
-				<h1 className='text-3xl text-gray-50'>Articles</h1>
+				<h1 className='text-3xl'>Articles</h1>
 				<QueryWrapper {...articlesQuery}>
 					{(articles) => (
 						<div className='grid grid-cols-6 gap-4'>
@@ -88,7 +88,7 @@ const Card = ({slug, title, content, createdAt, author}: ArticleType) => {
 				{author.image && <div className='float-left mr-2 h-12 w-12' />}
 				<h2 className=''>{title}</h2>
 				<div className='mt-0.5 flex h-1 items-center gap-2'>
-					<div className='h-[1px] w-auto grow rounded-full bg-secondary-normal/50' />
+					<div className='h-[1px] w-auto grow rounded-full bg-brand-500/50' />
 					<Triangle className='' />
 				</div>
 			</div>
@@ -127,11 +127,11 @@ const CreateArticleForm = ({refetchList}: {refetchList: () => void}) => {
 	return (
 		<div className='space-y-2'>
 			<div className='flex items-center justify-center gap-4  text-light-head'>
-				<div className='h-[1px] w-auto grow rounded-full bg-secondary-normal/50' />
+				<div className='h-[1px] w-auto grow rounded-full bg-brand-500/50' />
 				<Triangle />
 				<p className='w-fit text-lg'>Create New Article</p>
 				<Triangle className='rotate-180' />
-				<div className='h-[1px] w-auto grow rounded-full bg-secondary-normal/50' />
+				<div className='h-[1px] w-auto grow rounded-full bg-brand-500/50' />
 			</div>
 			<div className='mx-auto lg:w-3/4 '>
 				<FormWrapper
@@ -157,7 +157,7 @@ const CreateArticleForm = ({refetchList}: {refetchList: () => void}) => {
 }
 
 const Triangle = ({className}: {className?: string}) => {
-	return <span className={`${className} text-secondary-lighter`}>⨞</span>
+	return <span className={`${className} text-brand-300`}>⨞</span>
 }
 
 ArticlePage.getLayout = function getLayout(page: React.ReactElement) {

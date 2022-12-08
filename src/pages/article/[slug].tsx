@@ -152,22 +152,22 @@ const ArticleDetailsPage = ({
 					</FormWrapper>
 				) : (
 					<>
-						<h1 className='text-3xl text-gray-50'>{article.title}</h1>
-						<p className='text-lg text-light-head'>{article.content}</p>
+						<h1 className='text-3xl'>{article.title}</h1>
+						<p className='text-lg '>{article.content}</p>
 						{status === 'authenticated' && (
 							<div className='flex gap-4'>
 								<Button
 									variant='filled'
 									isLoading={isDeleteLoading}
 									onClick={() => deleteArticle(defaultValues)}
-									className='bg-light-bg text-red-500 hover:bg-red-500 hover:text-light-head'
+									className='bg-light-bg text-red-500 hover:bg-red-500 hover:text-light-body'
 								>
 									Delete <TrashIcon className='h-4 w-4' />
 								</Button>
 								<Button
 									variant='filled'
 									onClick={() => setIsEdit(true)}
-									className='bg-light-bg text-violet-500 hover:bg-violet-500 hover:text-gray-200'
+									className='bg-light-bg text-violet-500 hover:bg-violet-500 hover:text-light-body'
 								>
 									Update <PencilSquareIcon className='h-4 w-4' />
 								</Button>

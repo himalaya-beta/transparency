@@ -48,7 +48,7 @@ export default function NavbarTopLayout({
 	]
 
 	return (
-		<div className='to-bg-dark relative min-h-screen bg-gradient-to-br from-brand-900 to-brand-600'>
+		<div className='to-bg-dark to-bg-brand relative min-h-screen bg-gradient-to-br from-brand-700 via-brand-900 to-dark-bg'>
 			<div className='fixed bottom-0 z-10 flex w-full items-center justify-between border-t-0 bg-brand-900/50 bg-opacity-30 py-2 underline-offset-4 shadow-sm backdrop-blur-lg md:relative md:bg-inherit'>
 				<div className='w-12' />
 				<nav className='flex h-fit items-center gap-2'>

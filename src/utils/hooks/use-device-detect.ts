@@ -5,8 +5,7 @@ export default function useDeviceDetect() {
 	const [isPhone, setIsPhone] = useState(true)
 
 	useEffect(() => {
-		const userAgent =
-			typeof window.navigator === 'undefined' ? '' : navigator.userAgent
+		const userAgent = window.navigator === undefined ? '' : navigator.userAgent
 		const mobile = Boolean(
 			/android|blackberry|iphone|ipad|ipod|opera mini|iemobile|wpdesktop/i.test(
 				userAgent

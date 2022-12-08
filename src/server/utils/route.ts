@@ -1,3 +1,5 @@
+import {encrypt} from './crypto'
+
 export const BASE_URL = process.env.VERCEL_URL
 	? `https://${process.env.VERCEL_URL}`
 	: 'http://localhost:3000'
@@ -9,14 +11,13 @@ export async function revalidate(
 	revalidated: boolean
 	path: string
 }> {
+	const encryptedPath = encrypt(`/${page}/${urlParam ?? ''}`)
+
 	return fetch(`${BASE_URL}/api/revalidate`, {
 		method: 'POST',
-		body: JSON.stringify({
-			path: `/${page}/${urlParam ?? ''}`,
-		}),
+		body: JSON.stringify(encryptedPath),
 	}).then(async (response) => {
 		await fetch(`${BASE_URL}/${page}/${urlParam ?? ''}`)
-		console.log('resp >>>', response)
 		return response.json()
 	})
 }

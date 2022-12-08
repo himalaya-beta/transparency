@@ -19,6 +19,14 @@ const config = withBundleAnalyzer({
    * Reference repo for i18n:
    * @see https://github.com/juliusmarminge/t3-i18n
    **/
+  images: {
+    remotePatterns: [
+      {
+        protocol: 'https',
+        hostname: '**.googleusercontent.com',
+      },
+    ],
+  },
   i18n: {
     locales: ['en'],
     defaultLocale: 'en',
@@ -31,6 +39,9 @@ const config = withBundleAnalyzer({
     })
 
     return config
+  },
+  experimental: {
+    swcPlugins: [['next-superjson-plugin', {excluded: []}]],
   },
 })
 

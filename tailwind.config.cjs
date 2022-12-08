@@ -1,7 +1,8 @@
+/* eslint-disable @typescript-eslint/no-var-requires */
 /** @type {import('tailwindcss').Config} */
 
-// eslint-disable-next-line @typescript-eslint/no-var-requires
 const plugin = require('tailwindcss/plugin')
+const colors = require('tailwindcss/colors')
 
 // import plugin from 'tailwindcss/plugin'
 
@@ -34,6 +35,29 @@ module.exports = {
 					-10px 0 80px #f0f,        /* outer left magenta */
 					10px 0 80px #0ff;         /* outer right cyan */
 				`,
+      },
+      colors: {
+        light: {
+          bg: colors.slate[50],
+          head: colors.slate[100],
+          body: colors.slate[200],
+        },
+        dark: {
+          bg: colors.slate[900],
+          head: colors.slate[800],
+          body: colors.slate[700],
+        },
+        brand: {
+          100: colors.fuchsia[100],
+          200: colors.fuchsia[200],
+          300: colors.fuchsia[300],
+          400: colors.purple[400],
+          500: colors.purple[500],
+          600: colors.violet[600],
+          700: colors.violet[700],
+          800: colors.indigo[800],
+          900: colors.indigo[900],
+        },
       },
     },
   },

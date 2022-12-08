@@ -2,14 +2,14 @@ import {useState} from 'react'
 import Head from 'next/head'
 import Tilt from 'react-parallax-tilt'
 
-import useDeviceDetect from '@utils/hooks/use-device-detect'
+import useDeviceDetect from 'utils/hooks/use-device-detect'
 
-import Button from '@components/button'
-import TNC from '@components/svg/tnc'
+import {LinkButton, Button} from 'components/button'
+import TNC from 'components/svg/tnc'
 import MagnifyingGlass from '@images/magnifying-glass.svg'
 import PeopleGroup from '@images/people-group.svg'
 
-import animate from '@styles/index.module.scss'
+import animate from 'styles/index.module.scss'
 
 import {type NextPage} from 'next'
 
@@ -26,7 +26,7 @@ const Home: NextPage = () => {
 			</Head>
 
 			<main className=''>
-				<section className='relative h-screen overflow-hidden bg-gradient-to-br from-gray-900 via-purple-900 to-violet-600'>
+				<section className='relative h-screen overflow-hidden bg-gradient-to-br from-dark-bg via-purple-900 to-violet-600'>
 					<div className='absolute top-1/2 -translate-y-[50%] overflow-x-visible md:container md:left-1/2 md:max-w-screen-xl md:-translate-x-1/2 md:-translate-y-[55%]'>
 						<div className='mx-4 grid grid-cols-12 pb-8 md:mx-0'>
 							<Tilt
@@ -100,12 +100,13 @@ const Home: NextPage = () => {
 
 									<Tilt reset={false} tiltMaxAngleY={30}>
 										<TNC
-											className={`${animate.tnc} mx-auto my-8 w-72 sm:my-16 sm:w-80 md:absolute md:opacity-0`}
+											className={`${animate.tnc} mx-auto my-8 w-72 sm:my-16 sm:w-80 md:absolute md:left-full md:opacity-0`}
 										/>
 									</Tilt>
 
 									<h2
-										className={`${animate.h2} whitespace-nowrap text-lg child:underline-offset-8 sm:text-center sm:text-xl md:-mt-4 md:text-left md:text-2xl xl:-mt-6`}
+										className={`whitespace-nowrap text-lg child:underline-offset-8 sm:text-center sm:text-xl md:-mt-4 md:text-left md:text-2xl xl:-mt-6`}
+										// className={`${animate.h2} whitespace-nowrap text-lg child:underline-offset-8 sm:text-center sm:text-xl md:-mt-4 md:text-left md:text-2xl xl:-mt-6`}
 									>
 										Search
 										<span className='underline decoration-pink-500 decoration-wavy'>
@@ -119,7 +120,7 @@ const Home: NextPage = () => {
 										<span className='text-pink-500'>!</span>
 									</h2>
 
-									<p className='ml-4 text-gray-300 sm:mx-4 sm:text-justify sm:text-base md:ml-0 md:min-w-[28rem] md:text-left lg:min-w-[33rem]'>
+									<p className='ml-4 sm:mx-4 sm:text-justify sm:text-base md:ml-0 md:min-w-[28rem] md:text-left lg:min-w-[33rem]'>
 										<span className='hidden sm:inline'>
 											No more getting abused by irresponsible companies who
 											force us to agree on something we don&apos;t want.&nbsp;
@@ -132,7 +133,8 @@ const Home: NextPage = () => {
 								</div>
 
 								<div
-									className={`${animate.button} child:button-3d flex flex-col items-start gap-4 overflow-visible px-4 preserve-3d move-forth sm:flex-row sm:px-4 md:mt-4 md:px-0 xl:-ml-6`}
+									className={`${animate.glassMain} ${animate.content} child:button-3d flex flex-col items-start gap-4 overflow-visible px-4 preserve-3d move-forth sm:flex-row sm:px-4 md:mt-4 md:px-0 xl:-ml-6`}
+									// className={`${animate.button} child:button-3d flex flex-col items-start gap-4 overflow-visible px-4 preserve-3d move-forth sm:flex-row sm:px-4 md:mt-4 md:px-0 xl:-ml-6`}
 								>
 									<Button
 										variant='outlined'
@@ -147,10 +149,7 @@ const Home: NextPage = () => {
 										</span>
 									</Button>
 
-									<Button
-										variant='filled'
-										onClick={() => console.log('Discover app')}
-									>
+									<LinkButton variant='filled' href='/article'>
 										Discover app
 										<span className='relative h-5 child:h-full child:fill-violet-200'>
 											<MagnifyingGlass />
@@ -158,7 +157,7 @@ const Home: NextPage = () => {
 												className={`${animate.pingingB} absolute top-0.5 left-0.5`}
 											/>
 										</span>
-									</Button>
+									</LinkButton>
 								</div>
 							</Tilt>
 

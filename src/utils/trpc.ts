@@ -3,7 +3,7 @@ import {createTRPCNext} from '@trpc/next'
 import superjson from 'superjson'
 
 import {type inferRouterInputs, type inferRouterOutputs} from '@trpc/server'
-import {type AppRouter} from '@server/trpc/router/_app'
+import {type AppRouter} from 'server/trpc/router/_app'
 
 const getBaseUrl = () => {
 	if (typeof window !== 'undefined') return '' // browser should use relative url
@@ -32,11 +32,11 @@ export const trpc = createTRPCNext<AppRouter>({
 
 /**
  * Inference helper for inputs
- * @article type HelloInput = RouterInputs['article']['hello']
+ * @example type HelloInput = RouterInputs['example']['hello']
  **/
 export type RouterInputs = inferRouterInputs<AppRouter>
 /**
  * Inference helper for outputs
- * @article type HelloOutput = RouterOutputs['article']['hello']
+ * @example type HelloOutput = RouterOutputs['example']['hello']
  **/
 export type RouterOutputs = inferRouterOutputs<AppRouter>

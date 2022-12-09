@@ -138,7 +138,7 @@ const AdminDashboardPage = () => {
 								) : (
 									<>
 										<div className='flex items-center justify-between'>
-											<h2>{criteria.value}</h2>
+											<h2 className='text-xl'>{criteria.value}</h2>
 											<div className='item-center flex gap-2'>
 												<button onClick={() => onClickAddSubCriteria(criteria)}>
 													<PlusIcon className='h-10 w-10 rounded-lg bg-brand-100 p-2 text-blue-500' />

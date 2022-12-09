@@ -16,7 +16,9 @@
 		@apply font-heading font-bold text-light-head;
 	}
 
-	p {
+	p,
+	pre,
+	button {
 		@apply font-body text-light-body;
 	}
 

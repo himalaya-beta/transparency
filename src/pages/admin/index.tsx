@@ -21,16 +21,11 @@ import {
 } from 'types/criteria'
 
 const AdminDashboardPage = () => {
+	const [edit, setEdit] = React.useState<string | null>(null)
+
 	const criteriaListQuery = trpc.criteria.fetchAll.useQuery()
-	const {mutate: create} = trpc.criteria.create.useMutation({
-		onError: (error) => {
-			alert(error.message)
-		},
-		onSuccess: () => {
-			createMethods.reset()
-			criteriaListQuery.refetch()
-		},
-	})
+	const {refetch: refetchCriteria} = criteriaListQuery
+
 	const {mutate: update} = trpc.criteria.update.useMutation({
 		onError: (error) => {
 			alert(error.message)
@@ -50,25 +45,22 @@ const AdminDashboardPage = () => {
 		},
 	})
 
-	const createMethods = useForm<CreateCriteriaType>({
-		mode: 'onTouched',
-		resolver: zodResolver(CreateCriteriaSchema),
-	})
-
-	const onCreateCriteria: SubmitHandler<CreateCriteriaType> = (data) => {
-		create(data)
-	}
-
-	const [edit, setEdit] = React.useState<string | null>(null)
-
 	const updateMethods = useForm<UpdateCriteriaType>({
 		mode: 'onTouched',
 		resolver: zodResolver(UpdateCriteriaSchema),
 	})
+
 	const onUpdateCriteria: SubmitHandler<UpdateCriteriaType> = (data) => {
 		if (edit) {
 			update({...data, id: edit})
 		}
+	}
+
+	const onClickEdit = (criteria: UpdateCriteriaType) => {
+		setEdit(criteria.id)
+		updateMethods.setValue('id', criteria.id)
+		updateMethods.setValue('value', criteria.value)
+		updateMethods.setValue('parentId', criteria.parentId)
 	}
 
 	return (
@@ -108,14 +100,7 @@ const AdminDashboardPage = () => {
 									<>
 										<h2>{criteria.value}</h2>
 										<div className='item-center flex gap-2'>
-											<button
-												onClick={() => {
-													setEdit(criteria.id)
-													updateMethods.setValue('id', criteria.id)
-													updateMethods.setValue('value', criteria.value)
-													updateMethods.setValue('parentId', criteria.parentId)
-												}}
-											>
+											<button onClick={() => onClickEdit(criteria)}>
 												<PencilIcon className='h-10 w-10 rounded-lg bg-brand-100 p-2 text-blue-500' />
 											</button>
 											<button onClick={() => remove({id: criteria.id})}>
@@ -130,19 +115,44 @@ const AdminDashboardPage = () => {
 				)}
 			</QueryWrapper>
 
-			<div>
-				<SectionSeparator>Create New</SectionSeparator>
-				<FormWrapper
-					methods={createMethods}
-					onValidSubmit={onCreateCriteria}
-					className='space-y-4'
-				>
-					<TextAreaInput<CreateCriteriaType> name='value' label='The point' />
-					<Button type='submit' variant='filled'>
-						Submit
-					</Button>
-				</FormWrapper>
-			</div>
+			<CreateForm refetchList={refetchCriteria} />
+		</div>
+	)
+}
+
+const CreateForm = ({refetchList}: {refetchList: () => void}) => {
+	const {mutate: create} = trpc.criteria.create.useMutation({
+		onError: (error) => {
+			alert(error.message)
+		},
+		onSuccess: () => {
+			createMethods.reset()
+			refetchList()
+		},
+	})
+
+	const createMethods = useForm<CreateCriteriaType>({
+		mode: 'onTouched',
+		resolver: zodResolver(CreateCriteriaSchema),
+	})
+
+	const onCreateCriteria: SubmitHandler<CreateCriteriaType> = (data) => {
+		create(data)
+	}
+
+	return (
+		<div>
+			<SectionSeparator>Create New</SectionSeparator>
+			<FormWrapper
+				methods={createMethods}
+				onValidSubmit={onCreateCriteria}
+				className='space-y-4'
+			>
+				<TextAreaInput<CreateCriteriaType> name='value' label='The point' />
+				<Button type='submit' variant='filled'>
+					Submit
+				</Button>
+			</FormWrapper>
 		</div>
 	)
 }

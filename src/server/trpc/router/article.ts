@@ -6,8 +6,8 @@ import {revalidate, slugify} from 'server/utils/route'
 
 import {CreateArticleSchema, UpdateArticleSchema} from 'types/article'
 import {TRPCError} from '@trpc/server'
+import {requiredIdSchema} from 'types/general'
 
-const requiredIdSchema = z.object({id: z.string()})
 const requiredIdAuthorIdSchema = requiredIdSchema.extend({authorId: z.string()})
 
 export const articleRouter = router({

@@ -1,6 +1,5 @@
 import Link from 'next/link'
 import Image from 'next/image'
-import dynamic from 'next/dynamic'
 import dayjs from 'dayjs'
 import {useForm, type SubmitHandler} from 'react-hook-form'
 import {zodResolver} from '@hookform/resolvers/zod'
@@ -17,14 +16,9 @@ import {
 } from 'types/article'
 import QueryWrapper from 'components/query-wrapper'
 
-import {type FormWrapperProps} from 'components/form-wrapper'
-const FormWrapper = dynamic<FormWrapperProps<CreateArticleType>>(
-	() => import('components/form-wrapper')
-)
-const TextAreaInput = dynamic(() => import('components/textarea-input'))
-const Button = dynamic(() =>
-	import('components/button').then((buttons) => buttons.Button)
-)
+import FormWrapper from 'components/form-wrapper'
+import TextAreaInput from 'components/textarea-input'
+import {Button} from 'components/button'
 
 export default function ArticlePage() {
 	const articlesQuery = trpc.article.fetchAll.useQuery(undefined, {
@@ -139,11 +133,11 @@ const CreateArticleForm = ({refetchList}: {refetchList: () => void}) => {
 					onValidSubmit={onValidSubmit}
 					className='flex flex-col gap-4'
 				>
-					<TextAreaInput
+					<TextAreaInput<CreateArticleType>
 						name='title'
 						className='h-[5.4em] md:h-[4em] lg:h-[2.5em]'
 					/>
-					<TextAreaInput
+					<TextAreaInput<CreateArticleType>
 						name='content'
 						className='h-[16em] md:h-[12.8em] lg:h-[10em]'
 					/>

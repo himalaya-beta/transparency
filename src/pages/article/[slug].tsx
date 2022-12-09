@@ -1,5 +1,4 @@
 import React from 'react'
-import dynamic from 'next/dynamic'
 import {useRouter} from 'next/router'
 import {useSession} from 'next-auth/react'
 import {
@@ -29,14 +28,9 @@ import {
 	XMarkIcon,
 } from '@heroicons/react/24/outline'
 
-import {type FormWrapperProps} from 'components/form-wrapper'
-const FormWrapper = dynamic<FormWrapperProps<UpdateArticleType>>(
-	() => import('components/form-wrapper')
-)
-const TextAreaInput = dynamic(() => import('components/textarea-input'))
-const Button = dynamic(() =>
-	import('components/button').then((buttons) => buttons.Button)
-)
+import FormWrapper from 'components/form-wrapper'
+import TextAreaInput from 'components/textarea-input'
+import {Button} from 'components/button'
 
 export const getStaticProps: GetStaticProps<{
 	article: ArticleType
@@ -130,8 +124,8 @@ const ArticleDetailsPage = ({
 						onValidSubmit={onValidSubmit}
 						className='col-span-full flex flex-col gap-4 md:col-span-2'
 					>
-						<TextAreaInput name='title' />
-						<TextAreaInput name='content' rows={10} />
+						<TextAreaInput<UpdateArticleType> name='title' />
+						<TextAreaInput<UpdateArticleType> name='content' rows={10} />
 
 						<div className='flex gap-4'>
 							<Button

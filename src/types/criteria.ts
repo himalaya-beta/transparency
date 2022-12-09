@@ -2,7 +2,7 @@ import {z} from 'zod'
 import {RouterOutputs} from 'utils/trpc'
 
 export const CreateCriteriaSchema = z.object({
-	value: z.string().min(3),
+	value: z.string().min(5, 'not long enough'),
 	parentId: z.string().nullish(),
 })
 
@@ -14,4 +14,4 @@ export const UpdateCriteriaSchema = CreateCriteriaSchema.extend({
 
 export type UpdateCriteriaType = z.infer<typeof UpdateCriteriaSchema>
 
-export type ArticleType = Exclude<RouterOutputs['article']['fetchOne'], null>
+export type CriteriaType = Exclude<RouterOutputs['criteria']['fetchOne'], null>

@@ -1,10 +1,16 @@
+/* eslint-disable unicorn/no-null */
 import {adminProcedure, protectedProcedure, router} from '../trpc'
 import {slugify} from 'server/utils/route'
 import {criteriaCreateSchema, criteriaUpdateSchema} from 'types/criteria'
 import {requiredIdSchema} from 'types/general'
 
 export const criteriaRouter = router({
-	fetchAll: protectedProcedure.query(({ctx}) => ctx.prisma.criteria.findMany()),
+	fetchRoot: protectedProcedure.query(({ctx}) =>
+		ctx.prisma.criteria.findMany({
+			include: {children: true},
+			where: {parent: null},
+		})
+	),
 	fetchOne: protectedProcedure
 		.input(requiredIdSchema)
 		.query(({ctx, input}) =>

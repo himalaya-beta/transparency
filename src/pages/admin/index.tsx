@@ -15,6 +15,10 @@ import {
 	TrashIcon,
 	XMarkIcon,
 } from '@heroicons/react/24/outline'
+import {
+	PencilIcon as PencilIconSolid,
+	TrashIcon as TrashIconSolid,
+} from '@heroicons/react/24/solid'
 
 import {trpc} from 'utils/trpc'
 
@@ -30,7 +34,7 @@ const AdminDashboardPage = () => {
 	const [edit, setEdit] = React.useState<string | null>(null)
 	const [add, setAdd] = React.useState<string | null>(null)
 
-	const criteriaListQuery = trpc.criteria.fetchAll.useQuery()
+	const criteriaListQuery = trpc.criteria.fetchRoot.useQuery()
 
 	const {mutate: create} = trpc.criteria.create.useMutation({
 		onError: (error) => {
@@ -38,6 +42,7 @@ const AdminDashboardPage = () => {
 		},
 		onSuccess: () => {
 			createMethods.reset()
+			createSubMethods.reset()
 			criteriaListQuery.refetch()
 			setAdd(null)
 		},
@@ -146,6 +151,24 @@ const AdminDashboardPage = () => {
 												</button>
 											</div>
 										</div>
+										<div className='space-y-2'>
+											{criteria.children.map((child) => (
+												<div
+													key={child.id}
+													className='flex items-center justify-between rounded-lg bg-dark-bg/25 p-2 pl-4'
+												>
+													<h3>{child.value}</h3>
+													<div className='item-center flex gap-4'>
+														<button onClick={() => onClickEdit(child)}>
+															<PencilIconSolid className='h-6 w-6 text-blue-500/75' />
+														</button>
+														<button onClick={() => remove({id: child.id})}>
+															<TrashIconSolid className='h-6 w-6 text-red-500/75' />
+														</button>
+													</div>
+												</div>
+											))}
+										</div>
 										{add === criteria.id && (
 											<FormWrapper
 												methods={createSubMethods}
@@ -163,7 +186,7 @@ const AdminDashboardPage = () => {
 													<button type='submit'>
 														<PencilIcon className='h-8 w-8 rounded-lg bg-blue-500 p-1 text-brand-100' />
 													</button>
-													<button onClick={() => setEdit(null)}>
+													<button onClick={() => setAdd(null)}>
 														<XMarkIcon className='h-8 w-8 rounded-lg bg-orange-400 p-1 text-brand-100' />
 													</button>
 												</div>

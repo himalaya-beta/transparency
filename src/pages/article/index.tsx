@@ -7,6 +7,7 @@ import {zodResolver} from '@hookform/resolvers/zod'
 import {trpc} from 'utils/trpc'
 import NavbarTopLayout from 'layouts/navbar'
 import MetaHead from 'components/meta-head'
+import {SectionSeparator, TriangleSymbol} from 'components/ornaments'
 import {PencilIcon} from '@heroicons/react/24/solid'
 
 import {
@@ -83,7 +84,7 @@ const Card = ({slug, title, content, createdAt, author}: ArticleType) => {
 				<h2 className=''>{title}</h2>
 				<div className='mt-0.5 flex h-1 items-center gap-2'>
 					<div className='h-[1px] w-auto grow rounded-full bg-brand-500/50' />
-					<Triangle className='' />
+					<TriangleSymbol className='' />
 				</div>
 			</div>
 
@@ -120,13 +121,7 @@ const CreateArticleForm = ({refetchList}: {refetchList: () => void}) => {
 
 	return (
 		<div className='space-y-2'>
-			<div className='flex items-center justify-center gap-4  text-light-head'>
-				<div className='h-[1px] w-auto grow rounded-full bg-brand-500/50' />
-				<Triangle />
-				<p className='w-fit text-lg'>Create New Article</p>
-				<Triangle className='rotate-180' />
-				<div className='h-[1px] w-auto grow rounded-full bg-brand-500/50' />
-			</div>
+			<SectionSeparator>Create New Article</SectionSeparator>
 			<div className='mx-auto lg:w-3/4 '>
 				<FormWrapper
 					methods={methods}
@@ -148,10 +143,6 @@ const CreateArticleForm = ({refetchList}: {refetchList: () => void}) => {
 			</div>
 		</div>
 	)
-}
-
-const Triangle = ({className}: {className?: string}) => {
-	return <span className={`${className} text-brand-300`}>⨞</span>
 }
 
 ArticlePage.getLayout = function getLayout(page: React.ReactElement) {

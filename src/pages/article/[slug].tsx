@@ -12,8 +12,8 @@ import {trpc} from 'utils/trpc'
 import {extractIdFromSlug} from 'server/utils/route'
 
 import {
-	UpdateArticleSchema,
-	type UpdateArticleType,
+	articleUpdateSchema,
+	type ArticleUpdateType,
 	type ArticleType,
 } from 'types/article'
 
@@ -89,12 +89,12 @@ const ArticleDetailsPage = ({
 		authorId: article.authorId,
 	}
 
-	const methods = useForm<UpdateArticleType>({
-		resolver: zodResolver(UpdateArticleSchema),
+	const methods = useForm<ArticleUpdateType>({
+		resolver: zodResolver(articleUpdateSchema),
 		defaultValues,
 	})
 
-	const onValidSubmit: SubmitHandler<UpdateArticleType> = (data) => {
+	const onValidSubmit: SubmitHandler<ArticleUpdateType> = (data) => {
 		updateArticle(data)
 	}
 
@@ -124,8 +124,8 @@ const ArticleDetailsPage = ({
 						onValidSubmit={onValidSubmit}
 						className='col-span-full flex flex-col gap-4 md:col-span-2'
 					>
-						<TextAreaInput<UpdateArticleType> name='title' />
-						<TextAreaInput<UpdateArticleType> name='content' rows={10} />
+						<TextAreaInput<ArticleUpdateType> name='title' />
+						<TextAreaInput<ArticleUpdateType> name='content' rows={10} />
 
 						<div className='flex gap-4'>
 							<Button

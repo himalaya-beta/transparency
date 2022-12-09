@@ -14,10 +14,10 @@ import {PencilIcon, TrashIcon, XMarkIcon} from '@heroicons/react/24/outline'
 import {trpc} from 'utils/trpc'
 
 import {
-	CreateCriteriaSchema,
-	UpdateCriteriaSchema,
-	type UpdateCriteriaType,
-	type CreateCriteriaType,
+	criteriaCreateSchema,
+	criteriaUpdateSchema,
+	type CriteriaUpdateType,
+	type CriteriaCreateType,
 } from 'types/criteria'
 
 const AdminDashboardPage = () => {
@@ -45,18 +45,18 @@ const AdminDashboardPage = () => {
 		},
 	})
 
-	const updateMethods = useForm<UpdateCriteriaType>({
+	const updateMethods = useForm<CriteriaUpdateType>({
 		mode: 'onTouched',
-		resolver: zodResolver(UpdateCriteriaSchema),
+		resolver: zodResolver(criteriaUpdateSchema),
 	})
 
-	const onUpdateCriteria: SubmitHandler<UpdateCriteriaType> = (data) => {
+	const onUpdateCriteria: SubmitHandler<CriteriaUpdateType> = (data) => {
 		if (edit) {
 			update({...data, id: edit})
 		}
 	}
 
-	const onClickEdit = (criteria: UpdateCriteriaType) => {
+	const onClickEdit = (criteria: CriteriaUpdateType) => {
 		setEdit(criteria.id)
 		updateMethods.setValue('id', criteria.id)
 		updateMethods.setValue('value', criteria.value)
@@ -80,7 +80,7 @@ const AdminDashboardPage = () => {
 										onValidSubmit={onUpdateCriteria}
 										className='flex w-full gap-2'
 									>
-										<TextAreaInput<UpdateCriteriaType>
+										<TextAreaInput<CriteriaUpdateType>
 											name='value'
 											rows={2}
 											label=''
@@ -131,12 +131,12 @@ const CreateForm = ({refetchList}: {refetchList: () => void}) => {
 		},
 	})
 
-	const createMethods = useForm<CreateCriteriaType>({
+	const createMethods = useForm<CriteriaCreateType>({
 		mode: 'onTouched',
-		resolver: zodResolver(CreateCriteriaSchema),
+		resolver: zodResolver(criteriaCreateSchema),
 	})
 
-	const onCreateCriteria: SubmitHandler<CreateCriteriaType> = (data) => {
+	const onCreateCriteria: SubmitHandler<CriteriaCreateType> = (data) => {
 		create(data)
 	}
 
@@ -148,7 +148,7 @@ const CreateForm = ({refetchList}: {refetchList: () => void}) => {
 				onValidSubmit={onCreateCriteria}
 				className='space-y-4'
 			>
-				<TextAreaInput<CreateCriteriaType> name='value' label='The point' />
+				<TextAreaInput<CriteriaCreateType> name='value' label='The point' />
 				<Button type='submit' variant='filled'>
 					Submit
 				</Button>

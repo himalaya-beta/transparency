@@ -11,8 +11,8 @@ import {SectionSeparator, TriangleSymbol} from 'components/ornaments'
 import {PencilIcon} from '@heroicons/react/24/solid'
 
 import {
-	CreateArticleSchema,
-	type CreateArticleType,
+	articleCreateSchema,
+	type ArticleCreateType,
 	type ArticleType,
 } from 'types/article'
 import QueryWrapper from 'components/query-wrapper'
@@ -96,9 +96,9 @@ const Card = ({slug, title, content, createdAt, author}: ArticleType) => {
 }
 
 const CreateArticleForm = ({refetchList}: {refetchList: () => void}) => {
-	const methods = useForm<CreateArticleType>({
+	const methods = useForm<ArticleCreateType>({
 		mode: 'onTouched',
-		resolver: zodResolver(CreateArticleSchema),
+		resolver: zodResolver(articleCreateSchema),
 	})
 
 	const {mutate, isLoading} = trpc.article.create.useMutation({
@@ -115,7 +115,7 @@ const CreateArticleForm = ({refetchList}: {refetchList: () => void}) => {
 		},
 	})
 
-	const onValidSubmit: SubmitHandler<CreateArticleType> = (data) => {
+	const onValidSubmit: SubmitHandler<ArticleCreateType> = (data) => {
 		mutate(data)
 	}
 
@@ -128,11 +128,11 @@ const CreateArticleForm = ({refetchList}: {refetchList: () => void}) => {
 					onValidSubmit={onValidSubmit}
 					className='flex flex-col gap-4'
 				>
-					<TextAreaInput<CreateArticleType>
+					<TextAreaInput<ArticleCreateType>
 						name='title'
 						className='h-[5.4em] md:h-[4em] lg:h-[2.5em]'
 					/>
-					<TextAreaInput<CreateArticleType>
+					<TextAreaInput<ArticleCreateType>
 						name='content'
 						className='h-[16em] md:h-[12.8em] lg:h-[10em]'
 					/>

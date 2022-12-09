@@ -1,7 +1,6 @@
-import {z} from 'zod'
 import {adminProcedure, protectedProcedure, router} from '../trpc'
 import {slugify} from 'server/utils/route'
-import {CreateCriteriaSchema, UpdateCriteriaSchema} from 'types/criteria'
+import {criteriaCreateSchema, criteriaUpdateSchema} from 'types/criteria'
 import {requiredIdSchema} from 'types/general'
 
 export const criteriaRouter = router({
@@ -11,13 +10,13 @@ export const criteriaRouter = router({
 		.query(({ctx, input}) =>
 			ctx.prisma.criteria.findUnique({where: {id: input.id}})
 		),
-	create: adminProcedure.input(CreateCriteriaSchema).mutation(({ctx, input}) =>
+	create: adminProcedure.input(criteriaCreateSchema).mutation(({ctx, input}) =>
 		ctx.prisma.criteria.create({
 			data: {...input, slug: slugify(input.value)},
 		})
 	),
 	update: adminProcedure
-		.input(UpdateCriteriaSchema)
+		.input(criteriaUpdateSchema)
 		.mutation(({ctx, input}) =>
 			ctx.prisma.criteria.update({where: {id: input.id}, data: input})
 		),

@@ -24,6 +24,49 @@ model Article {
     @@index([authorId])
 }
 
+model Criteria {
+    id          String        @id @default(cuid())
+    value       String
+    slug        String
+    parentId    String?
+    parent      Criteria?     @relation("CriteriaChildren", fields: [parentId], references: [id], onDelete: NoAction, onUpdate: NoAction)
+    children    Criteria[]    @relation("CriteriaChildren")
+    createdAt   DateTime      @default(now())
+    updatedAt   DateTime      @updatedAt
+    AppCriteria AppCriteria[]
+
+    @@index([parentId])
+}
+
+model App {
+    id           String        @id @default(cuid())
+    name         String
+    about        String?
+    company      String?
+    headquarter  String?
+    registeredIn String?
+    offices      String?
+    createdAt    DateTime      @default(now())
+    updatedAt    DateTime      @updatedAt
+    AppCriteria  AppCriteria[]
+}
+
+model AppCriteria {
+    app        App      @relation(fields: [appId], references: [id])
+    appId      String
+    criteriaId String
+    criteria   Criteria @relation(fields: [criteriaId], references: [id])
+    order      Int?
+    status     Boolean
+    note       String
+    assignedAt DateTime @default(now())
+    assignedBy String
+
+    @@id([appId, criteriaId])
+    @@index([criteriaId])
+    @@index([appId])
+}
+
 // Necessary for Next auth
 model Account {
     id                String  @id @default(cuid())

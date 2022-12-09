@@ -2,12 +2,17 @@ import {useFormContext} from 'react-hook-form'
 import {ErrorMessage} from '@hookform/error-message'
 import {capFirstChar} from 'utils/literal'
 
-import {type CreateArticleType} from 'types/article'
-type InputProps = React.TextareaHTMLAttributes<HTMLTextAreaElement> & {
-	name: keyof CreateArticleType
+type InputProps<T> = React.TextareaHTMLAttributes<HTMLTextAreaElement> & {
+	name: keyof T
+	label?: string
 }
 
-const TextAreaInput = ({name, className, ...props}: InputProps) => {
+const TextAreaInput = <T,>({
+	name,
+	label,
+	className,
+	...props
+}: InputProps<T>) => {
 	const {
 		register,
 		formState: {errors},
@@ -15,7 +20,7 @@ const TextAreaInput = ({name, className, ...props}: InputProps) => {
 	return (
 		<div className='flex flex-col'>
 			<label htmlFor={name} className='text-light-head'>
-				{capFirstChar(name)}
+				{label ?? capFirstChar(name)}
 			</label>
 			<textarea
 				id={name}

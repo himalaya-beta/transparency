@@ -102,6 +102,32 @@ const AdminDashboardPage = () => {
 		createSubMethods.setValue('parentId', criteria.id)
 	}
 
+	const EditForm = () => {
+		return (
+			<FormWrapper
+				methods={updateMethods}
+				onValidSubmit={onUpdateCriteria}
+				className='flex w-full gap-2'
+			>
+				<TextAreaInput<CriteriaUpdateType>
+					name='value'
+					rows={2}
+					label=''
+					wrapperClassName='flex-1'
+					inputClassName='pb-3'
+				/>
+				<div className='flex flex-col gap-1'>
+					<button type='submit'>
+						<PencilIcon className='h-8 w-8 rounded-lg bg-blue-500 p-1 text-brand-100' />
+					</button>
+					<button onClick={() => setEdit(null)}>
+						<XMarkIcon className='h-8 w-8 rounded-lg bg-orange-400 p-1 text-brand-100' />
+					</button>
+				</div>
+			</FormWrapper>
+		)
+	}
+
 	return (
 		<div className='container max-w-screen-md space-y-8 px-8 md:mx-auto '>
 			<h1 className='text-3xl'>Policy Criteria</h1>
@@ -114,27 +140,7 @@ const AdminDashboardPage = () => {
 								className='space-y-4 rounded-lg bg-dark-bg/25 p-4'
 							>
 								{edit === criteria.id ? (
-									<FormWrapper
-										methods={updateMethods}
-										onValidSubmit={onUpdateCriteria}
-										className='flex w-full gap-2'
-									>
-										<TextAreaInput<CriteriaUpdateType>
-											name='value'
-											rows={2}
-											label=''
-											wrapperClassName='flex-1'
-											inputClassName='pb-3'
-										/>
-										<div className='flex flex-col gap-1'>
-											<button type='submit'>
-												<PencilIcon className='h-8 w-8 rounded-lg bg-blue-500 p-1 text-brand-100' />
-											</button>
-											<button onClick={() => setEdit(null)}>
-												<XMarkIcon className='h-8 w-8 rounded-lg bg-orange-400 p-1 text-brand-100' />
-											</button>
-										</div>
-									</FormWrapper>
+									<EditForm />
 								) : (
 									<>
 										<div className='flex items-center justify-between'>
@@ -152,22 +158,26 @@ const AdminDashboardPage = () => {
 											</div>
 										</div>
 										<div className='space-y-2'>
-											{criteria.children.map((child) => (
-												<div
-													key={child.id}
-													className='flex items-center justify-between rounded-lg bg-dark-bg/25 p-2 pl-4'
-												>
-													<h3>{child.value}</h3>
-													<div className='item-center flex gap-4'>
-														<button onClick={() => onClickEdit(child)}>
-															<PencilIconSolid className='h-6 w-6 text-blue-500/75' />
-														</button>
-														<button onClick={() => remove({id: child.id})}>
-															<TrashIconSolid className='h-6 w-6 text-red-500/75' />
-														</button>
+											{criteria.children.map((child) =>
+												edit === child.id ? (
+													<EditForm />
+												) : (
+													<div
+														key={child.id}
+														className='flex items-center justify-between rounded-lg bg-dark-bg/25 p-2 pl-4'
+													>
+														<h3>{child.value}</h3>
+														<div className='item-center flex gap-4'>
+															<button onClick={() => onClickEdit(child)}>
+																<PencilIconSolid className='h-6 w-6 text-blue-500/75' />
+															</button>
+															<button onClick={() => remove({id: child.id})}>
+																<TrashIconSolid className='h-6 w-6 text-red-500/75' />
+															</button>
+														</div>
 													</div>
-												</div>
-											))}
+												)
+											)}
 										</div>
 										{add === criteria.id && (
 											<FormWrapper

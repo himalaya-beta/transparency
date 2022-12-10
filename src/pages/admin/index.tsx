@@ -140,7 +140,7 @@ const AdminDashboardPage = () => {
 								className='space-y-4 rounded-lg bg-dark-bg/25 p-4'
 							>
 								{edit === criteria.id ? (
-									<EditForm />
+									<EditForm key='main_criteria' />
 								) : (
 									<>
 										{/* CRITERIA */}
@@ -163,7 +163,7 @@ const AdminDashboardPage = () => {
 											<div className='space-y-2'>
 												{criteria.children.map((child) =>
 													edit === child.id ? (
-														<EditForm />
+														<EditForm key='sub_criteria' />
 													) : (
 														<div
 															key={child.id}

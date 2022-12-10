@@ -118,10 +118,10 @@ const AdminDashboardPage = () => {
 				/>
 				<div className='flex flex-col gap-1'>
 					<button type='submit'>
-						<PencilIcon className='h-8 w-8 rounded-lg bg-blue-500 p-1 text-brand-100' />
+						<PencilIcon className='h-8 w-8 rounded-lg bg-blue-500 p-1 text-brand-100 hover:bg-blue-400 active:bg-blue-300' />
 					</button>
 					<button onClick={() => setEdit(null)}>
-						<XMarkIcon className='h-8 w-8 rounded-lg bg-orange-400 p-1 text-brand-100' />
+						<XMarkIcon className='h-8 w-8 rounded-lg bg-orange-400 p-1 text-brand-100 hover:bg-orange-300 active:bg-orange-200' />
 					</button>
 				</div>
 			</FormWrapper>
@@ -143,20 +143,22 @@ const AdminDashboardPage = () => {
 									<EditForm />
 								) : (
 									<>
+										{/* CRITERIA */}
 										<div className='flex items-center justify-between'>
 											<h2 className='text-xl'>{criteria.value}</h2>
 											<div className='item-center flex gap-2'>
 												<button onClick={() => onClickAddSubCriteria(criteria)}>
-													<PlusIcon className='h-10 w-10 rounded-lg bg-brand-100 p-2 text-blue-500' />
+													<PlusIcon className='h-10 w-10 rounded-lg bg-brand-100 p-2 text-blue-500 hover:bg-brand-200 active:bg-brand-300' />
 												</button>
 												<button onClick={() => onClickEdit(criteria)}>
-													<PencilIcon className='h-10 w-10 rounded-lg bg-brand-100 p-2 text-blue-500' />
+													<PencilIcon className='h-10 w-10 rounded-lg bg-brand-100 p-2 text-blue-500 hover:bg-brand-200 active:bg-brand-300' />
 												</button>
 												<button onClick={() => remove({id: criteria.id})}>
-													<TrashIcon className='h-10 w-10 rounded-lg bg-brand-100 p-2 text-red-500' />
+													<TrashIcon className='h-10 w-10 rounded-lg bg-brand-100 p-2 text-red-500 hover:bg-brand-200 active:bg-brand-300' />
 												</button>
 											</div>
 										</div>
+										{/* SUB CRITERIA */}
 										{criteria.children.length > 0 && (
 											<div className='space-y-2'>
 												{criteria.children.map((child) =>
@@ -170,10 +172,10 @@ const AdminDashboardPage = () => {
 															<h3>{child.value}</h3>
 															<div className='item-center flex gap-4'>
 																<button onClick={() => onClickEdit(child)}>
-																	<PencilIconSolid className='h-6 w-6 text-blue-500/75' />
+																	<PencilIconSolid className='h-6 w-6 text-blue-500 text-opacity-75 hover:text-opacity-100 active:text-blue-400' />
 																</button>
 																<button onClick={() => remove({id: child.id})}>
-																	<TrashIconSolid className='h-6 w-6 text-red-500/75' />
+																	<TrashIconSolid className='h-6 w-6 text-red-500 text-opacity-75 hover:text-opacity-100 active:text-red-400' />
 																</button>
 															</div>
 														</div>
@@ -181,6 +183,7 @@ const AdminDashboardPage = () => {
 												)}
 											</div>
 										)}
+										{/* ADD SUB CRITERIA */}
 										{add === criteria.id && (
 											<FormWrapper
 												methods={createSubMethods}
@@ -196,10 +199,10 @@ const AdminDashboardPage = () => {
 												/>
 												<div className='flex flex-col gap-1'>
 													<button type='submit'>
-														<PencilIcon className='h-8 w-8 rounded-lg bg-blue-500 p-1 text-brand-100' />
+														<PencilIcon className='h-8 w-8 rounded-lg bg-blue-500 p-1 text-brand-100 hover:bg-blue-400 active:bg-blue-300' />
 													</button>
 													<button onClick={() => setAdd(null)}>
-														<XMarkIcon className='h-8 w-8 rounded-lg bg-orange-400 p-1 text-brand-100' />
+														<XMarkIcon className='h-8 w-8 rounded-lg bg-orange-400 p-1 text-brand-100 hover:bg-orange-300 active:bg-orange-200' />
 													</button>
 												</div>
 											</FormWrapper>

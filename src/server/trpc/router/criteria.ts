@@ -23,12 +23,15 @@ export const criteriaRouter = router({
 	),
 	update: adminProcedure
 		.input(criteriaUpdateSchema)
-		.mutation(({ctx, input}) =>
-			ctx.prisma.criteria.update({where: {id: input.id}, data: input})
+		.mutation(({ctx, input: {id, ...input}}) =>
+			ctx.prisma.criteria.update({where: {id}, data: input})
 		),
 	delete: adminProcedure
 		.input(requiredIdSchema)
 		.mutation(({ctx, input}) =>
-			ctx.prisma.criteria.delete({where: {id: input.id}})
+			ctx.prisma.$transaction([
+				ctx.prisma.criteria.deleteMany({where: {parentId: input.id}}),
+				ctx.prisma.criteria.delete({where: {id: input.id}}),
+			])
 		),
 })

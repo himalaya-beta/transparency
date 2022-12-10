@@ -157,28 +157,30 @@ const AdminDashboardPage = () => {
 												</button>
 											</div>
 										</div>
-										<div className='space-y-2'>
-											{criteria.children.map((child) =>
-												edit === child.id ? (
-													<EditForm />
-												) : (
-													<div
-														key={child.id}
-														className='flex items-center justify-between rounded-lg bg-dark-bg/25 p-2 pl-4'
-													>
-														<h3>{child.value}</h3>
-														<div className='item-center flex gap-4'>
-															<button onClick={() => onClickEdit(child)}>
-																<PencilIconSolid className='h-6 w-6 text-blue-500/75' />
-															</button>
-															<button onClick={() => remove({id: child.id})}>
-																<TrashIconSolid className='h-6 w-6 text-red-500/75' />
-															</button>
+										{criteria.children.length > 0 && (
+											<div className='space-y-2'>
+												{criteria.children.map((child) =>
+													edit === child.id ? (
+														<EditForm />
+													) : (
+														<div
+															key={child.id}
+															className='flex items-center justify-between rounded-lg bg-dark-bg/25 p-2 pl-4'
+														>
+															<h3>{child.value}</h3>
+															<div className='item-center flex gap-4'>
+																<button onClick={() => onClickEdit(child)}>
+																	<PencilIconSolid className='h-6 w-6 text-blue-500/75' />
+																</button>
+																<button onClick={() => remove({id: child.id})}>
+																	<TrashIconSolid className='h-6 w-6 text-red-500/75' />
+																</button>
+															</div>
 														</div>
-													</div>
-												)
-											)}
-										</div>
+													)
+												)}
+											</div>
+										)}
 										{add === criteria.id && (
 											<FormWrapper
 												methods={createSubMethods}

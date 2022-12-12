@@ -11,10 +11,12 @@ import {Button} from 'components/button'
 import {SectionSeparator} from 'components/ornaments'
 import DivAnimate from 'components/div-animate'
 import {
+	DocumentTextIcon,
 	ChevronDownIcon,
 	ChevronUpIcon,
 	PencilIcon,
 	PlusIcon,
+	ShieldCheckIcon,
 	TrashIcon,
 	XMarkIcon,
 } from '@heroicons/react/24/outline'
@@ -32,6 +34,7 @@ import {
 	type CriteriaCreateType,
 	type CriteriaType,
 } from 'types/criteria'
+import ListBox from 'components/list-box'
 
 const AdminDashboardPage = () => {
 	const criteriaListQuery = trpc.criteria.fetchRoot.useQuery()
@@ -47,13 +50,16 @@ const AdminDashboardPage = () => {
 	})
 
 	const createMethods = useForm<CriteriaCreateType>({
-		mode: 'onTouched',
 		resolver: zodResolver(criteriaCreateSchema),
 	})
 
 	const onCreateCriteria: SubmitHandler<CriteriaCreateType> = (data) => {
 		create(data)
 	}
+
+	React.useEffect(() => {
+		createMethods.setValue('type', 'CHECK')
+	}, [createMethods])
 
 	return (
 		<div className='container max-w-screen-md space-y-8 px-8 md:mx-auto '>
@@ -79,12 +85,15 @@ const AdminDashboardPage = () => {
 					onValidSubmit={onCreateCriteria}
 					className='space-y-4'
 				>
+					<ListBox
+						label='Type'
+						setValue={(value) => createMethods.setValue('type', value)}
+					/>
+
 					<TextAreaInput<CriteriaCreateType>
 						name='value'
 						label='Criteria name/ content/ value'
 						autoFocus
-						wrapperClassName='mt-2'
-						inputClassName='mt-1'
 					/>
 					<Button type='submit' variant='filled'>
 						Submit
@@ -136,11 +145,9 @@ const CriteriaCard = ({
 	})
 
 	const createMethods = useForm<CriteriaCreateType>({
-		mode: 'onTouched',
 		resolver: zodResolver(criteriaCreateSchema),
 	})
 	const updateMethods = useForm<CriteriaUpdateType>({
-		mode: 'onTouched',
 		resolver: zodResolver(criteriaUpdateSchema),
 	})
 
@@ -159,12 +166,14 @@ const CriteriaCard = ({
 		updateMethods.setValue('id', criteria.id)
 		updateMethods.setValue('value', criteria.value)
 		updateMethods.setValue('parentId', criteria.parentId)
+		updateMethods.setValue('type', criteria.type)
 	}
 	const onClickAdd = (criteria: CriteriaType) => {
 		setAdd(criteria.id)
 		setIsExpanded(true)
 		setEdit(null)
 		createMethods.setValue('parentId', criteria.id)
+		createMethods.setValue('type', 'CHECK')
 	}
 
 	const EditForm = ({className}: {className?: string}) => {
@@ -179,16 +188,30 @@ const CriteriaCard = ({
 					rows={2}
 					label=''
 					wrapperClassName='flex-1'
-					inputClassName='pb-3'
+					inputClassName='pb-5'
 					autoFocus
 				/>
-				<div className='flex flex-col gap-1'>
-					<button type='submit'>
-						<PencilIcon className='h-8 w-8 rounded-lg bg-blue-500 p-1 text-brand-100 hover:bg-blue-400 active:bg-blue-300' />
-					</button>
-					<button type='reset' onClick={() => setEdit(null)}>
-						<XMarkIcon className='h-8 w-8 rounded-lg bg-orange-400 p-1 text-brand-100 hover:bg-orange-300 active:bg-orange-200' />
-					</button>
+				<div className='flex flex-col gap-2'>
+					<ListBox
+						label=''
+						setValue={(value) => updateMethods.setValue('type', value)}
+						className='w-40'
+					/>
+					<div className='flex gap-2'>
+						<button
+							type='submit'
+							className='flex-1 rounded-lg bg-blue-500 hover:bg-blue-400 active:bg-blue-300'
+						>
+							<PencilIcon className='mx-auto h-8 w-8 p-1 text-brand-100' />
+						</button>
+						<button
+							type='reset'
+							onClick={() => setEdit(null)}
+							className='flex-1 rounded-lg bg-orange-400 hover:bg-orange-300 active:bg-orange-200'
+						>
+							<XMarkIcon className='mx-auto h-8 w-8 p-1 text-brand-100' />
+						</button>
+					</div>
 				</div>
 			</FormWrapper>
 		)
@@ -202,6 +225,14 @@ const CriteriaCard = ({
 				<div className='flex items-center justify-between gap-2'>
 					<h2 className='md:text-xl'>
 						{criteria.value}
+						<span className='ml-2 space-x-1'>
+							{criteria.type.includes('CHECK') && (
+								<ShieldCheckIcon className='inline h-5 w-5 text-brand-200' />
+							)}
+							{criteria.type.includes('TEXT') && (
+								<DocumentTextIcon className='inline h-5 w-5 text-brand-200' />
+							)}
+						</span>
 						{criteria.children.length > 0 && (
 							<button
 								className='ml-1 rounded-full px-1 pt-0.5 align-middle text-brand-100 hover:bg-brand-200/50 active:bg-brand-200 active:text-brand-500 md:ml-2'
@@ -251,7 +282,17 @@ const CriteriaCard = ({
 									/>
 								) : (
 									<div className='flex items-center justify-between  p-2 pl-4'>
-										<h3 className='font-normal'>{child.value}</h3>
+										<h3 className='font-normal'>
+											{child.value}
+											<span className='ml-2 space-x-0.5'>
+												{child.type.includes('CHECK') && (
+													<ShieldCheckIcon className='inline h-5 w-5 align-text-top text-brand-200' />
+												)}
+												{child.type.includes('TEXT') && (
+													<DocumentTextIcon className='inline h-5 w-5 align-text-top text-brand-200' />
+												)}
+											</span>
+										</h3>
 										<div className='item-center flex gap-4'>
 											<button onClick={() => onClickEdit(child)}>
 												<PencilIconSolid className='h-6 w-6 p-0.5 text-blue-500 text-opacity-50 transition-colors duration-200 hover:text-opacity-100 active:text-blue-400' />
@@ -273,26 +314,40 @@ const CriteriaCard = ({
 					methods={createMethods}
 					onValidSubmit={onCreate}
 					className={`
-				flex w-full gap-2 rounded-b-md  ${
-					criteria.children.length > 0 ? 'bg-dark-bg/25 p-2 pl-4' : 'pt-4'
-				}
-			`}
+						mb-2 flex w-full gap-2 rounded-b-md  ${
+							criteria.children.length > 0 ? 'bg-dark-bg/25 p-2 pl-4' : 'pt-4'
+						}
+					`}
 				>
 					<TextAreaInput<CriteriaUpdateType>
 						name='value'
 						rows={2}
 						label=''
 						wrapperClassName='flex-1'
-						inputClassName='pb-3'
+						inputClassName='pb-5'
 						autoFocus
 					/>
-					<div className='flex flex-col gap-1'>
-						<button type='submit'>
-							<PencilIcon className='h-8 w-8 rounded-lg bg-blue-500 p-1 text-brand-100 hover:bg-blue-400 active:bg-blue-300' />
-						</button>
-						<button type='reset' onClick={() => setAdd(null)}>
-							<XMarkIcon className='h-8 w-8 rounded-lg bg-orange-400 p-1 text-brand-100 hover:bg-orange-300 active:bg-orange-200' />
-						</button>
+					<div className='flex flex-col gap-2'>
+						<ListBox
+							label=''
+							setValue={(value) => createMethods.setValue('type', value)}
+							className='w-40'
+						/>
+						<div className='flex gap-2'>
+							<button
+								type='submit'
+								className='flex-1 rounded-lg bg-blue-500 hover:bg-blue-400 active:bg-blue-300'
+							>
+								<PencilIcon className='mx-auto h-8 w-8 p-1 text-brand-100' />
+							</button>
+							<button
+								type='reset'
+								onClick={() => setAdd(null)}
+								className='flex-1 rounded-lg bg-orange-400 hover:bg-orange-300 active:bg-orange-200'
+							>
+								<XMarkIcon className='mx-auto h-8 w-8 p-1 text-brand-100' />
+							</button>
+						</div>
 					</div>
 				</FormWrapper>
 			)}

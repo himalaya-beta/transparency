@@ -29,6 +29,11 @@
 	button {
 		@apply outline-brand-600;
 	}
+
+	input,
+	textarea {
+		@apply rounded-md;
+	}
 }
 
 @layer utilities {

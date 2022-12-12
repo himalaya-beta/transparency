@@ -7,15 +7,16 @@ import {requiredIdSchema} from 'types/general'
 export const criteriaRouter = router({
 	fetchRoot: protectedProcedure.query(({ctx}) =>
 		ctx.prisma.criteria.findMany({
-			include: {children: true},
 			where: {parent: null},
+			include: {children: true},
 		})
 	),
-	fetchOne: protectedProcedure
-		.input(requiredIdSchema)
-		.query(({ctx, input}) =>
-			ctx.prisma.criteria.findUnique({where: {id: input.id}})
-		),
+	fetchOne: protectedProcedure.input(requiredIdSchema).query(({ctx, input}) =>
+		ctx.prisma.criteria.findUnique({
+			where: {id: input.id},
+			include: {children: true},
+		})
+	),
 	create: adminProcedure.input(criteriaCreateSchema).mutation(({ctx, input}) =>
 		ctx.prisma.criteria.create({
 			data: {...input, slug: slugify(input.value)},

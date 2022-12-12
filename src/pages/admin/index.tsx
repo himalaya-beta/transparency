@@ -162,6 +162,7 @@ const CriteriaCard = ({
 	}
 	const onClickAdd = (criteria: CriteriaType) => {
 		setAdd(criteria.id)
+		setIsExpanded(true)
 		setEdit(null)
 		createMethods.setValue('parentId', criteria.id)
 	}

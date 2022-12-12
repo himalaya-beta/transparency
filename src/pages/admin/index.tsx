@@ -41,11 +41,16 @@ const AdminDashboardPage = () => {
 		onError: (error) => {
 			alert(error.message)
 		},
-		onSuccess: () => {
-			createMethods.reset()
-			createSubMethods.reset()
+		onSuccess: (data) => {
+			if (data.parentId) {
+				createSubMethods.setFocus('value')
+				createSubMethods.reset({value: '', parentId: data.parentId})
+			} else {
+				setAdd(null)
+				createSubMethods.reset()
+				createMethods.reset()
+			}
 			criteriaListQuery.refetch()
-			setAdd(null)
 		},
 	})
 	const {mutate: update} = trpc.criteria.update.useMutation({

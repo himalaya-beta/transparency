@@ -29,7 +29,7 @@ model Criteria {
     value       String
     slug        String
     parentId    String?
-    type        CriteriaType  @default(YESNO)
+    type        CriteriaType  @default(CHECK)
     order       Int?
     parent      Criteria?     @relation("CriteriaChildren", fields: [parentId], references: [id], onDelete: NoAction, onUpdate: NoAction)
     children    Criteria[]    @relation("CriteriaChildren")
@@ -125,7 +125,7 @@ enum Role {
 }
 
 enum CriteriaType {
-    YESNO
-    EXPLAIN
-    YESEXPLAIN
+    CHECK
+    TEXT
+    CHECK_TEXT
 }

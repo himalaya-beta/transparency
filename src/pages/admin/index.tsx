@@ -205,7 +205,12 @@ const CriteriaCard = ({
 						{criteria.children.length > 0 && (
 							<button
 								className='ml-1 rounded-full px-1 pt-0.5 align-middle text-brand-100 hover:bg-brand-200/50 active:bg-brand-200 active:text-brand-500 md:ml-2'
-								onClick={() => setIsExpanded(!isExpanded)}
+								onClick={() => {
+									if (isExpanded) {
+										setAdd(null)
+									}
+									setIsExpanded(!isExpanded)
+								}}
 							>
 								{isExpanded ? (
 									<ChevronUpIcon className='h-6 w-6' />

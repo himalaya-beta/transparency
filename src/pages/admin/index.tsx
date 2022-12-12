@@ -146,63 +146,61 @@ const AdminDashboardPage = () => {
 								key={criteria.id}
 								className='rounded-lg bg-dark-bg/25 p-4'
 							>
+								{/* CRITERIA */}
 								{edit === criteria.id ? (
 									<EditForm key='main_criteria' />
 								) : (
-									<>
-										{/* CRITERIA */}
-										<div className='flex items-center justify-between'>
-											<h2 className='text-xl'>{criteria.value}</h2>
-											<div className='item-center flex'>
-												<button onClick={() => onClickAddSubCriteria(criteria)}>
-													<PlusIcon className='h-10 w-10 rounded-l-lg bg-brand-100/50 p-2 text-brand-800 transition-colors duration-200 hover:bg-brand-200 active:bg-brand-300' />
-												</button>
-												<button onClick={() => onClickEdit(criteria)}>
-													<PencilIcon className='h-10 w-10 border-l-[1px] border-r-[1px] border-brand-100/25 bg-brand-100/50 p-2 text-blue-700 transition-colors duration-200 hover:bg-brand-200 active:bg-brand-300' />
-												</button>
-												<button onClick={() => remove({id: criteria.id})}>
-													<TrashIcon className='h-10 w-10 rounded-r-lg bg-brand-100/50 p-2 text-red-700 transition-colors duration-200 hover:bg-brand-200 active:bg-brand-300' />
-												</button>
-											</div>
+									<div className='flex items-center justify-between'>
+										<h2 className='text-xl'>{criteria.value}</h2>
+										<div className='item-center flex'>
+											<button onClick={() => onClickAddSubCriteria(criteria)}>
+												<PlusIcon className='h-10 w-10 rounded-l-lg bg-brand-100/50 p-2 text-brand-800 transition-colors duration-200 hover:bg-brand-200 active:bg-brand-300' />
+											</button>
+											<button onClick={() => onClickEdit(criteria)}>
+												<PencilIcon className='h-10 w-10 border-l-[1px] border-r-[1px] border-brand-100/25 bg-brand-100/50 p-2 text-blue-700 transition-colors duration-200 hover:bg-brand-200 active:bg-brand-300' />
+											</button>
+											<button onClick={() => remove({id: criteria.id})}>
+												<TrashIcon className='h-10 w-10 rounded-r-lg bg-brand-100/50 p-2 text-red-700 transition-colors duration-200 hover:bg-brand-200 active:bg-brand-300' />
+											</button>
 										</div>
-										{/* SUB CRITERIA */}
-										{criteria.children.length > 0 && (
-											<DivAnimate
-												className={`
-													mt-2 divide-y-[1px] divide-brand-600 divide-opacity-50 rounded-t-md bg-dark-bg/25 
-													${add ? '' : 'rounded-b-md'} 
-												`}
-											>
-												{criteria.children.map((child) => {
-													return (
-														<DivAnimate className='' key={child.id}>
-															{edit === child.id ? (
-																<EditForm
-																	className='p-2 pl-4'
-																	key={`sub_criteria_${child.id}`}
-																/>
-															) : (
-																<div className='flex items-center justify-between  p-2 pl-4'>
-																	<h3>{child.value}</h3>
-																	<div className='item-center flex gap-4'>
-																		<button onClick={() => onClickEdit(child)}>
-																			<PencilIconSolid className='h-6 w-6 p-0.5 text-blue-500 text-opacity-50 transition-colors duration-200 hover:text-opacity-100 active:text-blue-400' />
-																		</button>
-																		<button
-																			onClick={() => remove({id: child.id})}
-																		>
-																			<TrashIconSolid className='h-6 w-6 p-0.5 text-red-500 text-opacity-50 transition-colors duration-200 hover:text-opacity-100  active:text-red-400' />
-																		</button>
-																	</div>
-																</div>
-															)}
-														</DivAnimate>
-													)
-												})}
-											</DivAnimate>
-										)}
-									</>
+									</div>
 								)}
+
+								{/* SUB CRITERIA */}
+								{criteria.children.length > 0 && (
+									<DivAnimate
+										className={`
+											mt-2 divide-y-[1px] divide-brand-600 divide-opacity-50 rounded-t-md bg-dark-bg/25 
+											${add ? '' : 'rounded-b-md'} 
+										`}
+									>
+										{criteria.children.map((child) => {
+											return (
+												<DivAnimate className='' key={child.id}>
+													{edit === child.id ? (
+														<EditForm
+															className='p-2 pl-4'
+															key={`sub_criteria_${child.id}`}
+														/>
+													) : (
+														<div className='flex items-center justify-between  p-2 pl-4'>
+															<h3>{child.value}</h3>
+															<div className='item-center flex gap-4'>
+																<button onClick={() => onClickEdit(child)}>
+																	<PencilIconSolid className='h-6 w-6 p-0.5 text-blue-500 text-opacity-50 transition-colors duration-200 hover:text-opacity-100 active:text-blue-400' />
+																</button>
+																<button onClick={() => remove({id: child.id})}>
+																	<TrashIconSolid className='h-6 w-6 p-0.5 text-red-500 text-opacity-50 transition-colors duration-200 hover:text-opacity-100  active:text-red-400' />
+																</button>
+															</div>
+														</div>
+													)}
+												</DivAnimate>
+											)
+										})}
+									</DivAnimate>
+								)}
+
 								{/* ADD SUB CRITERIA */}
 								{add === criteria.id && (
 									<FormWrapper

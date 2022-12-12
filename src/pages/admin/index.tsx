@@ -161,7 +161,12 @@ const AdminDashboardPage = () => {
 										</div>
 										{/* SUB CRITERIA */}
 										{criteria.children.length > 0 && (
-											<DivAnimate className='mt-2 divide-y-[1px] divide-brand-600 divide-opacity-50 rounded-md bg-dark-bg/25'>
+											<DivAnimate
+												className={`
+													mt-2 divide-y-[1px] divide-brand-600 divide-opacity-50 rounded-t-md bg-dark-bg/25 
+													${add ? '' : 'rounded-b-md'} 
+												`}
+											>
 												{criteria.children.map((child) => {
 													return (
 														<DivAnimate className='' key={child.id}>
@@ -188,34 +193,39 @@ const AdminDashboardPage = () => {
 														</DivAnimate>
 													)
 												})}
-
-												{/* ADD SUB CRITERIA */}
-												{add === criteria.id && (
-													<FormWrapper
-														methods={createSubMethods}
-														onValidSubmit={onCreateCriteria}
-														className='flex w-full gap-2 p-2 pl-4'
-													>
-														<TextAreaInput<CriteriaUpdateType>
-															name='value'
-															rows={2}
-															label=''
-															wrapperClassName='flex-1'
-															inputClassName='pb-3'
-														/>
-														<div className='flex flex-col gap-1'>
-															<button type='submit'>
-																<PencilIcon className='h-8 w-8 rounded-lg bg-blue-500 p-1 text-brand-100 hover:bg-blue-400 active:bg-blue-300' />
-															</button>
-															<button type='reset' onClick={() => setAdd(null)}>
-																<XMarkIcon className='h-8 w-8 rounded-lg bg-orange-400 p-1 text-brand-100 hover:bg-orange-300 active:bg-orange-200' />
-															</button>
-														</div>
-													</FormWrapper>
-												)}
 											</DivAnimate>
 										)}
 									</>
+								)}
+								{/* ADD SUB CRITERIA */}
+								{add === criteria.id && (
+									<FormWrapper
+										methods={createSubMethods}
+										onValidSubmit={onCreateCriteria}
+										className={`
+											flex w-full gap-2 rounded-b-md  ${
+												criteria.children.length > 0
+													? 'bg-dark-bg/25 p-2 pl-4'
+													: 'pt-4'
+											}
+										`}
+									>
+										<TextAreaInput<CriteriaUpdateType>
+											name='value'
+											rows={2}
+											label=''
+											wrapperClassName='flex-1'
+											inputClassName='pb-3'
+										/>
+										<div className='flex flex-col gap-1'>
+											<button type='submit'>
+												<PencilIcon className='h-8 w-8 rounded-lg bg-blue-500 p-1 text-brand-100 hover:bg-blue-400 active:bg-blue-300' />
+											</button>
+											<button type='reset' onClick={() => setAdd(null)}>
+												<XMarkIcon className='h-8 w-8 rounded-lg bg-orange-400 p-1 text-brand-100 hover:bg-orange-300 active:bg-orange-200' />
+											</button>
+										</div>
+									</FormWrapper>
 								)}
 							</DivAnimate>
 						))}

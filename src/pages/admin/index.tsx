@@ -9,6 +9,7 @@ import FormWrapper from 'components/form-wrapper'
 import TextAreaInput from 'components/textarea-input'
 import {Button} from 'components/button'
 import {SectionSeparator} from 'components/ornaments'
+import DivAnimate from 'components/div-animate'
 import {
 	PencilIcon,
 	PlusIcon,
@@ -102,12 +103,12 @@ const AdminDashboardPage = () => {
 		createSubMethods.setValue('parentId', criteria.id)
 	}
 
-	const EditForm = () => {
+	const EditForm = ({className}: {className?: string}) => {
 		return (
 			<FormWrapper
 				methods={updateMethods}
 				onValidSubmit={onUpdateCriteria}
-				className='flex w-full gap-2'
+				className={`flex w-full gap-2 ${className}`}
 			>
 				<TextAreaInput<CriteriaUpdateType>
 					name='value'
@@ -120,7 +121,7 @@ const AdminDashboardPage = () => {
 					<button type='submit'>
 						<PencilIcon className='h-8 w-8 rounded-lg bg-blue-500 p-1 text-brand-100 hover:bg-blue-400 active:bg-blue-300' />
 					</button>
-					<button onClick={() => setEdit(null)}>
+					<button type='reset' onClick={() => setEdit(null)}>
 						<XMarkIcon className='h-8 w-8 rounded-lg bg-orange-400 p-1 text-brand-100 hover:bg-orange-300 active:bg-orange-200' />
 					</button>
 				</div>
@@ -135,9 +136,9 @@ const AdminDashboardPage = () => {
 				{(criterias) => (
 					<div className='space-y-2'>
 						{criterias.map((criteria) => (
-							<div
+							<DivAnimate
 								key={criteria.id}
-								className='space-y-4 rounded-lg bg-dark-bg/25 p-4'
+								className='rounded-lg bg-dark-bg/25 p-4'
 							>
 								{edit === criteria.id ? (
 									<EditForm key='main_criteria' />
@@ -160,56 +161,63 @@ const AdminDashboardPage = () => {
 										</div>
 										{/* SUB CRITERIA */}
 										{criteria.children.length > 0 && (
-											<div className='space-y-2'>
-												{criteria.children.map((child) =>
-													edit === child.id ? (
-														<EditForm key='sub_criteria' />
-													) : (
-														<div
-															key={child.id}
-															className='flex items-center justify-between rounded-lg bg-dark-bg/25 p-2 pl-4'
-														>
-															<h3>{child.value}</h3>
-															<div className='item-center flex gap-4'>
-																<button onClick={() => onClickEdit(child)}>
-																	<PencilIconSolid className='h-6 w-6 text-blue-500 text-opacity-75 hover:text-opacity-100 active:text-blue-400' />
-																</button>
-																<button onClick={() => remove({id: child.id})}>
-																	<TrashIconSolid className='h-6 w-6 text-red-500 text-opacity-75 hover:text-opacity-100 active:text-red-400' />
-																</button>
-															</div>
-														</div>
+											<DivAnimate className='mt-2 rounded-md bg-dark-bg/25'>
+												{criteria.children.map((child) => {
+													return (
+														<DivAnimate className='' key={child.id}>
+															{edit === child.id ? (
+																<EditForm
+																	className='p-2 pl-4'
+																	key={`sub_criteria_${child.id}`}
+																/>
+															) : (
+																<div className='flex items-center justify-between  p-2 pl-4'>
+																	<h3>{child.value}</h3>
+																	<div className='item-center flex gap-4'>
+																		<button onClick={() => onClickEdit(child)}>
+																			<PencilIconSolid className='h-6 w-6 text-blue-500 text-opacity-75 hover:text-opacity-100 active:text-blue-400' />
+																		</button>
+																		<button
+																			onClick={() => remove({id: child.id})}
+																		>
+																			<TrashIconSolid className='h-6 w-6 text-red-500 text-opacity-75 hover:text-opacity-100 active:text-red-400' />
+																		</button>
+																	</div>
+																</div>
+															)}
+														</DivAnimate>
 													)
+												})}
+
+												{/* ADD SUB CRITERIA */}
+												{add === criteria.id && (
+													<FormWrapper
+														methods={createSubMethods}
+														onValidSubmit={onCreateCriteria}
+														className='flex w-full gap-2 p-2 pl-4'
+													>
+														<TextAreaInput<CriteriaUpdateType>
+															name='value'
+															rows={2}
+															label=''
+															wrapperClassName='flex-1'
+															inputClassName='pb-3'
+														/>
+														<div className='flex flex-col gap-1'>
+															<button type='submit'>
+																<PencilIcon className='h-8 w-8 rounded-lg bg-blue-500 p-1 text-brand-100 hover:bg-blue-400 active:bg-blue-300' />
+															</button>
+															<button type='reset' onClick={() => setAdd(null)}>
+																<XMarkIcon className='h-8 w-8 rounded-lg bg-orange-400 p-1 text-brand-100 hover:bg-orange-300 active:bg-orange-200' />
+															</button>
+														</div>
+													</FormWrapper>
 												)}
-											</div>
-										)}
-										{/* ADD SUB CRITERIA */}
-										{add === criteria.id && (
-											<FormWrapper
-												methods={createSubMethods}
-												onValidSubmit={onCreateCriteria}
-												className='flex w-full gap-2'
-											>
-												<TextAreaInput<CriteriaUpdateType>
-													name='value'
-													rows={2}
-													label=''
-													wrapperClassName='flex-1'
-													inputClassName='pb-3'
-												/>
-												<div className='flex flex-col gap-1'>
-													<button type='submit'>
-														<PencilIcon className='h-8 w-8 rounded-lg bg-blue-500 p-1 text-brand-100 hover:bg-blue-400 active:bg-blue-300' />
-													</button>
-													<button onClick={() => setAdd(null)}>
-														<XMarkIcon className='h-8 w-8 rounded-lg bg-orange-400 p-1 text-brand-100 hover:bg-orange-300 active:bg-orange-200' />
-													</button>
-												</div>
-											</FormWrapper>
+											</DivAnimate>
 										)}
 									</>
 								)}
-							</div>
+							</DivAnimate>
 						))}
 					</div>
 				)}

@@ -60,7 +60,7 @@ const AdminDashboardPage = () => {
 			<h1 className='text-3xl'>Policy Criteria</h1>
 			<QueryWrapper {...criteriaListQuery}>
 				{(criterias) => (
-					<div className='space-y-2'>
+					<div className='space-y-1'>
 						{criterias.map((criteria) => (
 							<CriteriaCard
 								key={criteria.id}
@@ -195,16 +195,16 @@ const CriteriaCard = ({
 	}
 
 	return (
-		<DivAnimate className='rounded-lg bg-dark-bg/25 p-4'>
+		<DivAnimate className='rounded-lg bg-dark-bg/25 py-2 pl-4 pr-2 md:pr-4'>
 			{edit === criteria.id ? (
 				<EditForm key='main_criteria' />
 			) : (
-				<div className='flex items-center justify-between'>
-					<h2 className='text-xl'>
+				<div className='flex items-center justify-between gap-2'>
+					<h2 className='md:text-xl'>
 						{criteria.value}
 						{criteria.children.length > 0 && (
 							<button
-								className='ml-2 rounded-full px-1 pt-0.5 align-middle text-brand-100 hover:bg-brand-200/50 active:bg-brand-200 active:text-brand-500'
+								className='ml-1 rounded-full px-1 pt-0.5 align-middle text-brand-100 hover:bg-brand-200/50 active:bg-brand-200 active:text-brand-500 md:ml-2'
 								onClick={() => setIsExpanded(!isExpanded)}
 							>
 								{isExpanded ? (
@@ -217,13 +217,13 @@ const CriteriaCard = ({
 					</h2>
 					<div className='item-center flex'>
 						<button onClick={() => onClickAdd(criteria)}>
-							<PlusIcon className='h-10 w-10 rounded-l-lg bg-brand-100/50 p-2 text-brand-800 transition-colors duration-200 hover:bg-brand-200 active:bg-brand-300' />
+							<PlusIcon className='h-8 w-8 rounded-l-lg bg-brand-100/50 p-1 text-brand-800 transition-colors duration-200 hover:bg-brand-200 active:bg-brand-300 md:h-10 md:w-10 md:p-2' />
 						</button>
 						<button onClick={() => onClickEdit(criteria)}>
-							<PencilIcon className='h-10 w-10 border-l-[1px] border-r-[1px] border-brand-100/25 bg-brand-100/50 p-2 text-blue-700 transition-colors duration-200 hover:bg-brand-200 active:bg-brand-300' />
+							<PencilIcon className='h-8 w-8 border-l-[1px] border-r-[1px] border-brand-100/25 bg-brand-100/50 p-1 text-blue-700 transition-colors duration-200 hover:bg-brand-200 active:bg-brand-300 md:h-10 md:w-10 md:p-2' />
 						</button>
 						<button onClick={() => remove({id: criteria.id})}>
-							<TrashIcon className='h-10 w-10 rounded-r-lg bg-brand-100/50 p-2 text-red-700 transition-colors duration-200 hover:bg-brand-200 active:bg-brand-300' />
+							<TrashIcon className='h-8 w-8 rounded-r-lg bg-brand-100/50 p-1 text-red-700 transition-colors duration-200 hover:bg-brand-200 active:bg-brand-300 md:h-10 md:w-10 md:p-2' />
 						</button>
 					</div>
 				</div>

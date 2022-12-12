@@ -29,6 +29,8 @@ model Criteria {
     value       String
     slug        String
     parentId    String?
+    type        CriteriaType  @default(YESNO)
+    order       Int?
     parent      Criteria?     @relation("CriteriaChildren", fields: [parentId], references: [id], onDelete: NoAction, onUpdate: NoAction)
     children    Criteria[]    @relation("CriteriaChildren")
     createdAt   DateTime      @default(now())
@@ -57,8 +59,8 @@ model AppCriteria {
     criteriaId String
     criteria   Criteria @relation(fields: [criteriaId], references: [id])
     order      Int?
-    status     Boolean
-    note       String
+    status     Boolean?
+    note       String?
     assignedAt DateTime @default(now())
     assignedBy String
 
@@ -120,4 +122,10 @@ model VerificationToken {
 enum Role {
     ADMIN
     USER
+}
+
+enum CriteriaType {
+    YESNO
+    EXPLAIN
+    YESEXPLAIN
 }

@@ -147,15 +147,15 @@ const AdminDashboardPage = () => {
 										{/* CRITERIA */}
 										<div className='flex items-center justify-between'>
 											<h2 className='text-xl'>{criteria.value}</h2>
-											<div className='item-center flex gap-2'>
+											<div className='item-center flex'>
 												<button onClick={() => onClickAddSubCriteria(criteria)}>
-													<PlusIcon className='h-10 w-10 rounded-lg bg-brand-100 p-2 text-blue-500 hover:bg-brand-200 active:bg-brand-300' />
+													<PlusIcon className='h-10 w-10 rounded-l-lg bg-brand-100/50 p-2 text-brand-800 transition-colors duration-200 hover:bg-brand-200 active:bg-brand-300' />
 												</button>
 												<button onClick={() => onClickEdit(criteria)}>
-													<PencilIcon className='h-10 w-10 rounded-lg bg-brand-100 p-2 text-blue-500 hover:bg-brand-200 active:bg-brand-300' />
+													<PencilIcon className='h-10 w-10 border-l-[1px] border-r-[1px] border-brand-100/25 bg-brand-100/50 p-2 text-blue-700 transition-colors duration-200 hover:bg-brand-200 active:bg-brand-300' />
 												</button>
 												<button onClick={() => remove({id: criteria.id})}>
-													<TrashIcon className='h-10 w-10 rounded-lg bg-brand-100 p-2 text-red-500 hover:bg-brand-200 active:bg-brand-300' />
+													<TrashIcon className='h-10 w-10 rounded-r-lg bg-brand-100/50 p-2 text-red-700 transition-colors duration-200 hover:bg-brand-200 active:bg-brand-300' />
 												</button>
 											</div>
 										</div>
@@ -175,12 +175,12 @@ const AdminDashboardPage = () => {
 																	<h3>{child.value}</h3>
 																	<div className='item-center flex gap-4'>
 																		<button onClick={() => onClickEdit(child)}>
-																			<PencilIconSolid className='h-6 w-6 p-0.5 text-blue-500 text-opacity-75 hover:text-opacity-100 active:text-blue-400' />
+																			<PencilIconSolid className='h-6 w-6 p-0.5 text-blue-500 text-opacity-50 transition-colors duration-200 hover:text-opacity-100 active:text-blue-400' />
 																		</button>
 																		<button
 																			onClick={() => remove({id: child.id})}
 																		>
-																			<TrashIconSolid className='h-6 w-6 p-0.5 text-red-500 text-opacity-75 hover:text-opacity-100 active:text-red-400' />
+																			<TrashIconSolid className='h-6 w-6 p-0.5 text-red-500 text-opacity-50 transition-colors duration-200 hover:text-opacity-100  active:text-red-400' />
 																		</button>
 																	</div>
 																</div>

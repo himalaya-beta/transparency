@@ -184,7 +184,7 @@ const AdminDashboardPage = () => {
 														/>
 													) : (
 														<div className='flex items-center justify-between  p-2 pl-4'>
-															<h3>{child.value}</h3>
+															<h3 className='font-normal'>{child.value}</h3>
 															<div className='item-center flex gap-4'>
 																<button onClick={() => onClickEdit(child)}>
 																	<PencilIconSolid className='h-6 w-6 p-0.5 text-blue-500 text-opacity-50 transition-colors duration-200 hover:text-opacity-100 active:text-blue-400' />

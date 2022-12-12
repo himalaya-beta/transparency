@@ -161,7 +161,7 @@ const AdminDashboardPage = () => {
 										</div>
 										{/* SUB CRITERIA */}
 										{criteria.children.length > 0 && (
-											<DivAnimate className='mt-2 rounded-md bg-dark-bg/25'>
+											<DivAnimate className='mt-2 divide-y-[1px] divide-brand-600 divide-opacity-50 rounded-md bg-dark-bg/25'>
 												{criteria.children.map((child) => {
 													return (
 														<DivAnimate className='' key={child.id}>
@@ -175,12 +175,12 @@ const AdminDashboardPage = () => {
 																	<h3>{child.value}</h3>
 																	<div className='item-center flex gap-4'>
 																		<button onClick={() => onClickEdit(child)}>
-																			<PencilIconSolid className='h-6 w-6 text-blue-500 text-opacity-75 hover:text-opacity-100 active:text-blue-400' />
+																			<PencilIconSolid className='h-6 w-6 p-0.5 text-blue-500 text-opacity-75 hover:text-opacity-100 active:text-blue-400' />
 																		</button>
 																		<button
 																			onClick={() => remove({id: child.id})}
 																		>
-																			<TrashIconSolid className='h-6 w-6 text-red-500 text-opacity-75 hover:text-opacity-100 active:text-red-400' />
+																			<TrashIconSolid className='h-6 w-6 p-0.5 text-red-500 text-opacity-75 hover:text-opacity-100 active:text-red-400' />
 																		</button>
 																	</div>
 																</div>

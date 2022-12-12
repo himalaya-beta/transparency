@@ -121,6 +121,7 @@ const AdminDashboardPage = () => {
 					label=''
 					wrapperClassName='flex-1'
 					inputClassName='pb-3'
+					autoFocus
 				/>
 				<div className='flex flex-col gap-1'>
 					<button type='submit'>
@@ -221,6 +222,7 @@ const AdminDashboardPage = () => {
 											label=''
 											wrapperClassName='flex-1'
 											inputClassName='pb-3'
+											autoFocus
 										/>
 										<div className='flex flex-col gap-1'>
 											<button type='submit'>
@@ -248,6 +250,9 @@ const AdminDashboardPage = () => {
 					<TextAreaInput<CriteriaCreateType>
 						name='value'
 						label='Criteria name/ content/ value'
+						autoFocus
+						wrapperClassName='mt-2'
+						inputClassName='mt-1'
 					/>
 					<Button type='submit' variant='filled'>
 						Submit

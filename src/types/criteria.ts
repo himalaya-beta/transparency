@@ -2,7 +2,7 @@ import {z} from 'zod'
 import {RouterOutputs} from 'utils/trpc'
 
 export const criteriaCreateSchema = z.object({
-	value: z.string().min(5, 'not long enough'),
+	value: z.string().min(3, 'provide meaningful point'),
 	parentId: z.string().nullish(),
 })
 

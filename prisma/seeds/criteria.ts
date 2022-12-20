@@ -42,6 +42,63 @@ async function main() {
 			value: 'Personal data collected for',
 			type: 'EXPLANATION',
 		},
+		{
+			value: 'Automatic Data',
+			children: [
+				{value: 'IP address'},
+				{value: 'Devices ID'},
+				{value: 'User activity statistic'},
+				{value: 'How user come'},
+				{value: 'Location'},
+				{value: 'Features used and not'},
+				{value: 'Visited website before and after'},
+				{
+					value:
+						'Collect data from Cookies, Pixel Tags, Local Shared Object, Web Storage, and similar technology',
+				},
+				{value: 'Email and text interaction'},
+			],
+		},
+		{
+			value: 'Information from third party sources',
+			type: 'TRUE_OR_FALSE_WITH_EXPLANATION',
+		},
+		{value: 'Information from physical devices'},
+		{
+			value: 'Personal data usage',
+			children: [
+				{value: 'Customer services'},
+				{value: 'Grant access'},
+				{value: 'Internal business'},
+				{value: 'Marketing'},
+				{value: 'Social media ads'},
+				{value: 'Organizer emails'},
+				{value: 'Personalized recommendation/ localized content'},
+				{value: 'Targeted advertisement/ recommendation customization'},
+				{value: 'Unlawful behavior detection and prevention'},
+				{
+					value:
+						'Consent to other purpose that is not consistent to current policy',
+				},
+			],
+		},
+		{value: 'Exclude from personalized marketing options'},
+		{value: 'Data transfer', type: 'EXPLANATION'},
+		{value: 'Manage personal data'},
+		{value: 'Personal data retention period'},
+		{
+			value: 'Personal data options',
+			children: [
+				{value: 'Limitation'},
+				{value: 'Electronic communication/ subscription'},
+				{value: 'Social media notification/ personalization'},
+				{value: 'Location tracking & push notification'},
+			],
+		},
+		{value: 'Untracked frameworks'},
+		{value: 'Data storage location', type: 'EXPLANATION'},
+		{value: 'Parental consent on children data'},
+		{value: 'Sources', type: 'EXPLANATION'},
 	]
 	const promises: PrismaPromise<Criteria>[] = []
 

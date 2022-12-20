@@ -54,11 +54,12 @@ const AdminDashboardPage = () => {
 	})
 
 	const onCreateCriteria: SubmitHandler<CriteriaCreateType> = (data) => {
-		create(data)
+		create({...data, order: criteriaListQuery.data?.length ?? 0})
 	}
 
 	React.useEffect(() => {
 		createMethods.setValue('type', 'TRUE_OR_FALSE')
+		createMethods.setValue('order', 0)
 	}, [createMethods])
 
 	return (
@@ -165,6 +166,7 @@ const CriteriaCard = ({
 		setAdd(null)
 		updateMethods.setValue('id', criteria.id)
 		updateMethods.setValue('value', criteria.value)
+		updateMethods.setValue('order', criteria.order)
 		updateMethods.setValue('parentId', criteria.parentId)
 		updateMethods.setValue('type', criteria.type)
 	}
@@ -172,6 +174,7 @@ const CriteriaCard = ({
 		setAdd(criteria.id)
 		setIsExpanded(true)
 		setEdit(null)
+		createMethods.setValue('order', criteria.children.length)
 		createMethods.setValue('parentId', criteria.id)
 		createMethods.setValue('type', 'TRUE_OR_FALSE')
 	}

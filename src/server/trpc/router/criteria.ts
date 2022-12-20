@@ -9,6 +9,7 @@ export const criteriaRouter = router({
 		ctx.prisma.criteria.findMany({
 			where: {parent: null},
 			include: {children: true},
+			orderBy: {order: 'asc'},
 		})
 	),
 	fetchOne: protectedProcedure.input(requiredIdSchema).query(({ctx, input}) =>

@@ -27,10 +27,10 @@ model Article {
 model Criteria {
     id          String        @id @default(cuid())
     value       String
-    slug        String
+    slug        String        @unique
     parentId    String?
     type        CriteriaType  @default(TRUE_OR_FALSE)
-    order       Int?
+    order       Int
     parent      Criteria?     @relation("CriteriaChildren", fields: [parentId], references: [id], onDelete: NoAction, onUpdate: NoAction)
     children    Criteria[]    @relation("CriteriaChildren")
     createdAt   DateTime      @default(now())

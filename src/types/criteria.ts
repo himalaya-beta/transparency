@@ -4,6 +4,7 @@ import {RouterOutputs} from 'utils/trpc'
 export const criteriaCreateSchema = z.object({
 	value: z.string().min(3, 'provide meaningful point'),
 	parentId: z.string().nullish(),
+	order: z.number(),
 	type: z.enum([
 		'TRUE_OR_FALSE',
 		'EXPLANATION',

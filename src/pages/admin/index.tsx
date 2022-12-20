@@ -58,7 +58,7 @@ const AdminDashboardPage = () => {
 	}
 
 	React.useEffect(() => {
-		createMethods.setValue('type', 'CHECK')
+		createMethods.setValue('type', 'TRUE_OR_FALSE')
 	}, [createMethods])
 
 	return (
@@ -173,7 +173,7 @@ const CriteriaCard = ({
 		setIsExpanded(true)
 		setEdit(null)
 		createMethods.setValue('parentId', criteria.id)
-		createMethods.setValue('type', 'CHECK')
+		createMethods.setValue('type', 'TRUE_OR_FALSE')
 	}
 
 	const EditForm = ({className}: {className?: string}) => {
@@ -226,16 +226,16 @@ const CriteriaCard = ({
 					<h2 className='md:text-xl'>
 						{criteria.value}
 						<span className='ml-2 space-x-1'>
-							{criteria.type.includes('CHECK') && (
-								<ShieldCheckIcon className='inline h-5 w-5 text-brand-200' />
+							{criteria.type.includes('TRUE_OR_FALSE') && (
+								<ShieldCheckIcon className='inline h-5 w-5 text-brand-100' />
 							)}
-							{criteria.type.includes('TEXT') && (
-								<DocumentTextIcon className='inline h-5 w-5 text-brand-200' />
+							{criteria.type.includes('EXPLANATION') && (
+								<DocumentTextIcon className='inline h-5 w-5 text-brand-100' />
 							)}
 						</span>
 						{criteria.children.length > 0 && (
 							<button
-								className='ml-1 rounded-full px-1 pt-0.5 align-middle text-brand-100 hover:bg-brand-200/50 active:bg-brand-200 active:text-brand-500 md:ml-2'
+								className='ml-1 rounded-full px-1 pt-0.5 align-middle text-brand-400 hover:bg-brand-200/75 hover:text-brand-500 active:bg-brand-200 active:text-brand-600 md:ml-2'
 								onClick={() => {
 									if (isExpanded) {
 										setAdd(null)
@@ -285,11 +285,11 @@ const CriteriaCard = ({
 										<h3 className='font-normal'>
 											{child.value}
 											<span className='ml-2 space-x-0.5'>
-												{child.type.includes('CHECK') && (
-													<ShieldCheckIcon className='inline h-5 w-5 align-text-top text-brand-200' />
+												{child.type.includes('TRUE_OR_FALSE') && (
+													<ShieldCheckIcon className='inline h-5 w-5 align-text-top text-brand-100' />
 												)}
-												{child.type.includes('TEXT') && (
-													<DocumentTextIcon className='inline h-5 w-5 align-text-top text-brand-200' />
+												{child.type.includes('EXPLANATION') && (
+													<DocumentTextIcon className='inline h-5 w-5 align-text-top text-brand-100' />
 												)}
 											</span>
 										</h3>

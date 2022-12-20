@@ -29,7 +29,7 @@ model Criteria {
     value       String
     slug        String
     parentId    String?
-    type        CriteriaType  @default(CHECK)
+    type        CriteriaType  @default(TRUE_OR_FALSE)
     order       Int?
     parent      Criteria?     @relation("CriteriaChildren", fields: [parentId], references: [id], onDelete: NoAction, onUpdate: NoAction)
     children    Criteria[]    @relation("CriteriaChildren")
@@ -125,7 +125,7 @@ enum Role {
 }
 
 enum CriteriaType {
-    CHECK
-    TEXT
-    CHECK_TEXT
+    TRUE_OR_FALSE
+    EXPLANATION
+    TRUE_OR_FALSE_WITH_EXPLANATION
 }

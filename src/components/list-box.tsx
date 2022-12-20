@@ -4,9 +4,9 @@ import {CheckIcon, ChevronUpDownIcon} from '@heroicons/react/20/solid'
 import {type CriteriaTypesEnum} from 'types/criteria'
 
 const criteriaTypes: CriteriaType[] = [
-	{label: 'Check', id: 'CHECK'},
-	{label: 'Text', id: 'TEXT'},
-	{label: 'Check & Text', id: 'CHECK_TEXT'},
+	{label: 'True or false', id: 'TRUE_OR_FALSE'},
+	{label: 'Explanation', id: 'EXPLANATION'},
+	{label: 'Both', id: 'TRUE_OR_FALSE_WITH_EXPLANATION'},
 ]
 
 type CriteriaType = {

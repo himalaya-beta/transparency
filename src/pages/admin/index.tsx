@@ -231,7 +231,7 @@ const CriteriaCard = ({
 	}
 
 	return (
-		<DivAnimate className='rounded-lg bg-dark-bg/25 p-2 pt-2 md:pr-4'>
+		<DivAnimate className='rounded-lg bg-dark-bg/25 p-2 pt-2'>
 			{edit === criteria.id ? (
 				<EditForm key='main_criteria' className='pr-0 md:py-2 md:pl-2' />
 			) : (

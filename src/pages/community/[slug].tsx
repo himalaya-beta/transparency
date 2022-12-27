@@ -71,14 +71,14 @@ const ArticleDetailsPage = ({
 	const {mutate: deleteArticle, isLoading: isDeleteLoading} =
 		trpc.article.delete.useMutation({
 			onError: (err) => alert(err.message),
-			onSuccess: () => router.push('/article'),
+			onSuccess: () => router.push('/community'),
 		})
 
 	const {mutate: updateArticle, isLoading: isUpdateLoading} =
 		trpc.article.update.useMutation({
 			onError: (err) => alert(err.message),
 			onSuccess: () => {
-				router.push('/article')
+				router.push('/community')
 			},
 		})
 
@@ -115,7 +115,7 @@ const ArticleDetailsPage = ({
 				imageUrl={`https://${process.env.NEXT_PUBLIC_VERCEL_URL}/images/articles.jpg`}
 			/>
 			<main
-				className='container mx-auto max-w-screen-md space-y-8 px-6'
+				className='container mx-auto max-w-screen-md space-y-8 px-6 pt-6'
 				ref={toggleAnimation}
 			>
 				{isEdit ? (

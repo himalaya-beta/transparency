@@ -41,8 +41,8 @@ export default function NavbarLayout({children}: {children: React.ReactNode}) {
 			admin: false,
 		},
 		{
-			href: '/article',
-			label: 'article',
+			href: '/community',
+			label: 'Community',
 			Icon: ArticleOutlineIcon,
 			IconActive: ArticleSolidIcon,
 			admin: false,

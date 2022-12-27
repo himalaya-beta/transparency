@@ -149,7 +149,7 @@ const Home: NextPage = () => {
 										</span>
 									</Button>
 
-									<LinkButton variant='filled' href='/article'>
+									<LinkButton variant='filled' href='/community'>
 										Discover app
 										<span className='relative h-5 child:h-full child:fill-violet-200'>
 											<MagnifyingGlass />

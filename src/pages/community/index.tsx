@@ -33,8 +33,8 @@ export default function ArticlePage() {
 				description='Example on how to build full stack app using extended T3 stack'
 				imageUrl={`https://${process.env.NEXT_PUBLIC_VERCEL_URL}/images/articles.jpg`}
 			/>
-			<main className='container mx-auto max-w-screen-lg space-y-8 px-8 pb-10 md:pb-8'>
-				<h1 className='text-3xl'>Articles</h1>
+			<main className='container mx-auto max-w-screen-lg space-y-8 px-8 pb-10 pt-6 md:pb-8'>
+				<h1 className='text-2xl'>Community Blog</h1>
 				<QueryWrapper {...articlesQuery}>
 					{(articles) => (
 						<div className='grid grid-cols-6 gap-4'>
@@ -53,7 +53,7 @@ export default function ArticlePage() {
 const Card = ({slug, title, content, createdAt, author}: ArticleType) => {
 	return (
 		<Link
-			href={`./article/${slug}`}
+			href={`./community/${slug}`}
 			className={`hover:shadow-bg-light relative col-span-full flex h-72 flex-col overflow-hidden rounded rounded-br-3xl rounded-tl-2xl border-2 border-light-head/25 bg-light-head bg-opacity-20 p-6 pb-4 duration-100 hover:bg-opacity-30 hover:shadow-lg md:col-span-3 lg:col-span-2`}
 		>
 			<div className='absolute top-0 left-0'>
@@ -121,7 +121,7 @@ const CreateArticleForm = ({refetchList}: {refetchList: () => void}) => {
 
 	return (
 		<div className='space-y-2'>
-			<SectionSeparator>Create New Article</SectionSeparator>
+			<SectionSeparator>Create new article</SectionSeparator>
 			<div className='mx-auto lg:w-3/4 '>
 				<FormWrapper
 					methods={methods}

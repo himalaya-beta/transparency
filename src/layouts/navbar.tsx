@@ -10,6 +10,7 @@ import MenuButton from 'components/menu-button'
 import {
 	HomeIcon as HomeOutlineIcon,
 	DocumentTextIcon as ArticleOutlineIcon,
+	UserGroupIcon as UserGroupOutlineIcon,
 	ArrowLeftOnRectangleIcon as LoginIcon,
 	ArrowRightOnRectangleIcon as LogoutIcon,
 	LockClosedIcon,
@@ -17,6 +18,7 @@ import {
 
 import {
 	HomeIcon as HomeSolidIcon,
+	UserGroupIcon as UserGroupSolidIcon,
 	DocumentTextIcon as ArticleSolidIcon,
 	UserIcon,
 	LockOpenIcon,
@@ -43,8 +45,8 @@ export default function NavbarLayout({children}: {children: React.ReactNode}) {
 		{
 			href: '/community',
 			label: 'Community',
-			Icon: ArticleOutlineIcon,
-			IconActive: ArticleSolidIcon,
+			Icon: UserGroupOutlineIcon,
+			IconActive: UserGroupSolidIcon,
 			admin: false,
 		},
 		{

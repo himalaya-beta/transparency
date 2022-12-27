@@ -20,6 +20,7 @@ type Props<T> = UseTRPCQueryResult<T, ErrorType> & {
 const QueryWrapper = <T,>({
 	isLoading,
 	isError,
+	isRefetching,
 	data,
 	error,
 	refetch,
@@ -46,7 +47,7 @@ const QueryWrapper = <T,>({
 
 	return (
 		<div ref={containerRef}>
-			{isLoading ? (
+			{isLoading && !isRefetching ? (
 				<Loading CustomLoading={CustomLoading} />
 			) : isError ? (
 				<Error error={error} CustomError={CustomError} refetch={refetch} />

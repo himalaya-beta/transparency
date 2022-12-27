@@ -13,6 +13,7 @@ import TextAreaInput from 'components/textarea-input'
 import {Button} from 'components/button'
 import {SectionSeparator} from 'components/ornaments'
 import {ErrorMessage} from '@hookform/error-message'
+import {Bars3BottomLeftIcon, ChevronDownIcon} from '@heroicons/react/24/outline'
 
 import {criteriaUpdateSchema} from 'types/criteria'
 import {appCreateSchema} from 'types/app'
@@ -136,7 +137,7 @@ export default function AppSection() {
 										/>
 
 										<div className='flex gap-2'>
-											<div className='ml-2 flex h-5 items-center'>
+											<div className='ml-2 mt-0.5 flex h-5 items-center'>
 												<input
 													id={`criteria-${criteria.id}`}
 													type='checkbox'
@@ -146,13 +147,19 @@ export default function AppSection() {
 													)}
 												/>
 											</div>
-											<div className='min-w-0 space-y-1'>
+											<div className='min-w-0 items-start'>
 												<label
 													htmlFor={`criteria-${criteria.id}`}
 													className='select-none font-medium hover:cursor-pointer'
 												>
 													{criteria.value}
 												</label>
+												{criteria.type.includes('EXPLANATION') && (
+													<Bars3BottomLeftIcon className='ml-2 inline h-5 w-5 align-middle text-brand-100' />
+												)}
+												{criteria.children.length > 0 && (
+													<ChevronDownIcon className='ml-2 inline h-5 w-5 align-middle text-brand-100' />
+												)}
 											</div>
 										</div>
 
@@ -177,19 +184,22 @@ export default function AppSection() {
 																	<input
 																		id={`criteria-${item.id}`}
 																		type='checkbox'
-																		className='h-4 w-4 rounded border-gray-300 text-brand-600 hover:cursor-pointer focus:ring-brand-500'
+																		className='mt-0.5 h-4 w-4 rounded border-gray-300 text-brand-600 hover:cursor-pointer focus:ring-brand-500'
 																		{...methods.register(
 																			`criteria.${idx}.checked` as const
 																		)}
 																	/>
 																</div>
-																<div className='min-w-0 space-y-1'>
+																<div className='min-w-0'>
 																	<label
 																		htmlFor={`criteria-${item.id}`}
 																		className='select-none font-medium hover:cursor-pointer'
 																	>
 																		{item.value}
 																	</label>
+																	{item.type.includes('EXPLANATION') && (
+																		<Bars3BottomLeftIcon className='ml-2 inline h-5 w-5 align-middle text-brand-100' />
+																	)}
 																</div>
 															</div>
 														)

@@ -15,7 +15,7 @@ export type FormWrapperProps<T extends FieldValues> = {
 }
 
 const defaultOnInValidSubmit: SubmitErrorHandler<FieldValues> = (error) => {
-	console.log(error)
+	console.log(error, '[INVALID FORM SUBMISSION]')
 }
 
 const FormWrapper = <T extends FieldValues>({

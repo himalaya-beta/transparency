@@ -1,4 +1,5 @@
 import React from 'react'
+import {useRouter} from 'next/router'
 import {z} from 'zod'
 import {useForm, SubmitHandler, useFieldArray} from 'react-hook-form'
 import {zodResolver} from '@hookform/resolvers/zod'
@@ -6,18 +7,19 @@ import {zodResolver} from '@hookform/resolvers/zod'
 import {trpc} from 'utils/trpc'
 
 import NavbarTopLayout from 'layouts/navbar'
+import DivAnimate from 'components/div-animate'
 import QueryWrapper from 'components/query-wrapper'
 import FormWrapper from 'components/form-wrapper'
 import TextAreaInput from 'components/textarea-input'
 import {Button} from 'components/button'
-import DivAnimate from 'components/div-animate'
 import {SectionSeparator} from 'components/ornaments'
-
-import {criteriaUpdateSchema} from 'types/criteria'
 import {ErrorMessage} from '@hookform/error-message'
 
+import {criteriaUpdateSchema} from 'types/criteria'
+import {appCreateSchema} from 'types/app'
+
 const criteriaSchema = criteriaUpdateSchema
-	.omit({order: true, value: true})
+	.pick({id: true, type: true})
 	.extend({
 		checked: z.boolean(),
 		explanation: z.string().optional(),
@@ -33,21 +35,17 @@ const criteriaSchema = criteriaUpdateSchema
 		{message: 'Provide more clear explanation', path: ['explanation']}
 	)
 
-const appSchema = z.object({
-	name: z.string().min(3, 'Provide more descriptive app name'),
-	company: z.string().min(3, 'Provide more descriptive company name'),
-	headquarter: z.string().optional(),
-	registeredIn: z.string().optional(),
-	offices: z.string().optional(),
-	about: z.string().optional(),
+const appSchema = appCreateSchema.extend({
 	criteria: z
 		.array(criteriaSchema)
 		.refine((val) => val.some((item) => item.checked), 'Provide criteria'),
 })
 
-type AppType = z.infer<typeof appSchema>
+type AppTypeForm = z.infer<typeof appSchema>
 
 export default function AppPage() {
+	const router = useRouter()
+
 	const criteriaQuery = trpc.criteria.fetchRoot.useQuery(
 		{noParent: false},
 		{
@@ -61,8 +59,11 @@ export default function AppPage() {
 			},
 		}
 	)
+	const {mutate: create} = trpc.app.create.useMutation({
+		onSuccess: () => router.push('/admin'),
+	})
 
-	const methods = useForm<AppType>({resolver: zodResolver(appSchema)})
+	const methods = useForm<AppTypeForm>({resolver: zodResolver(appSchema)})
 	const {
 		control,
 		setValue,
@@ -70,39 +71,50 @@ export default function AppPage() {
 		formState: {errors},
 	} = methods
 	const criteriaInput = watch('criteria')
-	useFieldArray<AppType>({control, name: 'criteria'})
+	useFieldArray<AppTypeForm>({control, name: 'criteria'})
 
-	// eslint-disable-next-line unicorn/consistent-function-scoping
-	const onCreateApp: SubmitHandler<AppType> = (data) => {
-		console.log(data.criteria)
-		console.log(data.criteria.filter((item) => item.checked))
+	const onCreateApp: SubmitHandler<AppTypeForm> = (data) => {
+		const criteria = data.criteria
+			.filter((item) => item.checked)
+			.map((item) => ({
+				id: item.id,
+				explanation: item.explanation,
+			}))
+
+		create({
+			...data,
+			criteria,
+		})
 	}
 
 	return (
 		<div className='mx-auto w-full max-w-screen-lg space-y-6'>
 			<h1 className='text-2xl'>New app policy</h1>
 			<FormWrapper methods={methods} onValidSubmit={onCreateApp}>
-				<div className='mb-2 grid grid-cols-2 gap-x-8 gap-y-2'>
-					<TextAreaInput<AppType>
+				<div className='mb-2 grid grid-cols-2 gap-x-12 gap-y-2'>
+					<TextAreaInput<AppTypeForm>
 						name='name'
 						label='App name'
 						rows={1}
 						autoFocus
 					/>
 					<div />
-					<TextAreaInput<AppType>
+					<TextAreaInput<AppTypeForm>
 						name='company'
 						label='Company name'
 						rows={1}
 					/>
-					<TextAreaInput<AppType> name='headquarter' rows={1} />
-					<TextAreaInput<AppType>
+					<TextAreaInput<AppTypeForm> name='headquarter' rows={1} />
+					<TextAreaInput<AppTypeForm>
 						name='registeredIn'
 						label='Registered city'
 						rows={1}
 					/>
-					<TextAreaInput<AppType> name='offices' rows={1} />
-					<TextAreaInput<AppType> name='about' wrapperClassName='col-span-2' />
+					<TextAreaInput<AppTypeForm> name='offices' rows={1} />
+					<TextAreaInput<AppTypeForm>
+						name='about'
+						wrapperClassName='col-span-2'
+					/>
 				</div>
 
 				<fieldset>
@@ -116,7 +128,7 @@ export default function AppPage() {
 									return (
 										<DivAnimate
 											key={criteria.id}
-											className='flex flex-col items-start py-4'
+											className='flex flex-col items-start py-3'
 										>
 											<input
 												type='hidden'

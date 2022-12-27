@@ -43,6 +43,13 @@ export default function NavbarLayout({children}: {children: React.ReactNode}) {
 			admin: false,
 		},
 		{
+			href: '/policy',
+			label: 'App Policy',
+			Icon: ArticleOutlineIcon,
+			IconActive: ArticleSolidIcon,
+			admin: false,
+		},
+		{
 			href: '/community',
 			label: 'Community',
 			Icon: UserGroupOutlineIcon,

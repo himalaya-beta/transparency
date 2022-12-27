@@ -175,32 +175,47 @@ export default function AppSection() {
 
 										{criteriaInput?.[i]?.checked &&
 											criteria.children.length > 0 && (
-												<div className='pl-9 pt-1 '>
+												<div className='w-full pl-9 pt-1'>
 													{criteria.children.map((item) => {
 														const idx = data.findIndex((c) => c.id === item.id)
 														return (
-															<div key={item.id} className='flex gap-2'>
-																<div className='flex h-5 items-center'>
-																	<input
-																		id={`criteria-${item.id}`}
-																		type='checkbox'
-																		className='mt-0.5 h-4 w-4 rounded border-gray-300 text-brand-600 hover:cursor-pointer focus:ring-brand-500'
-																		{...methods.register(
-																			`criteria.${idx}.checked` as const
+															<div key={item.id} className='flex flex-col'>
+																<div className='flex gap-2'>
+																	<div className='flex h-5 items-center'>
+																		<input
+																			id={`criteria-${item.id}`}
+																			type='checkbox'
+																			className='mt-1 h-4 w-4 rounded border-gray-300 text-brand-600 hover:cursor-pointer focus:ring-brand-500'
+																			{...methods.register(
+																				`criteria.${idx}.checked` as const
+																			)}
+																		/>
+																	</div>
+																	<div className='min-w-0'>
+																		<label
+																			htmlFor={`criteria-${item.id}`}
+																			className='select-none font-medium hover:cursor-pointer'
+																		>
+																			{item.value}
+																		</label>
+																		{item.type.includes('EXPLANATION') && (
+																			<Bars3BottomLeftIcon className='ml-2 inline h-5 w-5 align-middle text-brand-100' />
 																		)}
-																	/>
+																	</div>
 																</div>
-																<div className='min-w-0'>
-																	<label
-																		htmlFor={`criteria-${item.id}`}
-																		className='select-none font-medium hover:cursor-pointer'
-																	>
-																		{item.value}
-																	</label>
-																	{item.type.includes('EXPLANATION') && (
-																		<Bars3BottomLeftIcon className='ml-2 inline h-5 w-5 align-middle text-brand-100' />
+
+																{criteriaInput?.[idx]?.checked &&
+																	criteriaInput[idx]?.type.includes(
+																		'EXPLANATION'
+																	) && (
+																		<TextAreaInput
+																			name={`criteria.${idx}.explanation`}
+																			label=''
+																			wrapperClassName='w-full pl-6 pt-1 pb-3'
+																			autoFocus
+																			rows={1}
+																		/>
 																	)}
-																</div>
 															</div>
 														)
 													})}

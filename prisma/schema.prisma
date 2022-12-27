@@ -54,15 +54,13 @@ model App {
 }
 
 model AppCriteria {
-    appId      String
-    criteriaId String
-    order      Int?
-    status     Boolean?
-    note       String?
-    assignedAt DateTime @default(now())
-    assignedBy String
-    app        App      @relation(fields: [appId], references: [id])
-    criteria   Criteria @relation(fields: [criteriaId], references: [id])
+    appId       String
+    criteriaId  String
+    explanation String?
+    assignedAt  DateTime @default(now())
+    assignedBy  String
+    app         App      @relation(fields: [appId], references: [id])
+    criteria    Criteria @relation(fields: [criteriaId], references: [id])
 
     @@id([appId, criteriaId])
     @@index([criteriaId])

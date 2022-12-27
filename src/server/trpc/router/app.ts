@@ -12,9 +12,9 @@ export const appRouter = router({
 	create: protectedProcedure
 		.input(appCreateSchema)
 		.mutation(({ctx, input: {criteria, ...input}}) => {
-			const assigned = criteria.map((item) => ({
-				criteriaId: item.id,
-				note: item.explanation,
+			const assigned = criteria.map(({id, explanation}) => ({
+				criteriaId: id,
+				explanation,
 				assignedBy: ctx.session.user.id,
 			}))
 

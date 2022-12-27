@@ -136,7 +136,8 @@ const Home: NextPage = () => {
 									className={`${animate.glassMain} ${animate.content} child:button-3d flex flex-col items-start gap-4 overflow-visible px-4 preserve-3d move-forth sm:flex-row sm:px-4 md:mt-4 md:px-0 xl:-ml-6`}
 									// className={`${animate.button} child:button-3d flex flex-col items-start gap-4 overflow-visible px-4 preserve-3d move-forth sm:flex-row sm:px-4 md:mt-4 md:px-0 xl:-ml-6`}
 								>
-									<Button
+									<LinkButton
+										href='/community'
 										variant='outlined'
 										onClick={() => console.log('Join our community')}
 									>
@@ -147,9 +148,9 @@ const Home: NextPage = () => {
 												className={`${animate.pingingA} absolute top-0 left-0`}
 											/>
 										</span>
-									</Button>
+									</LinkButton>
 
-									<LinkButton variant='filled' href='/community'>
+									<Button variant='filled'>
 										Discover app
 										<span className='relative h-5 child:h-full child:fill-violet-200'>
 											<MagnifyingGlass />
@@ -157,7 +158,7 @@ const Home: NextPage = () => {
 												className={`${animate.pingingB} absolute top-0.5 left-0.5`}
 											/>
 										</span>
-									</LinkButton>
+									</Button>
 								</div>
 							</Tilt>
 

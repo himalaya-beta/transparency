@@ -5,7 +5,7 @@ import {useForm, type SubmitHandler} from 'react-hook-form'
 import {zodResolver} from '@hookform/resolvers/zod'
 
 import {trpc} from 'utils/trpc'
-import NavbarTopLayout from 'layouts/navbar'
+import NavbarLayout from 'layouts/navbar'
 import MetaHead from 'components/meta-head'
 import {SectionSeparator, TriangleSymbol} from 'components/ornaments'
 import {PencilIcon} from '@heroicons/react/24/solid'
@@ -146,5 +146,5 @@ const CreateArticleForm = ({refetchList}: {refetchList: () => void}) => {
 }
 
 ArticlePage.getLayout = function getLayout(page: React.ReactElement) {
-	return <NavbarTopLayout>{page}</NavbarTopLayout>
+	return <NavbarLayout>{page}</NavbarLayout>
 }

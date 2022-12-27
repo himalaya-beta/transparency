@@ -20,7 +20,7 @@ import {
 import {useForm, type SubmitHandler} from 'react-hook-form'
 import {zodResolver} from '@hookform/resolvers/zod'
 import {useAutoAnimate} from '@formkit/auto-animate/react'
-import NavbarTopLayout from 'layouts/navbar'
+import NavbarLayout from 'layouts/navbar'
 import MetaHead from 'components/meta-head'
 import {
 	PencilSquareIcon,
@@ -177,5 +177,5 @@ const ArticleDetailsPage = ({
 export default ArticleDetailsPage
 
 ArticleDetailsPage.getLayout = (page: React.ReactElement) => (
-	<NavbarTopLayout>{page}</NavbarTopLayout>
+	<NavbarLayout>{page}</NavbarLayout>
 )

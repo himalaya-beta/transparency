@@ -13,12 +13,12 @@ datasource db {
 
 model Article {
     id        String   @id @default(cuid())
+    authorId  String
     title     String
     slug      String
     content   String   @db.Text
     createdAt DateTime @default(now())
     updatedAt DateTime @updatedAt
-    authorId  String
     author    User     @relation(fields: [authorId], references: [id])
 
     @@index([authorId])
@@ -26,15 +26,15 @@ model Article {
 
 model Criteria {
     id          String        @id @default(cuid())
+    parentId    String?
     value       String
     slug        String        @unique
-    parentId    String?
     type        CriteriaType  @default(TRUE_OR_FALSE)
     order       Int
-    parent      Criteria?     @relation("CriteriaChildren", fields: [parentId], references: [id], onDelete: NoAction, onUpdate: NoAction)
-    children    Criteria[]    @relation("CriteriaChildren")
     createdAt   DateTime      @default(now())
     updatedAt   DateTime      @updatedAt
+    parent      Criteria?     @relation("CriteriaChildren", fields: [parentId], references: [id], onDelete: NoAction, onUpdate: NoAction)
+    children    Criteria[]    @relation("CriteriaChildren")
     AppCriteria AppCriteria[]
 
     @@index([parentId])
@@ -54,15 +54,15 @@ model App {
 }
 
 model AppCriteria {
-    app        App      @relation(fields: [appId], references: [id])
     appId      String
     criteriaId String
-    criteria   Criteria @relation(fields: [criteriaId], references: [id])
     order      Int?
     status     Boolean?
     note       String?
     assignedAt DateTime @default(now())
     assignedBy String
+    app        App      @relation(fields: [appId], references: [id])
+    criteria   Criteria @relation(fields: [criteriaId], references: [id])
 
     @@id([appId, criteriaId])
     @@index([criteriaId])

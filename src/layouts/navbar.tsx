@@ -97,7 +97,7 @@ export default function NavbarLayout({children}: {children: React.ReactNode}) {
 								</Link>
 
 								{i !== filteredRoutes.length - 1 && (
-									<span className='invisible text-light-head md:visible'>
+									<span className='invisible text-xs text-light-head md:visible'>
 										&#9671;
 									</span>
 								)}

@@ -179,7 +179,10 @@ export default function AppSection() {
 													{criteria.children.map((item) => {
 														const idx = data.findIndex((c) => c.id === item.id)
 														return (
-															<div key={item.id} className='flex flex-col'>
+															<DivAnimate
+																key={item.id}
+																className='flex flex-col'
+															>
 																<div className='flex gap-2'>
 																	<div className='flex h-5 items-center'>
 																		<input
@@ -216,7 +219,7 @@ export default function AppSection() {
 																			rows={1}
 																		/>
 																	)}
-															</div>
+															</DivAnimate>
 														)
 													})}
 												</div>

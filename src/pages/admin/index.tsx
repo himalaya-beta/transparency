@@ -1,4 +1,7 @@
 import React from 'react'
+import {useRouter} from 'next/router'
+import {useSession} from 'next-auth/react'
+
 import NavbarLayout from 'layouts/navbar'
 import CriteriaSection from 'view/admin/criteria'
 import AppSection from 'view/admin/app'
@@ -8,6 +11,14 @@ import DivAnimate from 'components/div-animate'
 export default function AdminPage() {
 	const tabs = ['App', 'Criteria']
 	const [tabActive, setTabActive] = React.useState('App')
+
+	const {data} = useSession()
+	const router = useRouter()
+	React.useEffect(() => {
+		if (data?.user.role !== 'ADMIN') {
+			router.replace('/')
+		}
+	}, [data, router])
 
 	return (
 		<div className='pb-12'>

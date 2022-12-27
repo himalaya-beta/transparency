@@ -28,11 +28,7 @@ const Button = dynamic(() =>
 	import('components/button').then((buttons) => buttons.Button)
 )
 
-export default function NavbarTopLayout({
-	children,
-}: {
-	children: React.ReactNode
-}) {
+export default function NavbarLayout({children}: {children: React.ReactNode}) {
 	const {data} = useSession()
 
 	const {pathname} = useRouter()
@@ -67,7 +63,7 @@ export default function NavbarTopLayout({
 
 	return (
 		<div className='to-bg-dark to-bg-brand relative min-h-screen bg-gradient-to-br from-brand-700 via-brand-900 to-dark-bg'>
-			<div className='fixed bottom-0 z-10 flex w-full items-center justify-between border-t-0 bg-brand-900/50 bg-opacity-30 py-2 underline-offset-4 shadow-sm backdrop-blur-lg md:relative md:bg-inherit'>
+			<div className='fixed bottom-0 z-10 flex w-full items-center justify-between border-t-0 bg-brand-900/50 bg-opacity-30 py-2 underline-offset-4 backdrop-blur-lg md:relative md:bg-inherit'>
 				<div className='w-12' />
 				<nav className='flex h-fit items-center gap-2'>
 					{filteredRoutes.map(({href, label, Icon, IconActive}, i) => {
@@ -104,7 +100,7 @@ export default function NavbarTopLayout({
 
 				<AuthButton className='px-2 md:px-4' />
 			</div>
-			<div className='container mx-auto py-12'>{children}</div>
+			<div className='container mx-auto'>{children}</div>
 		</div>
 	)
 }

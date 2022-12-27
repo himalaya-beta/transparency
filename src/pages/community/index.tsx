@@ -29,8 +29,8 @@ export default function ArticlePage() {
 	return (
 		<>
 			<MetaHead
-				title='Articles (example) | Create T3 App'
-				description='Example on how to build full stack app using extended T3 stack'
+				title='Community Blog'
+				description='Place where every member share their thought'
 				imageUrl={`https://${process.env.NEXT_PUBLIC_VERCEL_URL}/images/articles.jpg`}
 			/>
 			<main className='container mx-auto max-w-screen-lg space-y-8 px-8 pb-10 pt-6 md:pb-8'>

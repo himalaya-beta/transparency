@@ -10,12 +10,11 @@ import {Button} from 'components/button'
 import {SectionSeparator} from 'components/ornaments'
 import DivAnimate from 'components/div-animate'
 import {
-	DocumentTextIcon,
+	Bars3BottomLeftIcon,
 	ChevronDownIcon,
 	ChevronUpIcon,
 	PencilIcon,
 	PlusIcon,
-	ShieldCheckIcon,
 	TrashIcon,
 	XMarkIcon,
 } from '@heroicons/react/24/outline'
@@ -258,11 +257,8 @@ const CriteriaCard = ({
 						>
 							<span className='mr-2'>{criteria.value}</span>
 							<span className='space-x-1'>
-								{criteria.type.includes('TRUE_OR_FALSE') && (
-									<ShieldCheckIcon className='inline h-5 w-5 text-brand-100' />
-								)}
 								{criteria.type.includes('EXPLANATION') && (
-									<DocumentTextIcon className='inline h-5 w-5 text-brand-100' />
+									<Bars3BottomLeftIcon className='inline h-5 w-5 text-brand-100' />
 								)}
 							</span>
 						</h2>
@@ -302,11 +298,8 @@ const CriteriaCard = ({
 											<h3 className='font-normal'>
 												{child.value}
 												<span className='ml-2 space-x-0.5'>
-													{child.type.includes('TRUE_OR_FALSE') && (
-														<ShieldCheckIcon className='inline h-5 w-5 align-text-top text-brand-100' />
-													)}
 													{child.type.includes('EXPLANATION') && (
-														<DocumentTextIcon className='inline h-5 w-5 align-text-top text-brand-100' />
+														<Bars3BottomLeftIcon className='inline h-5 w-5 align-text-top text-brand-100' />
 													)}
 												</span>
 											</h3>

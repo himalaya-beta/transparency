@@ -56,7 +56,7 @@ const CriteriaSection = () => {
 	}
 
 	React.useEffect(() => {
-		createMethods.setValue('type', 'TRUE_OR_FALSE')
+		createMethods.setValue('type', 'TRUE_FALSE')
 		createMethods.setValue('order', 0)
 	}, [createMethods])
 
@@ -172,7 +172,7 @@ const CriteriaCard = ({
 		setEdit(null)
 		createMethods.setValue('order', criteria.children.length)
 		createMethods.setValue('parentId', criteria.id)
-		createMethods.setValue('type', 'TRUE_OR_FALSE')
+		createMethods.setValue('type', 'TRUE_FALSE')
 	}
 
 	const EditForm = ({className}: {className?: string}) => {
@@ -257,7 +257,7 @@ const CriteriaCard = ({
 						>
 							<span className='mr-2'>{criteria.value}</span>
 							<span className='space-x-1'>
-								{criteria.type.includes('EXPLANATION') && (
+								{criteria.type === 'EXPLANATION' && (
 									<Bars3BottomLeftIcon className='inline h-5 w-5 text-brand-100' />
 								)}
 							</span>
@@ -298,7 +298,7 @@ const CriteriaCard = ({
 											<h3 className='font-normal'>
 												{child.value}
 												<span className='ml-2 space-x-0.5'>
-													{child.type.includes('EXPLANATION') && (
+													{child.type === 'EXPLANATION' && (
 														<Bars3BottomLeftIcon className='inline h-5 w-5 align-text-top text-brand-100' />
 													)}
 												</span>

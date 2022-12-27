@@ -61,7 +61,7 @@ async function main() {
 		},
 		{
 			value: 'Information from third party sources',
-			type: 'TRUE_OR_FALSE_WITH_EXPLANATION',
+			type: 'EXPLANATION',
 		},
 		{value: 'Information from physical devices'},
 		{

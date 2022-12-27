@@ -9,11 +9,7 @@ export const criteriaCreateSchema = z.object({
 	value: z.string().min(3, 'provide meaningful point'),
 	parentId: z.string().nullish(),
 	order: z.number(),
-	type: z.enum([
-		'TRUE_OR_FALSE',
-		'EXPLANATION',
-		'TRUE_OR_FALSE_WITH_EXPLANATION',
-	]),
+	type: z.enum(['TRUE_FALSE', 'EXPLANATION']),
 })
 
 export const criteriaUpdateSchema = criteriaCreateSchema.extend({

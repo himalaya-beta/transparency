@@ -29,7 +29,7 @@ model Criteria {
     parentId    String?
     value       String
     slug        String        @unique
-    type        CriteriaType  @default(TRUE_OR_FALSE)
+    type        CriteriaType  @default(TRUE_FALSE)
     order       Int
     createdAt   DateTime      @default(now())
     updatedAt   DateTime      @updatedAt
@@ -125,7 +125,6 @@ enum Role {
 }
 
 enum CriteriaType {
-    TRUE_OR_FALSE
+    TRUE_FALSE
     EXPLANATION
-    TRUE_OR_FALSE_WITH_EXPLANATION
 }

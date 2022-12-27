@@ -4,9 +4,8 @@ import {CheckIcon, ChevronUpDownIcon} from '@heroicons/react/20/solid'
 import {type CriteriaTypesEnum} from 'types/criteria'
 
 const criteriaTypes: CriteriaType[] = [
-	{label: 'True or false', id: 'TRUE_OR_FALSE'},
+	{label: 'True or false', id: 'TRUE_FALSE'},
 	{label: 'Explanation', id: 'EXPLANATION'},
-	{label: 'Both', id: 'TRUE_OR_FALSE_WITH_EXPLANATION'},
 ]
 
 type CriteriaType = {
@@ -24,6 +23,7 @@ export default function ListBox({
 	className?: string
 }) {
 	const [selected, setSelected] = React.useState<CriteriaType>(
+		// eslint-disable-next-line @typescript-eslint/no-non-null-assertion
 		criteriaTypes[0]!
 	)
 

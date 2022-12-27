@@ -28,7 +28,7 @@ const criteriaSchema = criteriaUpdateSchema
 		(val) =>
 			!(
 				val.checked &&
-				val.type.includes('EXPLANATION') &&
+				val.type === 'EXPLANATION' &&
 				(!!val.explanation || val.explanation === '') &&
 				val.explanation?.length < 3
 			),
@@ -154,7 +154,7 @@ export default function AppSection() {
 												>
 													{criteria.value}
 												</label>
-												{criteria.type.includes('EXPLANATION') && (
+												{criteria.type === 'EXPLANATION' && (
 													<Bars3BottomLeftIcon className='ml-2 inline h-5 w-5 align-middle text-brand-100' />
 												)}
 												{criteria.children.length > 0 && (
@@ -164,7 +164,7 @@ export default function AppSection() {
 										</div>
 
 										{criteriaInput?.[i]?.checked &&
-											criteriaInput[i]?.type.includes('EXPLANATION') && (
+											criteriaInput[i]?.type === 'EXPLANATION' && (
 												<TextAreaInput
 													name={`criteria.${i}.explanation`}
 													label=''
@@ -201,16 +201,15 @@ export default function AppSection() {
 																		>
 																			{item.value}
 																		</label>
-																		{item.type.includes('EXPLANATION') && (
+																		{item.type === 'EXPLANATION' && (
 																			<Bars3BottomLeftIcon className='ml-2 inline h-5 w-5 align-middle text-brand-100' />
 																		)}
 																	</div>
 																</div>
 
 																{criteriaInput?.[idx]?.checked &&
-																	criteriaInput[idx]?.type.includes(
-																		'EXPLANATION'
-																	) && (
+																	criteriaInput[idx]?.type ===
+																		'EXPLANATION' && (
 																		<TextAreaInput
 																			name={`criteria.${idx}.explanation`}
 																			label=''

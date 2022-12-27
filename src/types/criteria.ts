@@ -1,6 +1,10 @@
 import {z} from 'zod'
 import {RouterOutputs} from 'utils/trpc'
 
+export const criteriaFetchSchema = z.object({
+	noParent: z.boolean(),
+})
+
 export const criteriaCreateSchema = z.object({
 	value: z.string().min(3, 'provide meaningful point'),
 	parentId: z.string().nullish(),

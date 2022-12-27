@@ -37,7 +37,7 @@ import {
 import ListBox from 'components/list-box'
 
 const AdminDashboardPage = () => {
-	const criteriaListQuery = trpc.criteria.fetchRoot.useQuery()
+	const criteriaListQuery = trpc.criteria.fetchRoot.useQuery({noParent: true})
 
 	const {mutate: create} = trpc.criteria.create.useMutation({
 		onError: (error) => {

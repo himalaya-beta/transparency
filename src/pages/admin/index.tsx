@@ -10,11 +10,11 @@ export default function AdminPage() {
 	const [tabActive, setTabActive] = React.useState('App')
 
 	return (
-		<div>
+		<div className='pb-12'>
 			<Tabs tabs={tabs} tabActive={tabActive} setTabActive={setTabActive} />
-			<DivAnimate className='mt-2'>
+			<DivAnimate>
 				{tabActive === 'App' && (
-					<div className='mx-auto max-w-screen-md space-y-4 pb-8'>
+					<div className='mx-auto max-w-screen-md space-y-4'>
 						<h1 className='text-2xl'>New app policy</h1>
 						<AppSection />
 					</div>

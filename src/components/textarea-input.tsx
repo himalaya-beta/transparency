@@ -1,10 +1,11 @@
-import {useFormContext} from 'react-hook-form'
+import {useFormContext, type RegisterOptions} from 'react-hook-form'
 import {ErrorMessage} from '@hookform/error-message'
 import {capFirstChar} from 'utils/literal'
 
 type InputProps<T> = React.TextareaHTMLAttributes<HTMLTextAreaElement> & {
 	name: keyof T
 	label?: string
+	registerOptions?: RegisterOptions
 	wrapperClassName?: string
 	labelClassName?: string
 	inputClassName?: string
@@ -14,6 +15,7 @@ type InputProps<T> = React.TextareaHTMLAttributes<HTMLTextAreaElement> & {
 const TextAreaInput = <T,>({
 	name,
 	label,
+	registerOptions,
 	wrapperClassName,
 	labelClassName,
 	inputClassName,
@@ -32,7 +34,7 @@ const TextAreaInput = <T,>({
 			<textarea
 				id={name}
 				className={`rounded bg-light-bg/90 py-2 px-3 ${inputClassName}`}
-				{...register(name)}
+				{...register(name, registerOptions)}
 				{...props}
 			/>
 			<ErrorMessage

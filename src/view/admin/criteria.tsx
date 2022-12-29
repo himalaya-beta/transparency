@@ -6,7 +6,7 @@ import {zodResolver} from '@hookform/resolvers/zod'
 import QueryWrapper from 'components/query-wrapper'
 import FormWrapper from 'components/form-wrapper'
 import TextAreaInput from 'components/textarea-input'
-import {Button} from 'components/button'
+import {Button, IconButton} from 'components/button'
 import {SectionSeparator} from 'components/ornaments'
 import DivAnimate from 'components/div-animate'
 import {
@@ -62,7 +62,9 @@ const CriteriaSection = () => {
 
 	return (
 		<>
-			<h1 className='text-2xl'>Policy criteria</h1>
+			<h1 className='text-2xl'>
+				Policy criteria <PlusIcon className='inline h-6 w-6' />
+			</h1>
 			<div className='space-y-8'>
 				<QueryWrapper {...criteriaListQuery}>
 					{(criterias) => (
@@ -236,16 +238,13 @@ const CriteriaCard = ({
 			) : (
 				<div className='flex items-start'>
 					{haveChildren ? (
-						<button
-							onClick={handleExpand}
-							className='mr-0.5 rounded-full p-0.5 align-middle text-brand-400 hover:bg-brand-200/75 hover:text-brand-500 active:bg-brand-200 active:text-brand-600 md:mt-1'
-						>
+						<IconButton onClick={handleExpand}>
 							{isExpanded ? (
 								<ChevronUpIcon className='h-6 w-6' />
 							) : (
 								<ChevronDownIcon className='h-6 w-6' />
 							)}
-						</button>
+						</IconButton>
 					) : (
 						<div className='inline-block h-full w-8' />
 					)}

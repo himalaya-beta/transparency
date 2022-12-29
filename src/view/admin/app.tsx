@@ -1,5 +1,4 @@
 import React from 'react'
-import {useRouter} from 'next/router'
 import {z} from 'zod'
 import {useForm, SubmitHandler, useFieldArray} from 'react-hook-form'
 import {zodResolver} from '@hookform/resolvers/zod'
@@ -50,8 +49,6 @@ const appSchema = appCreateSchema.extend({
 type AppTypeForm = z.infer<typeof appSchema>
 
 export default function AppSection() {
-	const router = useRouter()
-
 	const [isCreate, setIsCreate] = React.useState(false)
 
 	const appQuery = trpc.app.fetchAll.useQuery()
@@ -69,7 +66,9 @@ export default function AppSection() {
 		}
 	)
 	const {mutate: create} = trpc.app.create.useMutation({
-		onSuccess: () => router.push('/policy'),
+		onSuccess: () => {
+			setIsCreate(false)
+		},
 	})
 	const {mutate: remove} = trpc.app.delete.useMutation({
 		onSuccess: () => {

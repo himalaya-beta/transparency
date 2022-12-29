@@ -23,7 +23,7 @@ export default function AdminPage() {
 	return (
 		<div className='pb-12'>
 			<Tabs tabs={tabs} tabActive={tabActive} setTabActive={setTabActive} />
-			<DivAnimate>
+			<DivAnimate className='-mt-2'>
 				{tabActive === 'App' && (
 					<div className='mx-auto max-w-screen-md space-y-4'>
 						<h1 className='text-2xl'>New app policy</h1>

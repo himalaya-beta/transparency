@@ -12,7 +12,7 @@ export const appCreateSchema = z.object({
 	headquarter: z.string().optional(),
 	registeredIn: z.string().optional(),
 	offices: z.string().optional(),
-	about: z.string().optional(),
+	about: z.string().min(80, 'Provide more meaningful description'),
 	criteria: z.array(criteriaSchema).min(1),
 })
 

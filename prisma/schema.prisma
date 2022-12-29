@@ -43,7 +43,7 @@ model Criteria {
 model App {
     id           String        @id @default(cuid())
     name         String
-    about        String?
+    about        String
     company      String?
     headquarter  String?
     registeredIn String?

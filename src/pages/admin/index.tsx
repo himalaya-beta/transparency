@@ -12,13 +12,13 @@ export default function AdminPage() {
 	const tabs = ['App', 'Criteria']
 	const [tabActive, setTabActive] = React.useState('App')
 
-	const {data} = useSession()
+	const {data, status} = useSession()
 	const router = useRouter()
 	React.useEffect(() => {
-		if (data?.user.role !== 'ADMIN') {
+		if (data?.user.role !== 'ADMIN' && status !== 'loading') {
 			router.replace('/')
 		}
-	}, [data, router])
+	}, [data, router, status])
 
 	return (
 		<div>

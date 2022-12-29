@@ -60,7 +60,7 @@ export default function AppSection() {
 		}
 	)
 	const {mutate: create} = trpc.app.create.useMutation({
-		onSuccess: () => router.push('/admin'),
+		onSuccess: () => router.push('/policy'),
 	})
 
 	const methods = useForm<AppTypeForm>({resolver: zodResolver(appSchema)})

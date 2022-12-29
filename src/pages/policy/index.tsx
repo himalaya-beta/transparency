@@ -34,6 +34,7 @@ export default function PolicyPage() {
 }
 
 const Card = ({
+	id,
 	name,
 	company,
 	about,
@@ -43,7 +44,7 @@ const Card = ({
 	const logo = ''
 	return (
 		<Link
-			href={`./community/${slugify(name)}`}
+			href={`./policy/${slugify(name, id)}`}
 			className={`hover:shadow-bg-light min-h-48 relative flex max-h-60 flex-col overflow-hidden rounded rounded-br-3xl rounded-tl-2xl border-2 border-light-head/25 bg-light-head bg-opacity-20 p-6 pb-4 duration-100 hover:bg-opacity-30 hover:shadow-lg ${className}`}
 		>
 			<div className='absolute top-0 left-0'>

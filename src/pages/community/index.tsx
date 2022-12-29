@@ -123,7 +123,7 @@ const CreateArticleForm = ({refetchList}: {refetchList: () => void}) => {
 
 	return (
 		<div className='space-y-2'>
-			<SectionSeparator>Create new article</SectionSeparator>
+			<SectionSeparator>Create new</SectionSeparator>
 			<div className='mx-auto lg:w-3/4 '>
 				<FormWrapper
 					methods={methods}

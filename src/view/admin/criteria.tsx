@@ -79,7 +79,7 @@ const CriteriaSection = () => {
 				</QueryWrapper>
 
 				<div>
-					<SectionSeparator>Create New</SectionSeparator>
+					<SectionSeparator>Create new</SectionSeparator>
 					<FormWrapper
 						methods={createMethods}
 						onValidSubmit={onCreateCriteria}

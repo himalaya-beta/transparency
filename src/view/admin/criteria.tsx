@@ -63,7 +63,15 @@ const CriteriaSection = () => {
 	return (
 		<>
 			<h1 className='text-2xl'>
-				Policy criteria <PlusIcon className='inline h-6 w-6' />
+				Policy criteria
+				<IconButton
+					className='ml-2 align-bottom'
+					onClick={() => {
+						createMethods.setFocus('value')
+					}}
+				>
+					<PlusIcon className='h-6 w-6 text-brand-300' />
+				</IconButton>
 			</h1>
 			<div className='space-y-8'>
 				<QueryWrapper {...criteriaListQuery}>

@@ -1,6 +1,5 @@
 /* eslint-disable unicorn/no-null */
 import {adminProcedure, protectedProcedure, router} from '../trpc'
-import {slugify} from 'utils/literal'
 
 import {
 	criteriaCreateSchema,
@@ -27,7 +26,7 @@ export const criteriaRouter = router({
 	),
 	create: adminProcedure.input(criteriaCreateSchema).mutation(({ctx, input}) =>
 		ctx.prisma.criteria.create({
-			data: {...input, slug: slugify(input.value)},
+			data: input,
 		})
 	),
 	update: adminProcedure

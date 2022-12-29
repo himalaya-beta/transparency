@@ -1,36 +1,36 @@
 import React from 'react'
 import {useRouter} from 'next/router'
 import {useSession} from 'next-auth/react'
-import {
-	type GetStaticPaths,
-	type GetStaticProps,
-	type InferGetStaticPropsType,
-} from 'next'
+import {useForm} from 'react-hook-form'
+import {zodResolver} from '@hookform/resolvers/zod'
+import {useAutoAnimate} from '@formkit/auto-animate/react'
 
 import {prisma} from 'server/db/client'
 import {trpc} from 'utils/trpc'
-import {extractIdFromSlug} from 'utils/literal'
+import {extractIdFromSlug, slugify} from 'utils/literal'
 
-import {
-	articleUpdateSchema,
-	type ArticleUpdateType,
-	type ArticleType,
-} from 'types/article'
-
-import {useForm, type SubmitHandler} from 'react-hook-form'
-import {zodResolver} from '@hookform/resolvers/zod'
-import {useAutoAnimate} from '@formkit/auto-animate/react'
 import NavbarLayout from 'layouts/navbar'
 import MetaHead from 'components/meta-head'
+import FormWrapper from 'components/form-wrapper'
+import TextAreaInput from 'components/textarea-input'
+import {Button} from 'components/button'
 import {
 	PencilSquareIcon,
 	TrashIcon,
 	XMarkIcon,
 } from '@heroicons/react/24/outline'
 
-import FormWrapper from 'components/form-wrapper'
-import TextAreaInput from 'components/textarea-input'
-import {Button} from 'components/button'
+import {
+	type GetStaticPaths,
+	type GetStaticProps,
+	type InferGetStaticPropsType,
+} from 'next'
+import {type SubmitHandler} from 'react-hook-form'
+import {
+	articleUpdateSchema,
+	type ArticleUpdateType,
+	type ArticleType,
+} from 'types/article'
 
 export const getStaticProps: GetStaticProps<{
 	article: ArticleType
@@ -53,8 +53,10 @@ export const getStaticProps: GetStaticProps<{
 }
 
 export const getStaticPaths: GetStaticPaths = async () => {
-	const articles = await prisma.article.findMany({select: {slug: true}})
-	const articleSlugs = articles.map(({slug}) => ({params: {slug}}))
+	const articles = await prisma.article.findMany()
+	const articleSlugs = articles.map(({title, id}) => ({
+		params: {slug: slugify(title, id)},
+	}))
 
 	return {
 		paths: articleSlugs,

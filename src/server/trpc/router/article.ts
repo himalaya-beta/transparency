@@ -1,7 +1,7 @@
+import {TRPCError} from '@trpc/server'
 import cuid from 'cuid'
 import {z} from 'zod'
 
-import {TRPCError} from '@trpc/server'
 import {router, publicProcedure, protectedProcedure} from '../trpc'
 import {revalidate} from 'server/utils/route'
 import {slugify} from 'utils/literal'
@@ -31,7 +31,6 @@ export const articleRouter = router({
 				data: {
 					...input,
 					id,
-					slug: slugify(input.title, id),
 					authorId: ctx.session.user.id,
 				},
 			})
@@ -47,14 +46,11 @@ export const articleRouter = router({
 			return ctx.prisma.article
 				.update({
 					where: {id: input.id},
-					data: {
-						...input,
-						slug: slugify(input.title, input.id),
-					},
+					data: input,
 				})
 				.then(async (updated) => {
 					// TODO: Revert update on revalidation error
-					await revalidate('article', updated.slug)
+					await revalidate('article', slugify(updated.title, updated.id))
 					return updated
 				})
 		}),

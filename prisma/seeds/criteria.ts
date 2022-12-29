@@ -7,8 +7,6 @@ import {
 	CriteriaType,
 } from '@prisma/client'
 
-import {slugify} from '../../src/utils/literal'
-
 type CriteriaSimple = Pick<Criteria, 'value'> & {type?: CriteriaType}
 
 const prisma = new PrismaClient()
@@ -97,25 +95,17 @@ async function main() {
 
 	for (const [i, criteria] of criterias.entries()) {
 		promises.push(
-			prisma.criteria.upsert({
-				where: {
-					slug: slugify(criteria.value),
-				},
-				update: {
-					order: i,
-				},
-				create: {
+			prisma.criteria.create({
+				data: {
 					order: i,
 					type: criteria.type,
 					value: criteria.value,
-					slug: slugify(criteria.value),
 					...(criteria.children && {
 						children: {
 							createMany: {
 								data: criteria.children.map((subCriteria, j) => ({
 									...subCriteria,
 									order: j,
-									slug: slugify(subCriteria.value),
 								})),
 							},
 						},

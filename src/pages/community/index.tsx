@@ -1,25 +1,27 @@
 import Link from 'next/link'
 import Image from 'next/image'
 import dayjs from 'dayjs'
-import {useForm, type SubmitHandler} from 'react-hook-form'
+import {useForm} from 'react-hook-form'
 import {zodResolver} from '@hookform/resolvers/zod'
 
 import {trpc} from 'utils/trpc'
+import {slugify} from 'utils/literal'
+
 import NavbarLayout from 'layouts/navbar'
 import MetaHead from 'components/meta-head'
+import QueryWrapper from 'components/query-wrapper'
+import FormWrapper from 'components/form-wrapper'
+import TextAreaInput from 'components/textarea-input'
+import {Button} from 'components/button'
 import {SectionSeparator, TriangleSymbol} from 'components/ornaments'
 import {PencilIcon} from '@heroicons/react/24/solid'
 
+import {type SubmitHandler} from 'react-hook-form'
 import {
 	articleCreateSchema,
 	type ArticleCreateType,
 	type ArticleType,
 } from 'types/article'
-import QueryWrapper from 'components/query-wrapper'
-
-import FormWrapper from 'components/form-wrapper'
-import TextAreaInput from 'components/textarea-input'
-import {Button} from 'components/button'
 
 export default function ArticlePage() {
 	const articlesQuery = trpc.article.fetchAll.useQuery(undefined, {
@@ -50,10 +52,10 @@ export default function ArticlePage() {
 	)
 }
 
-const Card = ({slug, title, content, createdAt, author}: ArticleType) => {
+const Card = ({id, title, content, createdAt, author}: ArticleType) => {
 	return (
 		<Link
-			href={`./community/${slug}`}
+			href={`./community/${slugify(title, id)}`}
 			className={`hover:shadow-bg-light relative col-span-full flex h-72 flex-col overflow-hidden rounded rounded-br-3xl rounded-tl-2xl border-2 border-light-head/25 bg-light-head bg-opacity-20 p-6 pb-4 duration-100 hover:bg-opacity-30 hover:shadow-lg md:col-span-3 lg:col-span-2`}
 		>
 			<div className='absolute top-0 left-0'>

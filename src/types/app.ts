@@ -1,9 +1,10 @@
 import {z} from 'zod'
 import {RouterOutputs} from 'utils/trpc'
 
-const criteriaSchema = z.object({
-	id: z.string(),
+const criteriaCreateSchema = z.object({
+	criteriaId: z.string(),
 	explanation: z.string().optional(),
+	assignedBy: z.string(),
 })
 
 export const appCreateSchema = z.object({
@@ -13,7 +14,7 @@ export const appCreateSchema = z.object({
 	registeredIn: z.string().optional(),
 	offices: z.string().optional(),
 	about: z.string().min(80, 'Provide more meaningful description'),
-	criteria: z.array(criteriaSchema).min(1),
+	criteria: z.array(criteriaCreateSchema).min(1),
 })
 
 export const appUpdateSchema = appCreateSchema.extend({

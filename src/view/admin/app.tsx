@@ -1,4 +1,5 @@
 import React from 'react'
+import {useSession} from 'next-auth/react'
 import {z} from 'zod'
 import {useForm, SubmitHandler, useFieldArray} from 'react-hook-form'
 import {zodResolver} from '@hookform/resolvers/zod'
@@ -49,6 +50,7 @@ const appSchema = appCreateSchema.extend({
 type AppTypeForm = z.infer<typeof appSchema>
 
 export default function AppSection() {
+	const {data: auth} = useSession()
 	const [isCreate, setIsCreate] = React.useState(false)
 
 	const appQuery = trpc.app.fetchAll.useQuery()
@@ -87,11 +89,15 @@ export default function AppSection() {
 	useFieldArray<AppTypeForm>({control, name: 'criteria'})
 
 	const onCreateApp: SubmitHandler<AppTypeForm> = (data) => {
+		if (!auth?.user.id) {
+			return alert('Forbidden access')
+		}
 		const criteria = data.criteria
 			.filter((item) => item.checked)
 			.map((item) => ({
-				id: item.id,
+				criteriaId: item.id,
 				explanation: item.explanation,
+				assignedBy: auth.user.id,
 			}))
 
 		create({

@@ -250,7 +250,7 @@ const CriteriaCard = ({
 						<h2
 							className={`
 
-								leading-5 md:text-xl md:leading-none
+								leading-5 md:text-lg md:leading-none
 								${haveChildren ? 'hover:cursor-pointer' : ''} 
 							`}
 							onClick={handleExpand}

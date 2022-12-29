@@ -1,6 +1,7 @@
 /* eslint-disable unicorn/no-null */
 import {adminProcedure, protectedProcedure, router} from '../trpc'
-import {slugify} from 'server/utils/route'
+import {slugify} from 'utils/literal'
+
 import {
 	criteriaCreateSchema,
 	criteriaFetchSchema,

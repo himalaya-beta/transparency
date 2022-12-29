@@ -6,19 +6,12 @@ import {
 	Criteria,
 	CriteriaType,
 } from '@prisma/client'
-const prisma = new PrismaClient()
+
+import {slugify} from '../../src/utils/literal'
 
 type CriteriaSimple = Pick<Criteria, 'value'> & {type?: CriteriaType}
 
-function slugify(title: string) {
-	return title
-		.normalize('NFD') // split an accented letter in the base letter and the accent
-		.replace(/[\u0300-\u036F]/g, '') // remove all previously split accents
-		.toLowerCase()
-		.trim()
-		.replace(/[^\d a-z]/g, '') // remove all chars not letters, numbers and spaces (to be replaced)
-		.replace(/\s+/g, '-') // separator
-}
+const prisma = new PrismaClient()
 
 async function main() {
 	const criterias: Array<CriteriaSimple & {children?: CriteriaSimple[]}> = [

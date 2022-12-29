@@ -9,7 +9,7 @@ import {
 
 import {prisma} from 'server/db/client'
 import {trpc} from 'utils/trpc'
-import {extractIdFromSlug} from 'server/utils/route'
+import {extractIdFromSlug} from 'utils/literal'
 
 import {
 	articleUpdateSchema,

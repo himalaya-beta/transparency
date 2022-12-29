@@ -1,11 +1,12 @@
 import cuid from 'cuid'
 import {z} from 'zod'
 
+import {TRPCError} from '@trpc/server'
 import {router, publicProcedure, protectedProcedure} from '../trpc'
-import {revalidate, slugify} from 'server/utils/route'
+import {revalidate} from 'server/utils/route'
+import {slugify} from 'utils/literal'
 
 import {articleCreateSchema, articleUpdateSchema} from 'types/article'
-import {TRPCError} from '@trpc/server'
 import {requiredIdSchema} from 'types/general'
 
 const requiredIdAuthorIdSchema = requiredIdSchema.extend({authorId: z.string()})

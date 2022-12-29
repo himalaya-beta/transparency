@@ -35,7 +35,7 @@ export default function ArticlePage() {
 				description='Place where every member share their thought'
 				imageUrl={`https://${process.env.NEXT_PUBLIC_VERCEL_URL}/images/articles.jpg`}
 			/>
-			<main className='container mx-auto max-w-screen-lg space-y-8 px-8 pb-10 pt-8 md:pb-8'>
+			<main className='container mx-auto max-w-screen-lg space-y-8 px-8 pt-8'>
 				<h1 className='text-2xl'>Community Blog</h1>
 				<QueryWrapper {...articlesQuery}>
 					{(articles) => (

@@ -109,7 +109,7 @@ export default function NavbarLayout({children}: {children: React.ReactNode}) {
 
 				<AuthButton className='px-2 md:px-4' />
 			</div>
-			<div className='container mx-auto'>{children}</div>
+			<div className='container mx-auto pb-10 md:pb-16'>{children}</div>
 		</div>
 	)
 }

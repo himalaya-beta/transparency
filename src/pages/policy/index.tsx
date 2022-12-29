@@ -12,24 +12,32 @@ import {TriangleSymbol} from 'components/ornaments'
 import {PuzzlePieceIcon} from '@heroicons/react/24/outline'
 
 import {AppType} from 'types/app'
+import MetaHead from 'components/meta-head'
 
 export default function PolicyPage() {
 	const appQuery = trpc.app.fetchAll.useQuery()
 
 	return (
-		<main className='container mx-auto max-w-screen-lg space-y-8 px-8 pb-10 pt-6 md:pb-8'>
-			<h1 className='text-2xl'>Search for app policy</h1>
+		<>
+			<MetaHead
+				title='App Policy'
+				description='Search for app policy'
+				imageUrl={`https://${process.env.NEXT_PUBLIC_VERCEL_URL}/images/articles.jpg`}
+			/>
+			<main className='container mx-auto max-w-screen-lg space-y-8 px-8 pt-8'>
+				<h1 className='text-2xl'>Search for app policy</h1>
 
-			<QueryWrapper {...appQuery}>
-				{(data) => (
-					<div className='grid grid-cols-4 gap-4'>
-						{data.map((app) => (
-							<Card key={app.id} {...app} className='col-span-2' />
-						))}
-					</div>
-				)}
-			</QueryWrapper>
-		</main>
+				<QueryWrapper {...appQuery}>
+					{(data) => (
+						<div className='grid grid-cols-4 gap-4'>
+							{data.map((app) => (
+								<Card key={app.id} {...app} className='col-span-2' />
+							))}
+						</div>
+					)}
+				</QueryWrapper>
+			</main>
+		</>
 	)
 }
 

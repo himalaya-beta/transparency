@@ -21,16 +21,16 @@ export default function AdminPage() {
 	}, [data, router])
 
 	return (
-		<div className='pb-12'>
+		<div>
 			<Tabs tabs={tabs} tabActive={tabActive} setTabActive={setTabActive} />
 			<DivAnimate className='-mt-2'>
 				{tabActive === 'App' && (
-					<div className='mx-auto max-w-screen-md space-y-4 pb-10'>
+					<div className='mx-auto max-w-screen-md space-y-4'>
 						<AppSection />
 					</div>
 				)}
 				{tabActive === 'Criteria' && (
-					<div className='mx-auto max-w-screen-md space-y-4 pb-10'>
+					<div className='mx-auto max-w-screen-md space-y-4'>
 						<CriteriaSection />
 					</div>
 				)}

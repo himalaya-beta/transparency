@@ -71,6 +71,11 @@ export default function AppSection() {
 	const {mutate: create} = trpc.app.create.useMutation({
 		onSuccess: () => router.push('/policy'),
 	})
+	const {mutate: remove} = trpc.app.delete.useMutation({
+		onSuccess: () => {
+			appQuery.refetch()
+		},
+	})
 
 	const methods = useForm<AppTypeForm>({resolver: zodResolver(appSchema)})
 	const {
@@ -302,7 +307,7 @@ export default function AppSection() {
 											<button onClick={() => console.log('edit', app.id)}>
 												<PencilIcon className='h-8 w-8 rounded-l-lg border-l-[1px] border-r-[1px] border-brand-100/25 bg-brand-100/50 p-1  text-blue-700 transition-colors duration-200 hover:bg-brand-200 active:bg-brand-300 md:h-10 md:w-10 md:p-2' />
 											</button>
-											<button onClick={() => console.log('delete', app.id)}>
+											<button onClick={() => remove({id: app.id})}>
 												<TrashIcon className='h-8 w-8 rounded-r-lg bg-brand-100/50 p-1 text-red-700 transition-colors duration-200 hover:bg-brand-200 active:bg-brand-300 md:h-10 md:w-10 md:p-2' />
 											</button>
 										</div>

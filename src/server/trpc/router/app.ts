@@ -1,4 +1,4 @@
-import {publicProcedure, protectedProcedure, router} from '../trpc'
+import {publicProcedure, router, adminProcedure} from '../trpc'
 import {appCreateSchema} from 'types/app'
 import {requiredIdSchema} from 'types/general'
 
@@ -9,7 +9,7 @@ export const appRouter = router({
 		.query(({ctx, input}) =>
 			ctx.prisma.app.findUnique({where: {id: input.id}})
 		),
-	create: protectedProcedure
+	create: adminProcedure
 		.input(appCreateSchema)
 		.mutation(({ctx, input: {criteria, ...input}}) => {
 			const assigned = criteria.map(({id, explanation}) => ({
@@ -29,4 +29,12 @@ export const appRouter = router({
 				},
 			})
 		}),
+	delete: adminProcedure.input(requiredIdSchema).mutation(({ctx, input}) =>
+		ctx.prisma.$transaction([
+			ctx.prisma.appCriteria.deleteMany({where: {appId: input.id}}),
+			ctx.prisma.app.delete({
+				where: {id: input.id},
+			}),
+		])
+	),
 })

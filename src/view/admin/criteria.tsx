@@ -61,43 +61,46 @@ const CriteriaSection = () => {
 	}, [createMethods])
 
 	return (
-		<div className='space-y-8'>
-			<QueryWrapper {...criteriaListQuery}>
-				{(criterias) => (
-					<div className='space-y-1'>
-						{criterias.map((criteria) => (
-							<CriteriaCard
-								key={criteria.id}
-								criteria={criteria}
-								refetch={criteriaListQuery.refetch}
-							/>
-						))}
-					</div>
-				)}
-			</QueryWrapper>
+		<>
+			<h1 className='text-2xl'>Policy criteria</h1>
+			<div className='space-y-8'>
+				<QueryWrapper {...criteriaListQuery}>
+					{(criterias) => (
+						<div className='space-y-1'>
+							{criterias.map((criteria) => (
+								<CriteriaCard
+									key={criteria.id}
+									criteria={criteria}
+									refetch={criteriaListQuery.refetch}
+								/>
+							))}
+						</div>
+					)}
+				</QueryWrapper>
 
-			<div>
-				<SectionSeparator>Create New</SectionSeparator>
-				<FormWrapper
-					methods={createMethods}
-					onValidSubmit={onCreateCriteria}
-					className='space-y-4'
-				>
-					<ListBox
-						label='Type'
-						setValue={(value) => createMethods.setValue('type', value)}
-					/>
+				<div>
+					<SectionSeparator>Create New</SectionSeparator>
+					<FormWrapper
+						methods={createMethods}
+						onValidSubmit={onCreateCriteria}
+						className='space-y-4'
+					>
+						<ListBox
+							label='Type'
+							setValue={(value) => createMethods.setValue('type', value)}
+						/>
 
-					<TextAreaInput<CriteriaCreateType>
-						name='value'
-						label='Criteria name/ content/ value'
-					/>
-					<Button type='submit' variant='filled'>
-						Submit
-					</Button>
-				</FormWrapper>
+						<TextAreaInput<CriteriaCreateType>
+							name='value'
+							label='Criteria name/ content/ value'
+						/>
+						<Button type='submit' variant='filled'>
+							Submit
+						</Button>
+					</FormWrapper>
+				</div>
 			</div>
-		</div>
+		</>
 	)
 }
 

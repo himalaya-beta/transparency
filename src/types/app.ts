@@ -3,7 +3,7 @@ import {RouterOutputs} from 'utils/trpc'
 
 const criteriaCreateSchema = z.object({
 	criteriaId: z.string(),
-	explanation: z.string().optional(),
+	explanation: z.string().nullable(),
 	assignedBy: z.string(),
 })
 

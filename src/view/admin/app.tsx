@@ -38,7 +38,7 @@ const criteriaSchema = criteriaUpdateSchema
 	.pick({id: true, type: true})
 	.extend({
 		checked: z.boolean(),
-		explanation: z.string().optional(),
+		explanation: z.string().nullable(),
 	})
 	.refine(
 		(val) =>
@@ -73,6 +73,7 @@ export default function AppSection() {
 					setValue(`criteria.${i}.id`, criteria.id)
 					setValue(`criteria.${i}.type`, criteria.type)
 					setValue(`criteria.${i}.checked`, false)
+					setValue(`criteria.${i}.explanation`, null)
 				}
 			},
 		}

@@ -92,6 +92,7 @@ export default function AppSection() {
 		watch,
 		reset,
 		formState: {errors},
+		register,
 	} = methods
 	const criteriaForm = watch('criteria')
 	useFieldArray<AppTypeForm>({control, name: 'criteria'})
@@ -157,6 +158,8 @@ export default function AppSection() {
 								{(data) => (
 									<div className='divide-y divide-gray-500/50 '>
 										{data.map((criteria, i) => {
+											const isChecked = criteriaForm[i]?.checked
+											const hasChildren = criteria.children.length > 0
 											if (criteria.parentId) return
 											return (
 												<DivAnimate
@@ -165,102 +168,42 @@ export default function AppSection() {
 												>
 													<input
 														type='hidden'
-														{...methods.register(`criteria.${i}.id` as const)}
+														{...register(`criteria.${i}.id` as const)}
 													/>
 													<input
 														type='hidden'
-														{...methods.register(`criteria.${i}.type` as const)}
+														{...register(`criteria.${i}.type` as const)}
 													/>
 
-													<div className='flex gap-2'>
-														<div className='ml-2 mt-0.5 flex h-5 items-center'>
-															<input
-																id={`criteria-${criteria.id}`}
-																type='checkbox'
-																className='h-4 w-4 rounded border-gray-300 text-brand-600 hover:cursor-pointer focus:ring-brand-500'
-																{...methods.register(
-																	`criteria.${i}.checked` as const
-																)}
-															/>
+													<CheckInput
+														idx={i}
+														register={register}
+														criteria={criteria}
+														criteriaForm={criteriaForm}
+													/>
+
+													{isChecked && hasChildren && (
+														<div className='w-full pl-9 pt-1'>
+															{criteria.children.map((item) => {
+																const idx = data.findIndex(
+																	(c) => c.id === item.id
+																)
+																return (
+																	<DivAnimate
+																		key={item.id}
+																		className='flex flex-col'
+																	>
+																		<CheckInput
+																			idx={idx}
+																			register={register}
+																			criteria={item}
+																			criteriaForm={criteriaForm}
+																		/>
+																	</DivAnimate>
+																)
+															})}
 														</div>
-														<div className='min-w-0 items-start'>
-															<label
-																htmlFor={`criteria-${criteria.id}`}
-																className='select-none font-medium hover:cursor-pointer'
-															>
-																{criteria.value}
-															</label>
-															{criteria.type === 'EXPLANATION' && (
-																<Bars3BottomLeftIcon className='ml-2 inline h-5 w-5 align-middle text-brand-100' />
-															)}
-															{criteria.children.length > 0 && (
-																<ChevronDownIcon className='ml-2 inline h-5 w-5 align-middle text-brand-100' />
-															)}
-														</div>
-													</div>
-
-													{criteriaForm?.[i]?.checked &&
-														criteriaForm[i]?.type === 'EXPLANATION' && (
-															<TextAreaInput
-																name={`criteria.${i}.explanation`}
-																label=''
-																wrapperClassName='w-full pl-9 pt-1'
-																autoFocus
-															/>
-														)}
-
-													{criteriaForm?.[i]?.checked &&
-														criteria.children.length > 0 && (
-															<div className='w-full pl-9 pt-1'>
-																{criteria.children.map((item) => {
-																	const idx = data.findIndex(
-																		(c) => c.id === item.id
-																	)
-																	return (
-																		<DivAnimate
-																			key={item.id}
-																			className='flex flex-col'
-																		>
-																			<div className='flex gap-2'>
-																				<div className='flex h-5 items-center'>
-																					<input
-																						id={`criteria-${item.id}`}
-																						type='checkbox'
-																						className='mt-1 h-4 w-4 rounded border-gray-300 text-brand-600 hover:cursor-pointer focus:ring-brand-500'
-																						{...methods.register(
-																							`criteria.${idx}.checked` as const
-																						)}
-																					/>
-																				</div>
-																				<div className='min-w-0'>
-																					<label
-																						htmlFor={`criteria-${item.id}`}
-																						className='select-none font-medium hover:cursor-pointer'
-																					>
-																						{item.value}
-																					</label>
-																					{item.type === 'EXPLANATION' && (
-																						<Bars3BottomLeftIcon className='ml-2 inline h-5 w-5 align-middle text-brand-100' />
-																					)}
-																				</div>
-																			</div>
-
-																			{criteriaForm?.[idx]?.checked &&
-																				criteriaForm[idx]?.type ===
-																					'EXPLANATION' && (
-																					<TextAreaInput
-																						name={`criteria.${idx}.explanation`}
-																						label=''
-																						wrapperClassName='w-full pl-6 pt-1 pb-3'
-																						autoFocus
-																						rows={1}
-																					/>
-																				)}
-																		</DivAnimate>
-																	)
-																})}
-															</div>
-														)}
+													)}
 												</DivAnimate>
 											)
 										})}
@@ -421,7 +364,7 @@ const Card = ({
 						{(data) => (
 							<div className='w-full divide-y divide-gray-500/50 '>
 								{data.map((criteria, i) => {
-									const isChecked = criteriaForm?.[i]?.checked
+									const isChecked = criteriaForm[i]?.checked
 									const hasChildren = criteria.children.length > 0
 									if (criteria.parentId || !isExpanded) return
 									return (
@@ -442,7 +385,7 @@ const Card = ({
 												{...methods.register(`criteria.${i}.type` as const)}
 											/>
 											<CheckInput
-												i={i}
+												idx={i}
 												criteriaForm={criteriaForm}
 												criteria={criteria}
 												register={register}
@@ -458,10 +401,10 @@ const Card = ({
 																className='flex flex-col'
 															>
 																<CheckInput
-																	i={idx}
+																	idx={idx}
 																	register={register}
 																	criteriaForm={criteriaForm}
-																	criteria={{...item, children: []}}
+																	criteria={item}
 																/>
 															</DivAnimate>
 														)
@@ -481,17 +424,23 @@ const Card = ({
 }
 
 const CheckInput = ({
-	i,
+	idx,
 	criteria,
 	criteriaForm,
 	register,
 }: {
-	i: number
-	criteriaForm: CriteriaEditType[]
-	criteria: CriteriaType
-	register: UseFormRegister<CriteriaEditFormType>
+	idx: number
+	criteriaForm: Array<{checked: boolean}>
+	criteria: {
+		id: string
+		value: string
+		type: 'EXPLANATION' | 'TRUE_FALSE'
+		children?: Array<unknown>
+	}
+	// eslint-disable-next-line @typescript-eslint/no-explicit-any
+	register: UseFormRegister<any>
 }) => {
-	const methods = register(`criteria.${i}.checked` as const)
+	const methods = register(`criteria.${idx}.checked` as const)
 
 	return (
 		<>
@@ -514,14 +463,14 @@ const CheckInput = ({
 					{criteria.type === 'EXPLANATION' && (
 						<Bars3BottomLeftIcon className='ml-2 inline h-5 w-5 align-middle text-brand-100' />
 					)}
-					{criteria.children.length > 0 && (
+					{criteria.children && criteria.children.length > 0 && (
 						<ChevronDownIcon className='ml-2 inline h-5 w-5 align-middle text-brand-100' />
 					)}
 				</div>
 			</div>
-			{criteriaForm?.[i]?.checked && criteria.type === 'EXPLANATION' && (
+			{criteriaForm[idx]?.checked && criteria.type === 'EXPLANATION' && (
 				<TextAreaInput
-					name={`criteria.${i}.explanation`}
+					name={`criteria.${idx}.explanation`}
 					label=''
 					wrapperClassName='w-full pl-6 pt-1 pb-2'
 				/>

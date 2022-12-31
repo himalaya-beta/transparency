@@ -370,7 +370,7 @@ const Card = ({
 									return (
 										<DivAnimate
 											key={criteria.id}
-											className='flex flex-col items-start py-3'
+											className='flex flex-col items-start py-2'
 										>
 											<input
 												type='hidden'

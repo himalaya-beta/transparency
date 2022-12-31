@@ -3,12 +3,15 @@ import {appCreateSchema} from 'types/app'
 import {requiredIdSchema} from 'types/general'
 
 export const appRouter = router({
-	fetchAll: publicProcedure.query(({ctx}) => ctx.prisma.app.findMany()),
-	fetchOne: publicProcedure
-		.input(requiredIdSchema)
-		.query(({ctx, input}) =>
-			ctx.prisma.app.findUnique({where: {id: input.id}})
-		),
+	fetchAll: publicProcedure.query(({ctx}) =>
+		ctx.prisma.app.findMany({include: {AppCriteria: true}})
+	),
+	fetchOne: publicProcedure.input(requiredIdSchema).query(({ctx, input}) =>
+		ctx.prisma.app.findUnique({
+			where: {id: input.id},
+			include: {AppCriteria: true},
+		})
+	),
 	create: adminProcedure
 		.input(appCreateSchema)
 		.mutation(({ctx, input: {criteria, ...input}}) =>

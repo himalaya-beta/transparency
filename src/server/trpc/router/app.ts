@@ -1,5 +1,5 @@
 import {publicProcedure, router, adminProcedure} from '../trpc'
-import {appCreateSchema} from 'types/app'
+import {appCreateSchema, appUpdateSchema} from 'types/app'
 import {requiredIdSchema} from 'types/general'
 
 export const appRouter = router({
@@ -25,6 +25,11 @@ export const appRouter = router({
 					},
 				},
 			})
+		),
+	update: adminProcedure
+		.input(appUpdateSchema)
+		.mutation(({ctx, input: {id, ...input}}) =>
+			ctx.prisma.app.update({where: {id}, data: input})
 		),
 	delete: adminProcedure.input(requiredIdSchema).mutation(({ctx, input}) =>
 		ctx.prisma.$transaction([

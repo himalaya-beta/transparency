@@ -17,9 +17,11 @@ export const appCreateSchema = z.object({
 	criteria: z.array(criteriaCreateSchema).min(1),
 })
 
-export const appUpdateSchema = appCreateSchema.extend({
-	id: z.string(),
-})
+export const appUpdateSchema = appCreateSchema
+	.extend({
+		id: z.string(),
+	})
+	.omit({criteria: true})
 
 export type AppCreateType = z.infer<typeof appCreateSchema>
 export type AppUpdateType = z.infer<typeof appUpdateSchema>

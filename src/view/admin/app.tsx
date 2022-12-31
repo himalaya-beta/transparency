@@ -1,7 +1,13 @@
+/* eslint-disable unicorn/no-null */
 import React from 'react'
 import {useSession} from 'next-auth/react'
 import {z} from 'zod'
-import {useForm, SubmitHandler, useFieldArray} from 'react-hook-form'
+import {
+	useForm,
+	SubmitHandler,
+	useFieldArray,
+	UseFormRegister,
+} from 'react-hook-form'
 import {zodResolver} from '@hookform/resolvers/zod'
 
 import {trpc} from 'utils/trpc'
@@ -16,13 +22,17 @@ import {ErrorMessage} from '@hookform/error-message'
 import {
 	Bars3BottomLeftIcon,
 	ChevronDownIcon,
+	ChevronUpIcon,
 	PencilIcon,
 	PlusIcon,
 	TrashIcon,
 } from '@heroicons/react/24/outline'
 
-import {criteriaUpdateSchema} from 'types/criteria'
-import {appCreateSchema} from 'types/app'
+import {CriteriaType, criteriaUpdateSchema} from 'types/criteria'
+import {appCreateSchema, type AppType} from 'types/app'
+import {type UseTRPCQueryResult} from '@trpc/react-query/shared'
+import {type TRPCClientErrorLike} from '@trpc/client'
+import {type AppRouter} from 'server/trpc/router/_app'
 
 const criteriaSchema = criteriaUpdateSchema
 	.pick({id: true, type: true})
@@ -72,11 +82,6 @@ export default function AppSection() {
 			setIsCreate(false)
 		},
 	})
-	const {mutate: remove} = trpc.app.delete.useMutation({
-		onSuccess: () => {
-			appQuery.refetch()
-		},
-	})
 
 	const methods = useForm<AppTypeForm>({resolver: zodResolver(appSchema)})
 	const {
@@ -85,7 +90,7 @@ export default function AppSection() {
 		watch,
 		formState: {errors},
 	} = methods
-	const criteriaInput = watch('criteria')
+	const criteriaForm = watch('criteria')
 	useFieldArray<AppTypeForm>({control, name: 'criteria'})
 
 	const onCreateApp: SubmitHandler<AppTypeForm> = (data) => {
@@ -191,8 +196,8 @@ export default function AppSection() {
 														</div>
 													</div>
 
-													{criteriaInput?.[i]?.checked &&
-														criteriaInput[i]?.type === 'EXPLANATION' && (
+													{criteriaForm?.[i]?.checked &&
+														criteriaForm[i]?.type === 'EXPLANATION' && (
 															<TextAreaInput
 																name={`criteria.${i}.explanation`}
 																label=''
@@ -201,7 +206,7 @@ export default function AppSection() {
 															/>
 														)}
 
-													{criteriaInput?.[i]?.checked &&
+													{criteriaForm?.[i]?.checked &&
 														criteria.children.length > 0 && (
 															<div className='w-full pl-9 pt-1'>
 																{criteria.children.map((item) => {
@@ -237,8 +242,8 @@ export default function AppSection() {
 																				</div>
 																			</div>
 
-																			{criteriaInput?.[idx]?.checked &&
-																				criteriaInput[idx]?.type ===
+																			{criteriaForm?.[idx]?.checked &&
+																				criteriaForm[idx]?.type ===
 																					'EXPLANATION' && (
 																					<TextAreaInput
 																						name={`criteria.${idx}.explanation`}
@@ -301,22 +306,12 @@ export default function AppSection() {
 						{(data) => (
 							<div className='space-y-1'>
 								{data.map((app) => (
-									<div
-										className='flex flex-1 items-center justify-between gap-2 rounded-lg bg-dark-bg/25 p-2 pl-4'
+									<Card
 										key={app.id}
-									>
-										<h2 className={` leading-5 md:text-lg md:leading-none`}>
-											{app.name}
-										</h2>
-										<div className='item-center flex'>
-											<button onClick={() => console.log('edit', app.id)}>
-												<PencilIcon className='h-8 w-8 rounded-l-lg border-l-[1px] border-r-[1px] border-brand-100/25 bg-brand-100/50 p-1  text-blue-700 transition-colors duration-200 hover:bg-brand-200 active:bg-brand-300 md:h-10 md:w-10 md:p-2' />
-											</button>
-											<button onClick={() => remove({id: app.id})}>
-												<TrashIcon className='h-8 w-8 rounded-r-lg bg-brand-100/50 p-1 text-red-700 transition-colors duration-200 hover:bg-brand-200 active:bg-brand-300 md:h-10 md:w-10 md:p-2' />
-											</button>
-										</div>
-									</div>
+										refetch={appQuery.refetch}
+										criteriaQuery={criteriaQuery}
+										{...app}
+									/>
 								))}
 							</div>
 						)}
@@ -324,5 +319,210 @@ export default function AppSection() {
 				</>
 			)}
 		</DivAnimate>
+	)
+}
+
+const criteriaEditSchema = z.object({
+	id: z.string(),
+	parentId: z.string().nullable(),
+	explanation: z.string().nullable(),
+	checked: z.boolean(),
+	type: z.enum(['TRUE_FALSE', 'EXPLANATION']),
+})
+
+const criteriaEditFormSchema = z.object({
+	criteria: criteriaEditSchema.array(),
+})
+
+type CriteriaEditType = z.infer<typeof criteriaEditSchema>
+type CriteriaEditFormType = z.infer<typeof criteriaEditFormSchema>
+
+const Card = ({
+	id,
+	name,
+	AppCriteria,
+	refetch,
+	criteriaQuery,
+}: AppType & {
+	refetch: () => void
+	criteriaQuery: UseTRPCQueryResult<
+		CriteriaType[],
+		TRPCClientErrorLike<AppRouter>
+	>
+}) => {
+	const [isExpanded, setIsExpanded] = React.useState(false)
+
+	const {mutate: remove} = trpc.app.delete.useMutation({
+		onSuccess: () => {
+			refetch()
+		},
+	})
+
+	const defaultCriteria = React.useMemo(() => {
+		const result: CriteriaEditType[] = []
+
+		if (criteriaQuery.data) {
+			for (const criteria of criteriaQuery.data) {
+				const appCriteria = AppCriteria.find(
+					(item) => item.criteriaId === criteria.id
+				)
+				result.push({
+					id: criteria.id,
+					parentId: criteria.parentId,
+					checked: !!appCriteria,
+					explanation: appCriteria ? appCriteria.explanation : null,
+					type: criteria.type,
+				})
+			}
+		}
+
+		return result
+	}, [AppCriteria, criteriaQuery.data])
+
+	const methods = useForm<CriteriaEditFormType>({
+		resolver: zodResolver(criteriaEditSchema),
+		defaultValues: {
+			criteria: defaultCriteria,
+		},
+	})
+	const {control, watch, register} = methods
+	const criteriaForm = watch('criteria')
+	useFieldArray<CriteriaEditFormType>({control, name: 'criteria'})
+
+	return (
+		<div className='flex rounded-lg bg-dark-bg/25 p-2'>
+			<IconButton onClick={() => setIsExpanded(!isExpanded)} className='h-fit'>
+				{isExpanded ? (
+					<ChevronUpIcon className='h-6 w-6' />
+				) : (
+					<ChevronDownIcon className='h-6 w-6' />
+				)}
+			</IconButton>
+			<DivAnimate className='flex flex-1 flex-col justify-start'>
+				<div className='flex items-center justify-between'>
+					<h2 className='leading-5 md:text-lg md:leading-none'>{name}</h2>
+					<div className='item-center flex'>
+						<button onClick={() => console.log('edit', id)}>
+							<PencilIcon className='h-8 w-8 rounded-l-lg border-l-[1px] border-r-[1px] border-brand-100/25 bg-brand-100/50 p-1  text-blue-700 transition-colors duration-200 hover:bg-brand-200 active:bg-brand-300 md:h-10 md:w-10 md:p-2' />
+						</button>
+						<button onClick={() => remove({id})}>
+							<TrashIcon className='h-8 w-8 rounded-r-lg bg-brand-100/50 p-1 text-red-700 transition-colors duration-200 hover:bg-brand-200 active:bg-brand-300 md:h-10 md:w-10 md:p-2' />
+						</button>
+					</div>
+				</div>
+				<FormWrapper
+					methods={methods}
+					onValidSubmit={(data) => console.log(data, '<<<<< edit app')}
+				>
+					<QueryWrapper {...criteriaQuery}>
+						{(data) => (
+							<div className='w-full divide-y divide-gray-500/50 '>
+								{data.map((criteria, i) => {
+									const isChecked = criteriaForm?.[i]?.checked
+									const hasChildren = criteria.children.length > 0
+									if (criteria.parentId || !isExpanded) return
+									return (
+										<DivAnimate
+											key={criteria.id}
+											className='flex flex-col items-start py-3'
+										>
+											<input
+												type='hidden'
+												{...methods.register(`criteria.${i}.id` as const)}
+											/>
+											<input
+												type='hidden'
+												{...methods.register(`criteria.${i}.parentId` as const)}
+											/>
+											<input
+												type='hidden'
+												{...methods.register(`criteria.${i}.type` as const)}
+											/>
+											<CheckInput
+												i={i}
+												criteriaForm={criteriaForm}
+												criteria={criteria}
+												register={register}
+											/>
+
+											{isChecked && hasChildren && (
+												<div className='w-full pl-6 pt-1'>
+													{criteria.children.map((item) => {
+														const idx = data.findIndex((c) => c.id === item.id)
+														return (
+															<DivAnimate
+																key={item.id}
+																className='flex flex-col'
+															>
+																<CheckInput
+																	i={idx}
+																	register={register}
+																	criteriaForm={criteriaForm}
+																	criteria={{...item, children: []}}
+																/>
+															</DivAnimate>
+														)
+													})}
+												</div>
+											)}
+										</DivAnimate>
+									)
+								})}
+							</div>
+						)}
+					</QueryWrapper>
+				</FormWrapper>
+			</DivAnimate>
+		</div>
+	)
+}
+
+const CheckInput = ({
+	i,
+	criteria,
+	criteriaForm,
+	register,
+}: {
+	i: number
+	criteriaForm: CriteriaEditType[]
+	criteria: CriteriaType
+	register: UseFormRegister<CriteriaEditFormType>
+}) => {
+	const methods = register(`criteria.${i}.checked` as const)
+
+	return (
+		<>
+			<div className='flex gap-2'>
+				<div className='mt-0.5 flex h-5 items-center'>
+					<input
+						id={`criteria-${criteria.id}`}
+						type='checkbox'
+						className='h-4 w-4 rounded border-gray-300 text-brand-600 hover:cursor-pointer focus:ring-brand-500'
+						{...methods}
+					/>
+				</div>
+				<div className='min-w-0 items-start'>
+					<label
+						htmlFor={`criteria-${criteria.id}`}
+						className='select-none font-medium hover:cursor-pointer'
+					>
+						{criteria.value}
+					</label>
+					{criteria.type === 'EXPLANATION' && (
+						<Bars3BottomLeftIcon className='ml-2 inline h-5 w-5 align-middle text-brand-100' />
+					)}
+					{criteria.children.length > 0 && (
+						<ChevronDownIcon className='ml-2 inline h-5 w-5 align-middle text-brand-100' />
+					)}
+				</div>
+			</div>
+			{criteriaForm?.[i]?.checked && criteria.type === 'EXPLANATION' && (
+				<TextAreaInput
+					name={`criteria.${i}.explanation`}
+					label=''
+					wrapperClassName='w-full pl-6 pt-1 pb-2'
+				/>
+			)}
+		</>
 	)
 }

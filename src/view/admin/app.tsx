@@ -81,6 +81,7 @@ export default function AppSection() {
 	const {mutate: create} = trpc.app.create.useMutation({
 		onSuccess: () => {
 			setIsCreate(false)
+			reset()
 		},
 	})
 
@@ -89,6 +90,7 @@ export default function AppSection() {
 		control,
 		setValue,
 		watch,
+		reset,
 		formState: {errors},
 	} = methods
 	const criteriaForm = watch('criteria')

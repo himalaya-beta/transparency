@@ -2,12 +2,7 @@
 import React from 'react'
 import {useSession} from 'next-auth/react'
 import {z} from 'zod'
-import {
-	useForm,
-	SubmitHandler,
-	useFieldArray,
-	UseFormRegister,
-} from 'react-hook-form'
+import {useForm, useFieldArray, UseFormRegister} from 'react-hook-form'
 import {zodResolver} from '@hookform/resolvers/zod'
 
 import {trpc} from 'utils/trpc'
@@ -28,14 +23,13 @@ import {
 	TrashIcon,
 } from '@heroicons/react/24/outline'
 
-import {CriteriaType, criteriaUpdateSchema} from 'types/criteria'
+import {criteriaUpdateSchema} from 'types/criteria'
 import {appCreateSchema, type AppType} from 'types/app'
-import {type UseTRPCQueryResult} from '@trpc/react-query/shared'
-import {type TRPCClientErrorLike} from '@trpc/client'
-import {type AppRouter} from 'server/trpc/router/_app'
+import {type AppCriteria} from 'server/trpc/router/app-criteria'
+import {type SubmitHandler} from 'react-hook-form'
 
 const criteriaSchema = criteriaUpdateSchema
-	.pick({id: true, type: true})
+	.pick({id: true, type: true, parentId: true})
 	.extend({
 		checked: z.boolean(),
 		explanation: z.string().nullable(),
@@ -45,26 +39,43 @@ const criteriaSchema = criteriaUpdateSchema
 			!(
 				val.checked &&
 				val.type === 'EXPLANATION' &&
-				(!!val.explanation || val.explanation === '') &&
-				val.explanation?.length < 3
+				(val.explanation === null ||
+					val.explanation === '' ||
+					val.explanation?.length < 3)
 			),
 		{message: 'Provide more clear explanation', path: ['explanation']}
 	)
-
-const appSchema = appCreateSchema.extend({
+const criteriasSchema = z.object({
 	criteria: z
 		.array(criteriaSchema)
 		.refine((val) => val.some((item) => item.checked), 'Provide criteria'),
 })
-
-type AppTypeForm = z.infer<typeof appSchema>
+type CriteriaType = z.infer<typeof criteriaSchema>
 
 export default function AppSection() {
-	const {data: auth} = useSession()
-	const [isCreate, setIsCreate] = React.useState(false)
+	//	-----------------------   SCHEMA & TYPES   --------------------------- //
+	const formSchema = appCreateSchema.merge(criteriasSchema)
+	type FormType = z.infer<typeof formSchema>
 
-	const appQuery = trpc.app.fetchAll.useQuery()
-	const criteriaQuery = trpc.criteria.fetchRoot.useQuery(
+	// ------------------------   INITIALIZE LIB   --------------------------- //
+	const {data: auth} = useSession()
+
+	const methods = useForm<FormType>({
+		resolver: zodResolver(formSchema),
+		defaultValues: {criteria: []},
+	})
+	useFieldArray<FormType>({control: methods.control, name: 'criteria'})
+	const {
+		register,
+		reset,
+		watch,
+		setValue,
+		formState: {errors},
+	} = methods
+
+	// ------------------------ QUERIES, MUTATIONS --------------------------- //
+	const appQ = trpc.app.fetchAll.useQuery()
+	const criteriaQ = trpc.criteria.fetchRoot.useQuery(
 		{noParent: false},
 		{
 			refetchOnWindowFocus: false,
@@ -78,29 +89,21 @@ export default function AppSection() {
 			},
 		}
 	)
-	const {mutate: create} = trpc.app.create.useMutation({
+	const {mutate: appCreate} = trpc.app.create.useMutation({
 		onSuccess: () => {
 			setIsCreate(false)
 			reset()
 		},
 	})
 
-	const methods = useForm<AppTypeForm>({resolver: zodResolver(appSchema)})
-	const {
-		control,
-		setValue,
-		watch,
-		reset,
-		formState: {errors},
-		register,
-	} = methods
-	const criteriaForm = watch('criteria')
-	useFieldArray<AppTypeForm>({control, name: 'criteria'})
+	// ------------------------  VARIABLES, HOOKS  --------------------------- //
+	const criteriaF = watch('criteria')
+	const [isCreate, setIsCreate] = React.useState(false)
 
-	const onCreateApp: SubmitHandler<AppTypeForm> = (data) => {
-		if (!auth?.user.id) {
-			return alert('Forbidden access')
-		}
+	// ------------------------   EVENT HANDLERS   --------------------------- //
+	const onCreateApp: SubmitHandler<FormType> = (data) => {
+		if (!auth?.user.id) return
+
 		const criteria = data.criteria
 			.filter((item) => item.checked)
 			.map((item) => ({
@@ -109,7 +112,7 @@ export default function AppSection() {
 				assignedBy: auth.user.id,
 			}))
 
-		create({
+		appCreate({
 			...data,
 			criteria,
 		})
@@ -127,25 +130,21 @@ export default function AppSection() {
 						className='flex flex-col'
 					>
 						<div className='mb-2 grid grid-cols-2 gap-x-8 gap-y-2'>
-							<TextAreaInput<AppTypeForm>
-								name='name'
-								label='App name'
-								rows={1}
-							/>
+							<TextAreaInput<FormType> name='name' label='App name' rows={1} />
 							<div />
-							<TextAreaInput<AppTypeForm>
+							<TextAreaInput<FormType>
 								name='company'
 								label='Company name'
 								rows={1}
 							/>
-							<TextAreaInput<AppTypeForm> name='headquarter' rows={1} />
-							<TextAreaInput<AppTypeForm>
+							<TextAreaInput<FormType> name='headquarter' rows={1} />
+							<TextAreaInput<FormType>
 								name='registeredIn'
 								label='Registered city'
 								rows={1}
 							/>
-							<TextAreaInput<AppTypeForm> name='offices' rows={1} />
-							<TextAreaInput<AppTypeForm>
+							<TextAreaInput<FormType> name='offices' rows={1} />
+							<TextAreaInput<FormType>
 								name='about'
 								wrapperClassName='col-span-2'
 							/>
@@ -154,11 +153,11 @@ export default function AppSection() {
 						<fieldset className='mt-6'>
 							<SectionSeparator>Policy criteria</SectionSeparator>
 
-							<QueryWrapper {...criteriaQuery}>
+							<QueryWrapper {...criteriaQ}>
 								{(data) => (
 									<div className='divide-y divide-gray-500/50 '>
 										{data.map((criteria, i) => {
-											const isChecked = criteriaForm[i]?.checked
+											const isChecked = criteriaF[i]?.checked
 											const hasChildren = criteria.children.length > 0
 											if (criteria.parentId) return
 											return (
@@ -179,7 +178,7 @@ export default function AppSection() {
 														idx={i}
 														register={register}
 														criteria={criteria}
-														criteriaForm={criteriaForm}
+														criteriaForm={criteriaF}
 													/>
 
 													{isChecked && hasChildren && (
@@ -197,7 +196,7 @@ export default function AppSection() {
 																			idx={idx}
 																			register={register}
 																			criteria={item}
-																			criteriaForm={criteriaForm}
+																			criteriaForm={criteriaF}
 																		/>
 																	</DivAnimate>
 																)
@@ -248,16 +247,11 @@ export default function AppSection() {
 						</IconButton>
 					</h1>
 
-					<QueryWrapper {...appQuery}>
+					<QueryWrapper {...appQ}>
 						{(data) => (
 							<div className='space-y-1'>
 								{data.map((app) => (
-									<Card
-										key={app.id}
-										refetch={appQuery.refetch}
-										criteriaQuery={criteriaQuery}
-										{...app}
-									/>
+									<AppItem key={app.id} {...app} />
 								))}
 							</div>
 						)}
@@ -268,48 +262,59 @@ export default function AppSection() {
 	)
 }
 
-const criteriaEditSchema = z.object({
-	id: z.string(),
-	parentId: z.string().nullable(),
-	explanation: z.string().nullable(),
-	checked: z.boolean(),
-	type: z.enum(['TRUE_FALSE', 'EXPLANATION']),
-})
+const AppItem = ({id: appId, name: appName, AppCriteria}: AppType) => {
+	// ------------------------   SCHEMA & TYPES   --------------------------- //
+	const formSchema = criteriasSchema
+	type FormType = z.infer<typeof formSchema>
 
-const criteriaEditFormSchema = z.object({
-	criteria: criteriaEditSchema.array(),
-})
+	// ------------------------   INITIALIZE LIB   --------------------------- //
+	const methods = useForm<FormType>({
+		resolver: zodResolver(formSchema),
+		defaultValues: {criteria: []},
+	})
+	useFieldArray<FormType>({control: methods.control, name: 'criteria'})
+	const {
+		watch,
+		register,
+		reset,
+		formState: {dirtyFields, isDirty},
+	} = methods
 
-type CriteriaEditType = z.infer<typeof criteriaEditSchema>
-type CriteriaEditFormType = z.infer<typeof criteriaEditFormSchema>
+	// ------------------------ QUERIES, MUTATIONS --------------------------- //
+	const appQ = trpc.app.fetchAll.useQuery(undefined, {
+		refetchOnWindowFocus: false,
+	})
+	const criteriaQ = trpc.criteria.fetchRoot.useQuery(
+		{noParent: false},
+		{refetchOnWindowFocus: false}
+	)
+	const appCriteriaQ = trpc.appCriteria.fetch.useQuery(
+		{appId},
+		{initialData: AppCriteria, refetchOnWindowFocus: false}
+	)
 
-const Card = ({
-	id,
-	name,
-	AppCriteria,
-	refetch,
-	criteriaQuery,
-}: AppType & {
-	refetch: () => void
-	criteriaQuery: UseTRPCQueryResult<
-		CriteriaType[],
-		TRPCClientErrorLike<AppRouter>
-	>
-}) => {
-	const [isExpanded, setIsExpanded] = React.useState(false)
-
-	const {mutate: remove} = trpc.app.delete.useMutation({
+	const {mutate: appRemove} = trpc.app.delete.useMutation({
 		onSuccess: () => {
-			refetch()
+			appQ.refetch()
 		},
 	})
+	const {mutate: criteriaUpdate, isLoading} =
+		trpc.appCriteria.update.useMutation({
+			onSuccess: () => {
+				appCriteriaQ.refetch()
+			},
+		})
 
-	const defaultCriteria = React.useMemo(() => {
-		const result: CriteriaEditType[] = []
+	// ------------------------  VARIABLES, HOOKS  --------------------------- //
+	const criteriaF = watch('criteria')
+	const [isExpanded, setIsExpanded] = React.useState(false)
 
-		if (criteriaQuery.data) {
-			for (const criteria of criteriaQuery.data) {
-				const appCriteria = AppCriteria.find(
+	const defaultValues = React.useMemo(() => {
+		const result: CriteriaType[] = []
+
+		if (criteriaQ.data && appCriteriaQ.data) {
+			for (const criteria of criteriaQ.data) {
+				const appCriteria = appCriteriaQ.data.find(
 					(item) => item.criteriaId === criteria.id
 				)
 				result.push({
@@ -321,19 +326,35 @@ const Card = ({
 				})
 			}
 		}
-
 		return result
-	}, [AppCriteria, criteriaQuery.data])
+	}, [criteriaQ.data, appCriteriaQ.data])
 
-	const methods = useForm<CriteriaEditFormType>({
-		resolver: zodResolver(criteriaEditSchema),
-		defaultValues: {
-			criteria: defaultCriteria,
-		},
-	})
-	const {control, watch, register} = methods
-	const criteriaForm = watch('criteria')
-	useFieldArray<CriteriaEditFormType>({control, name: 'criteria'})
+	React.useEffect(() => {
+		reset({criteria: defaultValues})
+	}, [defaultValues, reset])
+
+	// ------------------------   EVENT HANDLERS   --------------------------- //
+	const onEditApp: SubmitHandler<FormType> = (form) => {
+		const upsert: AppCriteria[] = []
+		const remove: AppCriteria[] = []
+
+		for (const [i, criteria] of form.criteria.entries()) {
+			if (dirtyFields.criteria?.[i]) {
+				const appCriteria = {
+					criteriaId: criteria.id,
+					explanation: criteria.explanation,
+					appId,
+				}
+				if (criteria.checked) {
+					upsert.push(appCriteria)
+				} else {
+					remove.push(appCriteria)
+				}
+			}
+		}
+
+		criteriaUpdate({upsert, remove})
+	}
 
 	return (
 		<div className='flex rounded-lg bg-dark-bg/25 p-2'>
@@ -344,32 +365,31 @@ const Card = ({
 					<ChevronDownIcon className='h-6 w-6' />
 				)}
 			</IconButton>
+
 			<DivAnimate className='flex flex-1 flex-col justify-start'>
 				<div className='flex items-center justify-between'>
-					<h2 className='leading-5 md:text-lg md:leading-none'>{name}</h2>
+					<h2 className='leading-5 md:text-lg md:leading-none'>{appName}</h2>
 					<div className='item-center flex'>
-						<button onClick={() => console.log('edit', id)}>
+						<button onClick={() => console.log('edit', appId)}>
 							<PencilIcon className='h-8 w-8 rounded-l-lg border-l-[1px] border-r-[1px] border-brand-100/25 bg-brand-100/50 p-1  text-blue-700 transition-colors duration-200 hover:bg-brand-200 active:bg-brand-300 md:h-10 md:w-10 md:p-2' />
 						</button>
-						<button onClick={() => remove({id})}>
+						<button onClick={() => appRemove({id: appId})}>
 							<TrashIcon className='h-8 w-8 rounded-r-lg bg-brand-100/50 p-1 text-red-700 transition-colors duration-200 hover:bg-brand-200 active:bg-brand-300 md:h-10 md:w-10 md:p-2' />
 						</button>
 					</div>
 				</div>
-				<FormWrapper
-					methods={methods}
-					onValidSubmit={(data) => console.log(data, '<<<<< edit app')}
-				>
-					<QueryWrapper {...criteriaQuery}>
+
+				<FormWrapper methods={methods} onValidSubmit={onEditApp}>
+					<QueryWrapper {...criteriaQ}>
 						{(data) => (
 							<div className='w-full divide-y divide-gray-500/50 '>
 								{data.map((criteria, i) => {
-									const isChecked = criteriaForm[i]?.checked
+									const isChecked = criteriaF[i]?.checked
 									const hasChildren = criteria.children.length > 0
 									if (criteria.parentId || !isExpanded) return
 									return (
 										<DivAnimate
-											key={criteria.id}
+											key={`${appId}_${criteria.id}`}
 											className='flex flex-col items-start py-2'
 										>
 											<input
@@ -386,7 +406,7 @@ const Card = ({
 											/>
 											<CheckInput
 												idx={i}
-												criteriaForm={criteriaForm}
+												criteriaForm={criteriaF}
 												criteria={criteria}
 												register={register}
 											/>
@@ -397,13 +417,13 @@ const Card = ({
 														const idx = data.findIndex((c) => c.id === item.id)
 														return (
 															<DivAnimate
-																key={item.id}
+																key={`${appId}_${item.id}`}
 																className='flex flex-col'
 															>
 																<CheckInput
 																	idx={idx}
 																	register={register}
-																	criteriaForm={criteriaForm}
+																	criteriaForm={criteriaF}
 																	criteria={item}
 																/>
 															</DivAnimate>
@@ -417,6 +437,27 @@ const Card = ({
 							</div>
 						)}
 					</QueryWrapper>
+
+					{isDirty && isExpanded && (
+						<div className='float-right space-x-1'>
+							<Button
+								type='submit'
+								variant='filled'
+								className='px-2 py-1'
+								isLoading={isLoading}
+							>
+								Submit
+							</Button>
+							<Button
+								type='reset'
+								variant='outlined'
+								className='px-2 py-0.5'
+								onClick={() => reset()}
+							>
+								Cancel
+							</Button>
+						</div>
+					)}
 				</FormWrapper>
 			</DivAnimate>
 		</div>

@@ -1,3 +1,4 @@
+import {useAutoAnimate} from '@formkit/auto-animate/react'
 import {
 	FormProvider,
 	type UseFormReturn,
@@ -15,7 +16,7 @@ export type FormWrapperProps<T extends FieldValues> = {
 }
 
 const defaultOnInValidSubmit: SubmitErrorHandler<FieldValues> = (error) => {
-	console.log(error, '[INVALID FORM SUBMISSION]')
+	console.log(error, '[INVALID FORM]')
 }
 
 const FormWrapper = <T extends FieldValues>({
@@ -25,9 +26,11 @@ const FormWrapper = <T extends FieldValues>({
 	onValidSubmit,
 	onInvalidSubmit,
 }: FormWrapperProps<T>) => {
+	const [ref] = useAutoAnimate<HTMLFormElement>()
 	return (
 		<FormProvider {...methods}>
 			<form
+				ref={ref}
 				onSubmit={methods.handleSubmit(
 					onValidSubmit,
 					onInvalidSubmit ?? defaultOnInValidSubmit

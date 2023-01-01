@@ -382,7 +382,7 @@ const AppItem = ({appData: appP}: {appData: AppType}) => {
 	}
 
 	return (
-		<div className='flex rounded-lg bg-dark-bg/25 p-2'>
+		<div className='flex rounded-lg bg-dark-bg/25 py-3 px-2'>
 			<IconButton onClick={() => setIsExpanded(!isExpanded)} className='h-fit'>
 				{isExpanded ? (
 					<ChevronUpIcon className='h-6 w-6' />
@@ -393,7 +393,12 @@ const AppItem = ({appData: appP}: {appData: AppType}) => {
 
 			<DivAnimate className='flex flex-1 flex-col justify-start'>
 				<div className='flex items-center justify-between'>
-					<h2 className='leading-5 md:text-lg md:leading-none'>{appP.name}</h2>
+					<div className='space-y-0.5'>
+						<h2 className='leading-5 md:text-lg md:leading-none'>
+							{appP.name}
+						</h2>
+						<p className='text-xs text-light-body/75'>{appP.company}</p>
+					</div>
 					<IconButton>
 						<TrashIcon
 							className='h-6 w-6 text-red-500'

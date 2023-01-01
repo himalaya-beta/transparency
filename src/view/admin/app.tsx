@@ -182,7 +182,7 @@ export default function AppSection() {
 													/>
 
 													{isChecked && hasChildren && (
-														<div className='w-full pl-9 pt-1'>
+														<div className='w-full pl-7 pt-1'>
 															{criteria.children.map((item) => {
 																const idx = data.findIndex(
 																	(c) => c.id === item.id

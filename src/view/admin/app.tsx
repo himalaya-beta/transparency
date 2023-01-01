@@ -446,7 +446,7 @@ const AppItem = ({id: appId, name: appName, AppCriteria}: AppType) => {
 								className='px-2 py-1'
 								isLoading={isLoading}
 							>
-								Submit
+								Save
 							</Button>
 							<Button
 								type='reset'

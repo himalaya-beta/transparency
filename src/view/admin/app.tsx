@@ -18,7 +18,7 @@ import {
 	Bars3BottomLeftIcon,
 	ChevronDownIcon,
 	ChevronUpIcon,
-	PencilIcon,
+	EllipsisHorizontalIcon,
 	PlusIcon,
 	TrashIcon,
 } from '@heroicons/react/24/outline'
@@ -251,7 +251,7 @@ export default function AppSection() {
 						{(data) => (
 							<div className='space-y-1'>
 								{data.map((app) => (
-									<AppItem key={app.id} {...app} />
+									<AppItem key={app.id} appData={app} />
 								))}
 							</div>
 						)}
@@ -262,9 +262,9 @@ export default function AppSection() {
 	)
 }
 
-const AppItem = ({id: appId, name: appName, AppCriteria}: AppType) => {
+const AppItem = ({appData: appP}: {appData: AppType}) => {
 	// ------------------------   SCHEMA & TYPES   --------------------------- //
-	const formSchema = criteriasSchema
+	const formSchema = appCreateSchema.merge(criteriasSchema)
 	type FormType = z.infer<typeof formSchema>
 
 	// ------------------------   INITIALIZE LIB   --------------------------- //
@@ -289,27 +289,32 @@ const AppItem = ({id: appId, name: appName, AppCriteria}: AppType) => {
 		{refetchOnWindowFocus: false}
 	)
 	const appCriteriaQ = trpc.appCriteria.fetch.useQuery(
-		{appId},
-		{initialData: AppCriteria, refetchOnWindowFocus: false}
+		{appId: appP.id},
+		{initialData: appP.AppCriteria, refetchOnWindowFocus: false}
 	)
 
-	const {mutate: appRemove} = trpc.app.delete.useMutation({
+	const appUpdate = trpc.app.update.useMutation({
 		onSuccess: () => {
 			appQ.refetch()
 		},
 	})
-	const {mutate: criteriaUpdate, isLoading} =
-		trpc.appCriteria.update.useMutation({
-			onSuccess: () => {
-				appCriteriaQ.refetch()
-			},
-		})
+	const appRemove = trpc.app.delete.useMutation({
+		onSuccess: () => {
+			appQ.refetch()
+		},
+	})
+	const criteriaUpdate = trpc.appCriteria.update.useMutation({
+		onSuccess: () => {
+			appCriteriaQ.refetch()
+		},
+	})
 
 	// ------------------------  VARIABLES, HOOKS  --------------------------- //
 	const criteriaF = watch('criteria')
 	const [isExpanded, setIsExpanded] = React.useState(false)
+	const [isEdit, setIsEdit] = React.useState(false)
 
-	const defaultValues = React.useMemo(() => {
+	const defaultCriteria = React.useMemo(() => {
 		const result: CriteriaType[] = []
 
 		if (criteriaQ.data && appCriteriaQ.data) {
@@ -330,30 +335,50 @@ const AppItem = ({id: appId, name: appName, AppCriteria}: AppType) => {
 	}, [criteriaQ.data, appCriteriaQ.data])
 
 	React.useEffect(() => {
-		reset({criteria: defaultValues})
-	}, [defaultValues, reset])
+		if (
+			criteriaF.length <= 0 ||
+			(appUpdate.isSuccess && criteriaUpdate.isSuccess)
+		) {
+			reset({criteria: defaultCriteria})
+		}
+	}, [
+		appUpdate.isSuccess,
+		criteriaF.length,
+		criteriaUpdate.isSuccess,
+		defaultCriteria,
+		reset,
+	])
 
 	// ------------------------   EVENT HANDLERS   --------------------------- //
 	const onEditApp: SubmitHandler<FormType> = (form) => {
-		const upsert: AppCriteria[] = []
-		const remove: AppCriteria[] = []
+		const {criteria: formCriteria, ...formApp} = form
+		const {criteria: criteriaDirtyFields, ...appDirtyFields} = dirtyFields
 
-		for (const [i, criteria] of form.criteria.entries()) {
-			if (dirtyFields.criteria?.[i]) {
-				const appCriteria = {
-					criteriaId: criteria.id,
-					explanation: criteria.explanation,
-					appId,
-				}
-				if (criteria.checked) {
-					upsert.push(appCriteria)
-				} else {
-					remove.push(appCriteria)
-				}
-			}
+		if (isEdit && Object.keys(appDirtyFields).length > 0) {
+			appUpdate.mutate({id: appP.id, ...formApp})
 		}
 
-		criteriaUpdate({upsert, remove})
+		if (criteriaDirtyFields) {
+			const upsert: AppCriteria[] = []
+			const remove: AppCriteria[] = []
+
+			for (const [i, criteria] of formCriteria.entries()) {
+				if (criteriaDirtyFields?.[i]) {
+					const appCriteria = {
+						criteriaId: criteria.id,
+						explanation: criteria.explanation,
+						appId: appP.id,
+					}
+					if (criteria.checked) {
+						upsert.push(appCriteria)
+					} else {
+						remove.push(appCriteria)
+					}
+				}
+			}
+
+			criteriaUpdate.mutate({upsert, remove})
+		}
 	}
 
 	return (
@@ -368,18 +393,69 @@ const AppItem = ({id: appId, name: appName, AppCriteria}: AppType) => {
 
 			<DivAnimate className='flex flex-1 flex-col justify-start'>
 				<div className='flex items-center justify-between'>
-					<h2 className='leading-5 md:text-lg md:leading-none'>{appName}</h2>
-					<div className='item-center flex'>
-						<button onClick={() => console.log('edit', appId)}>
-							<PencilIcon className='h-8 w-8 rounded-l-lg border-l-[1px] border-r-[1px] border-brand-100/25 bg-brand-100/50 p-1  text-blue-700 transition-colors duration-200 hover:bg-brand-200 active:bg-brand-300 md:h-10 md:w-10 md:p-2' />
-						</button>
-						<button onClick={() => appRemove({id: appId})}>
-							<TrashIcon className='h-8 w-8 rounded-r-lg bg-brand-100/50 p-1 text-red-700 transition-colors duration-200 hover:bg-brand-200 active:bg-brand-300 md:h-10 md:w-10 md:p-2' />
-						</button>
-					</div>
+					<h2 className='leading-5 md:text-lg md:leading-none'>{appP.name}</h2>
+					<IconButton>
+						<TrashIcon
+							className='h-6 w-6 text-red-500'
+							onClick={() => appRemove.mutate({id: appP.id})}
+						/>
+					</IconButton>
 				</div>
 
-				<FormWrapper methods={methods} onValidSubmit={onEditApp}>
+				<FormWrapper
+					className='pr-2'
+					methods={methods}
+					onValidSubmit={onEditApp}
+				>
+					{isExpanded && (
+						<IconButton className='absolute -right-0 z-10'>
+							<EllipsisHorizontalIcon
+								className='h-6 w-6 text-brand-600'
+								onClick={() => setIsEdit(!isEdit)}
+							/>
+						</IconButton>
+					)}
+					<DivAnimate>
+						{isEdit && isExpanded && (
+							<div className='my-2 grid grid-cols-2 gap-x-8 gap-y-2 '>
+								<TextAreaInput<FormType>
+									name='name'
+									label='App name'
+									defaultValue={appP.name}
+									rows={1}
+								/>
+								<div />
+								<TextAreaInput<FormType>
+									name='company'
+									label='Company name'
+									defaultValue={appP.company}
+									rows={1}
+								/>
+								<TextAreaInput<FormType>
+									name='headquarter'
+									rows={1}
+									defaultValue={appP.headquarter ?? ''}
+								/>
+								<TextAreaInput<FormType>
+									name='registeredIn'
+									label='Registered city'
+									defaultValue={appP.registeredIn ?? ''}
+									rows={1}
+								/>
+								<TextAreaInput<FormType>
+									name='offices'
+									rows={1}
+									defaultValue={appP.offices ?? ''}
+								/>
+								<TextAreaInput<FormType>
+									name='about'
+									defaultValue={appP.about}
+									wrapperClassName='col-span-2'
+								/>
+							</div>
+						)}
+					</DivAnimate>
+
 					<QueryWrapper {...criteriaQ}>
 						{(data) => (
 							<div className='w-full divide-y divide-gray-500/50 '>
@@ -389,7 +465,7 @@ const AppItem = ({id: appId, name: appName, AppCriteria}: AppType) => {
 									if (criteria.parentId || !isExpanded) return
 									return (
 										<DivAnimate
-											key={`${appId}_${criteria.id}`}
+											key={`${appP.id}_${criteria.id}`}
 											className='flex flex-col items-start py-2'
 										>
 											<input
@@ -417,7 +493,7 @@ const AppItem = ({id: appId, name: appName, AppCriteria}: AppType) => {
 														const idx = data.findIndex((c) => c.id === item.id)
 														return (
 															<DivAnimate
-																key={`${appId}_${item.id}`}
+																key={`${appP.id}_${item.id}`}
 																className='flex flex-col'
 															>
 																<CheckInput
@@ -439,12 +515,12 @@ const AppItem = ({id: appId, name: appName, AppCriteria}: AppType) => {
 					</QueryWrapper>
 
 					{isDirty && isExpanded && (
-						<div className='float-right space-x-1'>
+						<div className='float-right space-x-1 '>
 							<Button
 								type='submit'
 								variant='filled'
 								className='px-2 py-1'
-								isLoading={isLoading}
+								isLoading={criteriaUpdate.isLoading || appUpdate.isLoading}
 							>
 								Save
 							</Button>

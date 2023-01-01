@@ -10,9 +10,9 @@ const criteriaCreateSchema = z.object({
 export const appCreateSchema = z.object({
 	name: z.string().min(3, 'Provide more descriptive app name'),
 	company: z.string().min(3, 'Provide more descriptive company name'),
-	headquarter: z.string().optional(),
-	registeredIn: z.string().optional(),
-	offices: z.string().optional(),
+	headquarter: z.string().nullable(),
+	registeredIn: z.string().nullable(),
+	offices: z.string().nullable(),
 	about: z.string().min(80, 'Provide more meaningful description'),
 	criteria: z.array(criteriaCreateSchema).min(1),
 })

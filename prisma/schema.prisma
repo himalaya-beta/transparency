@@ -41,7 +41,7 @@ model Criteria {
 model App {
     id           String        @id @default(cuid())
     name         String
-    about        String
+    about        String        @db.VarChar(255)
     company      String
     headquarter  String?
     registeredIn String?

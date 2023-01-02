@@ -270,7 +270,7 @@ const AppItem = ({appData: appP}: {appData: AppType}) => {
 	// ------------------------   INITIALIZE LIB   --------------------------- //
 	const methods = useForm<FormType>({
 		resolver: zodResolver(formSchema),
-		defaultValues: {criteria: []},
+		defaultValues: {...appP, criteria: []},
 	})
 	useFieldArray<FormType>({control: methods.control, name: 'criteria'})
 	const {
@@ -337,11 +337,13 @@ const AppItem = ({appData: appP}: {appData: AppType}) => {
 	React.useEffect(() => {
 		if (
 			criteriaF.length <= 0 ||
-			(appUpdate.isSuccess && criteriaUpdate.isSuccess)
+			appUpdate.isSuccess ||
+			criteriaUpdate.isSuccess
 		) {
-			reset({criteria: defaultCriteria})
+			reset({...appP, criteria: defaultCriteria})
 		}
 	}, [
+		appP,
 		appUpdate.isSuccess,
 		criteriaF.length,
 		criteriaUpdate.isSuccess,

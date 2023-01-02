@@ -1,6 +1,7 @@
 /* eslint-disable unicorn/no-null */
 import React from 'react'
 import {useAutoAnimate} from '@formkit/auto-animate/react'
+import dayjs from 'dayjs'
 
 import {prisma} from 'server/db/client'
 import {trpc} from 'utils/trpc'
@@ -76,7 +77,10 @@ const AppDetailsPage = ({
 			>
 				<div className='max-w-screen-md'>
 					<h1 className='text-3xl'>{app.name}</h1>
-					<p className='italic text-opacity-75'>{app.company}</p>
+					<div className='flex justify-between text-opacity-75 child:italic'>
+						<p>{app.company}</p>
+						<p>Last updated: {dayjs(app.updatedAt).format('MMM D, YYYY')}</p>
+					</div>
 					<p className='mt-4 text-lg'>{app.about}</p>
 				</div>
 

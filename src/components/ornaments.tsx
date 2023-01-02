@@ -20,6 +20,13 @@ export const SectionSeparator = ({
 	)
 }
 
-export const TriangleSymbol = ({className}: {className?: string}) => {
-	return <span className={`${className} text-brand-300`}>⨞</span>
+export const TriangleSymbol = ({
+	className,
+	...props
+}: {className?: string} & React.HTMLAttributes<HTMLSpanElement>) => {
+	return (
+		<span className={`${className} text-brand-300`} {...props}>
+			⨞
+		</span>
+	)
 }

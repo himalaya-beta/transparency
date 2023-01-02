@@ -1,6 +1,11 @@
 import React from 'react'
+import {useController, useFormContext} from 'react-hook-form'
+
 import {Listbox, Transition} from '@headlessui/react'
 import {CheckIcon, ChevronUpDownIcon} from '@heroicons/react/20/solid'
+
+import {capFirstChar} from 'utils/literal'
+
 import {type CriteriaTypesEnum} from 'types/criteria'
 
 const criteriaTypes: CriteriaType[] = [
@@ -13,40 +18,44 @@ type CriteriaType = {
 	label: string
 }
 
-export default function ListBox({
+const ListBox = ({
+	name,
 	label,
-	setValue,
 	className,
 }: {
-	label: string
-	setValue: React.Dispatch<CriteriaTypesEnum>
+	name: string
+	label?: string
 	className?: string
-}) {
-	const [selected, setSelected] = React.useState<CriteriaType>(
-		// eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-		criteriaTypes[0]!
-	)
+}) => {
+	const {control} = useFormContext()
+	const {field} = useController({name, control})
 
 	return (
 		<Listbox
-			value={selected}
-			onChange={(item) => {
-				setValue(item.id)
-				setSelected(item)
-			}}
+			as='div'
+			defaultValue={criteriaTypes[0]}
+			value={field.value}
+			onChange={field.onChange}
+			name={field.name}
+			ref={field.ref}
+			onBlur={field.onBlur}
 		>
 			<div className={`relative ${className}`}>
-				<Listbox.Label>{label}</Listbox.Label>
-				<Listbox.Button className='relative w-full cursor-default rounded-lg bg-light-bg/90 py-2 pl-3 pr-10 text-left shadow-md sm:text-sm'>
-					<span className='block truncate text-dark-head'>
-						{selected.label}
-					</span>
-					<span className='pointer-events-none absolute inset-y-0 right-0 flex items-center pr-2'>
-						<ChevronUpDownIcon
-							className='h-5 w-5 text-brand-400'
-							aria-hidden='true'
-						/>
-					</span>
+				<Listbox.Label>{label ?? capFirstChar(name)}</Listbox.Label>
+				<Listbox.Button className='relative w-full cursor-default rounded-md bg-light-bg/90 py-2 pl-3 pr-10 text-left shadow-md sm:text-sm'>
+					{(data) => (
+						<>
+							<span className='block truncate text-dark-head'>
+								{data.value.label}
+							</span>
+							<span className='pointer-events-none absolute inset-y-0 right-0 flex items-center pr-2'>
+								<ChevronUpDownIcon
+									className='h-5 w-5 text-brand-400'
+									aria-hidden='true'
+								/>
+							</span>
+						</>
+					)}
 				</Listbox.Button>
 				<Transition
 					as={React.Fragment}
@@ -58,19 +67,19 @@ export default function ListBox({
 						{criteriaTypes.map((type, i) => (
 							<Listbox.Option
 								key={i}
-								className={({active}) =>
-									`relative cursor-default select-none py-2 pl-10 pr-4 ${
-										active ? 'bg-brand-100 text-brand-900' : 'text-dark-head'
-									}`
-								}
+								className={({active}) => `
+									relative cursor-default select-none py-2 pl-10 pr-4 
+									${active ? 'bg-brand-100 text-brand-900' : 'text-dark-head'}
+								`}
 								value={type}
 							>
 								{({selected}) => (
 									<>
 										<span
-											className={`block truncate ${
-												selected ? 'font-medium' : 'font-normal'
-											}`}
+											className={`
+												block truncate 
+												${selected ? 'font-medium' : 'font-normal'}
+											`}
 										>
 											{type.label}
 										</span>
@@ -89,3 +98,5 @@ export default function ListBox({
 		</Listbox>
 	)
 }
+
+export default ListBox

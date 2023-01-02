@@ -6,9 +6,9 @@ import {zodResolver} from '@hookform/resolvers/zod'
 import QueryWrapper from 'components/query-wrapper'
 import FormWrapper from 'components/form-wrapper'
 import TextAreaInput from 'components/textarea-input'
+import DivAnimate from 'components/div-animate'
 import {Button, IconButton} from 'components/button'
 import {SectionSeparator} from 'components/ornaments'
-import DivAnimate from 'components/div-animate'
 import {
 	Bars3BottomLeftIcon,
 	ChevronDownIcon,
@@ -27,16 +27,30 @@ import {trpc} from 'utils/trpc'
 
 import {
 	criteriaCreateSchema,
-	criteriaUpdateSchema,
 	type CriteriaUpdateType,
-	type CriteriaCreateType,
 	type CriteriaType,
 } from 'types/criteria'
 import ListBox from 'components/list-box'
+import {z} from 'zod'
+
+const typeListOptionsSchema = z.object({
+	id: z.enum(['TRUE_FALSE', 'EXPLANATION']),
+	label: z.string(),
+})
+const formSchema = criteriaCreateSchema.omit({type: true}).merge(
+	z.object({
+		type: typeListOptionsSchema,
+	})
+)
+type FormType = z.infer<typeof formSchema>
 
 const CriteriaSection = () => {
-	const criteriaListQuery = trpc.criteria.fetchRoot.useQuery({noParent: true})
+	const createMethods = useForm<FormType>({
+		resolver: zodResolver(formSchema),
+		defaultValues: {order: 0, type: {id: 'TRUE_FALSE', label: 'True or false'}},
+	})
 
+	const criteriaListQuery = trpc.criteria.fetchRoot.useQuery({noParent: true})
 	const {mutate: create} = trpc.criteria.create.useMutation({
 		onError: (error) => {
 			alert(error.message)
@@ -47,18 +61,13 @@ const CriteriaSection = () => {
 		},
 	})
 
-	const createMethods = useForm<CriteriaCreateType>({
-		resolver: zodResolver(criteriaCreateSchema),
-	})
-
-	const onCreateCriteria: SubmitHandler<CriteriaCreateType> = (data) => {
-		create({...data, order: criteriaListQuery.data?.length ?? 0})
+	const onCreateCriteria: SubmitHandler<FormType> = (data) => {
+		create({
+			...data,
+			type: data.type.id,
+			order: criteriaListQuery.data?.length ?? 0,
+		})
 	}
-
-	React.useEffect(() => {
-		createMethods.setValue('type', 'TRUE_FALSE')
-		createMethods.setValue('order', 0)
-	}, [createMethods])
 
 	return (
 		<>
@@ -66,13 +75,12 @@ const CriteriaSection = () => {
 				Policy criteria
 				<IconButton
 					className='ml-2 align-bottom'
-					onClick={() => {
-						createMethods.setFocus('value')
-					}}
+					onClick={() => createMethods.setFocus('value')}
 				>
 					<PlusIcon className='h-6 w-6 text-brand-300' />
 				</IconButton>
 			</h1>
+
 			<div className='space-y-8'>
 				<QueryWrapper {...criteriaListQuery}>
 					{(criterias) => (
@@ -95,12 +103,9 @@ const CriteriaSection = () => {
 						onValidSubmit={onCreateCriteria}
 						className='space-y-4'
 					>
-						<ListBox
-							label='Type'
-							setValue={(value) => createMethods.setValue('type', value)}
-						/>
+						<ListBox name='type' />
 
-						<TextAreaInput<CriteriaCreateType>
+						<TextAreaInput<FormType>
 							name='value'
 							label='Criteria name/ content/ value'
 						/>
@@ -124,14 +129,23 @@ const CriteriaCard = ({
 	const [isExpanded, setIsExpanded] = React.useState(false)
 	const [edit, setEdit] = React.useState<string | null>(null)
 	const [add, setAdd] = React.useState<string | null>(null)
+	const haveChildren = criteria.children.length > 0
+
+	const createMethods = useForm<FormType>({
+		resolver: zodResolver(formSchema),
+	})
+	const updateMethods = useForm<FormType & {id: string}>({
+		resolver: zodResolver(formSchema.extend({id: z.string()})),
+	})
 
 	const {mutate: create} = trpc.criteria.create.useMutation({
 		onError: (error) => {
 			alert(error.message)
 		},
 		onSuccess: (data) => {
+			createMethods.resetField('order', {defaultValue: data.order + 1})
+			createMethods.resetField('value', {defaultValue: ''})
 			createMethods.setFocus('value')
-			createMethods.reset({value: '', parentId: data.parentId})
 			refetch()
 		},
 	})
@@ -154,22 +168,14 @@ const CriteriaCard = ({
 		},
 	})
 
-	const createMethods = useForm<CriteriaCreateType>({
-		resolver: zodResolver(criteriaCreateSchema),
-	})
-	const updateMethods = useForm<CriteriaUpdateType>({
-		resolver: zodResolver(criteriaUpdateSchema),
-	})
-
-	const onCreate: SubmitHandler<CriteriaCreateType> = (data) => {
-		create(data)
+	const onCreate: SubmitHandler<FormType> = (data) => {
+		create({...data, type: data.type.id})
 	}
-	const onUpdate: SubmitHandler<CriteriaUpdateType> = (data) => {
+	const onUpdate: SubmitHandler<FormType & {id: string}> = (data) => {
 		if (edit) {
-			update({...data, id: edit})
+			update({...data, type: data.type.id, id: edit})
 		}
 	}
-
 	const onClickEdit = (criteria: Omit<CriteriaType, 'children'>) => {
 		setEdit(criteria.id)
 		setAdd(null)
@@ -177,7 +183,10 @@ const CriteriaCard = ({
 		updateMethods.setValue('value', criteria.value)
 		updateMethods.setValue('order', criteria.order)
 		updateMethods.setValue('parentId', criteria.parentId)
-		updateMethods.setValue('type', criteria.type)
+		updateMethods.setValue('type', {
+			id: criteria.type,
+			label: criteria.type === 'TRUE_FALSE' ? 'True or False' : 'Explanation',
+		})
 	}
 	const onClickAdd = (criteria: CriteriaType) => {
 		setAdd(criteria.id)
@@ -185,7 +194,15 @@ const CriteriaCard = ({
 		setEdit(null)
 		createMethods.setValue('order', criteria.children.length)
 		createMethods.setValue('parentId', criteria.id)
-		createMethods.setValue('type', 'TRUE_FALSE')
+		createMethods.setValue('type', {id: 'TRUE_FALSE', label: 'True or false'})
+	}
+	const onExpand = () => {
+		if (haveChildren) {
+			if (isExpanded) {
+				setAdd(null)
+			}
+			setIsExpanded(!isExpanded)
+		}
 	}
 
 	const EditForm = ({className}: {className?: string}) => {
@@ -204,11 +221,7 @@ const CriteriaCard = ({
 					autoFocus
 				/>
 				<div className='flex gap-2 md:flex-col'>
-					<ListBox
-						label=''
-						setValue={(value) => updateMethods.setValue('type', value)}
-						className='w-40'
-					/>
+					<ListBox name='type' label='' className='w-40' />
 					<div className='flex flex-1 gap-2'>
 						<button
 							type='submit'
@@ -229,16 +242,6 @@ const CriteriaCard = ({
 		)
 	}
 
-	const haveChildren = criteria.children.length > 0
-	const handleExpand = () => {
-		if (haveChildren) {
-			if (isExpanded) {
-				setAdd(null)
-			}
-			setIsExpanded(!isExpanded)
-		}
-	}
-
 	return (
 		<DivAnimate className='rounded-lg bg-dark-bg/25 p-2 pt-2'>
 			{edit === criteria.id ? (
@@ -246,7 +249,7 @@ const CriteriaCard = ({
 			) : (
 				<div className='flex items-start'>
 					{haveChildren ? (
-						<IconButton onClick={handleExpand}>
+						<IconButton onClick={onExpand}>
 							{isExpanded ? (
 								<ChevronUpIcon className='h-6 w-6' />
 							) : (
@@ -259,11 +262,10 @@ const CriteriaCard = ({
 					<div className='flex flex-1 items-center justify-between gap-2'>
 						<h2
 							className={`
-
 								leading-5 md:text-lg md:leading-none
 								${haveChildren ? 'hover:cursor-pointer' : ''} 
 							`}
-							onClick={handleExpand}
+							onClick={onExpand}
 						>
 							<span className='mr-2'>{criteria.value}</span>
 							<span className='space-x-1'>
@@ -276,7 +278,7 @@ const CriteriaCard = ({
 							<button onClick={() => onClickAdd(criteria)}>
 								<PlusIcon className='h-8 w-8 rounded-l-lg bg-brand-100/50 p-1 text-brand-800 transition-colors duration-200 hover:bg-brand-200 active:bg-brand-300 md:h-10 md:w-10 md:p-2' />
 							</button>
-							<button onClick={() => onClickEdit(criteria)}>
+							<button onClick={() => onClickEdit({...criteria})}>
 								<PencilIcon className='h-8 w-8 border-l-[1px] border-r-[1px] border-brand-100/25 bg-brand-100/50 p-1 text-blue-700 transition-colors duration-200 hover:bg-brand-200 active:bg-brand-300 md:h-10 md:w-10 md:p-2' />
 							</button>
 							<button onClick={() => remove({id: criteria.id})}>
@@ -334,8 +336,8 @@ const CriteriaCard = ({
 						methods={createMethods}
 						onValidSubmit={onCreate}
 						className={`
-							flex flex-col gap-2 rounded-b-md md:ml-8 md:flex-row md:pb-3 md:pl-4  
-							${haveChildren ? 'bg-dark-bg/25 p-2' : 'pt-4'}
+							flex flex-col gap-2 rounded-b-md md:ml-8 md:flex-row md:pb-3   
+							${haveChildren ? 'bg-dark-bg/25 p-2 md:pl-4' : 'pt-4'}
 						`}
 					>
 						<TextAreaInput<CriteriaUpdateType>
@@ -347,11 +349,7 @@ const CriteriaCard = ({
 							autoFocus
 						/>
 						<div className='flex gap-2 md:flex-col'>
-							<ListBox
-								label=''
-								setValue={(value) => createMethods.setValue('type', value)}
-								className='w-40'
-							/>
+							<ListBox name='type' label='' className='w-40' />
 							<div className='flex flex-1 gap-2'>
 								<button
 									type='submit'

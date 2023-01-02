@@ -20,3 +20,7 @@ export type CriteriaTypesEnum = z.infer<typeof criteriaCreateSchema>['type']
 export type CriteriaCreateType = z.infer<typeof criteriaCreateSchema>
 export type CriteriaUpdateType = z.infer<typeof criteriaUpdateSchema>
 export type CriteriaType = Exclude<RouterOutputs['criteria']['fetchOne'], null>
+export type CriteriaAppType = Exclude<
+	RouterOutputs['criteria']['fetchByApp'],
+	null
+>

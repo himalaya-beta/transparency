@@ -19,7 +19,8 @@ import {
 	type InferGetStaticPropsType,
 } from 'next'
 import {type AppType} from 'types/app'
-import {type CriteriaType} from 'types/criteria'
+import {type CriteriaAppType} from 'types/criteria'
+import {type ArrayElement} from 'types/general'
 
 export const getStaticProps: GetStaticProps<{
 	app: AppType
@@ -51,11 +52,6 @@ export const getStaticPaths: GetStaticPaths = async () => {
 		paths: appSlugs,
 		fallback: 'blocking',
 	}
-}
-
-type CriteriaFilledType = CriteriaType & {
-	checked: boolean
-	explanation: string | null
 }
 
 const AppDetailsPage = ({
@@ -99,8 +95,17 @@ const AppDetailsPage = ({
 	)
 }
 
-const CriteriaList = ({criteria}: {criteria: CriteriaFilledType}) => {
-	const hasChildren = criteria.children.length > 0
+type CriteriaLisProps =
+	| {
+			criteria: Omit<ArrayElement<CriteriaAppType>, 'children'>
+			sub: true
+	  }
+	| {
+			sub?: false
+			criteria: ArrayElement<CriteriaAppType>
+	  }
+const CriteriaList = ({criteria, sub}: CriteriaLisProps) => {
+	const hasChildren = sub ? false : criteria.children.length > 0
 	const [isExpanded, setIsExpanded] = React.useState(criteria.checked)
 
 	const onExpand = () => {
@@ -120,11 +125,17 @@ const CriteriaList = ({criteria}: {criteria: CriteriaFilledType}) => {
 				`}
 			/>
 			<div className='w-full'>
-				<div className='grid grid-cols-8 border-b-[1px] border-brand-100/50'>
+				<div
+					className={`
+						grid grid-cols-8 border-b-[1px] border-brand-100 border-opacity-50 
+						${sub && 'border-dashed'}
+					`}
+				>
 					<h3
 						onClick={onExpand}
 						className={`
-							col-span-5 text-lg font-medium 
+							col-span-5 
+							${sub ? 'text-sm font-normal' : 'text-lg font-medium'}
 							${hasChildren ? 'hover:cursor-pointer' : ''}
 						`}
 					>
@@ -133,7 +144,13 @@ const CriteriaList = ({criteria}: {criteria: CriteriaFilledType}) => {
 
 					<div className='col-span-3 flex h-full w-fit justify-center justify-self-end'>
 						{criteria.type === 'TRUE_FALSE' && criteria.checked && (
-							<CheckIcon className='mr-8 w-6 text-brand-200' />
+							<CheckIcon
+								className={`${
+									sub
+										? 'mr-[2.125rem] w-5 text-brand-400'
+										: 'mr-8 w-6 text-brand-200'
+								}`}
+							/>
 						)}
 						{criteria.type === 'EXPLANATION' && (
 							<p className='text-right text-sm'>{criteria.explanation}</p>
@@ -143,10 +160,10 @@ const CriteriaList = ({criteria}: {criteria: CriteriaFilledType}) => {
 
 				<DivAnimate className='pt-2'>
 					{isExpanded &&
-						criteria.children.map((children) => (
-							<div key={children.id} className='pl-4'>
-								<h3 className='text-md font-light'>{children.value}</h3>
-							</div>
+						hasChildren &&
+						!sub &&
+						criteria.children.map((child) => (
+							<CriteriaList key={child.id} criteria={child} sub />
 						))}
 				</DivAnimate>
 			</div>

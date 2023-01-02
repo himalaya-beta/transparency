@@ -83,7 +83,8 @@ const AppDetailsPage = ({
 
 				<QueryWrapper {...criteriaQ}>
 					{(data) => (
-						<ul className='space-y-4'>
+						<ul className='relative space-y-0'>
+							<div className='absolute right-0 h-full w-[37.5%] rounded bg-dark-bg/10'></div>
 							{data.map((criteria) => (
 								<CriteriaList key={criteria.id} criteria={criteria} />
 							))}
@@ -115,11 +116,15 @@ const CriteriaList = ({criteria, sub}: CriteriaLisProps) => {
 	}
 
 	return (
-		<li className='flex list-none items-start gap-2'>
+		<li
+			className={`group relative flex list-none items-start gap-2 ${
+				sub ? 'py-0.5 first:mt-1 last:mb-2' : 'py-2'
+			}`}
+		>
 			<TriangleSymbol
 				onClick={onExpand}
 				className={`
-					transition-transform hover:cursor-pointer
+					w-fit transition-transform hover:cursor-pointer
 					${hasChildren ? 'visible' : 'invisible'}
 					${isExpanded ? '-rotate-90' : '-rotate-180'}
 				`}
@@ -127,38 +132,53 @@ const CriteriaList = ({criteria, sub}: CriteriaLisProps) => {
 			<div className='w-full'>
 				<div
 					className={`
-						grid grid-cols-8 border-b-[1px] border-brand-100 border-opacity-50 
-						${sub && 'border-dashed'}
+						group/sub grid grid-cols-8  border-b-[1px] border-brand-100 border-opacity-50 transition-all
+						${sub ? 'rounded border-dashed hover:bg-brand-100/50 hover:pl-2' : ''}
 					`}
 				>
 					<h3
 						onClick={onExpand}
 						className={`
-							col-span-5 
-							${sub ? 'text-sm font-normal' : 'text-lg font-medium'}
+							col-span-5 transition-all
+							${
+								sub
+									? 'text-sm font-normal'
+									: 'text-lg font-medium group-hover:pl-2 group-hover:text-xl group-hover:font-semibold'
+							}
 							${hasChildren ? 'hover:cursor-pointer' : ''}
 						`}
 					>
 						{criteria.value}
 					</h3>
 
-					<div className='col-span-3 flex h-full w-fit justify-center justify-self-end'>
+					<div className='col-span-3 flex h-full justify-center px-2'>
 						{criteria.type === 'TRUE_FALSE' && criteria.checked && (
-							<CheckIcon
+							<div
 								className={`${
-									sub
-										? 'mr-[2.125rem] w-5 text-brand-400'
-										: 'mr-8 w-6 text-brand-200'
-								}`}
-							/>
+									sub ? 'mr-2 h-6 w-8' : 'h-8 w-8'
+								} flex justify-center `}
+							>
+								<CheckIcon
+									className={`
+										transition-all
+										${
+											sub
+												? 'w-5 text-brand-400 group-hover/sub:text-white'
+												: 'w-6 text-brand-200 group-hover:w-8 group-hover:text-white'
+										}
+									`}
+								/>
+							</div>
 						)}
 						{criteria.type === 'EXPLANATION' && (
-							<p className='text-right text-sm'>{criteria.explanation}</p>
+							<p className='text-center text-sm group-hover:font-semibold'>
+								{criteria.explanation}
+							</p>
 						)}
 					</div>
 				</div>
 
-				<DivAnimate className='pt-2'>
+				<DivAnimate className=''>
 					{isExpanded &&
 						hasChildren &&
 						!sub &&

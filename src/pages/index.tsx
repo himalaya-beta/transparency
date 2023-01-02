@@ -4,7 +4,7 @@ import Tilt from 'react-parallax-tilt'
 
 import useDeviceDetect from 'utils/hooks/use-device-detect'
 
-import {LinkButton, Button} from 'components/button'
+import {LinkButton} from 'components/button'
 import TNC from 'components/svg/tnc'
 import MagnifyingGlass from '@images/magnifying-glass.svg'
 import PeopleGroup from '@images/people-group.svg'
@@ -136,7 +136,17 @@ const Home: NextPage = () => {
 									className={`${animate.glassMain} ${animate.content} child:button-3d flex flex-col items-start gap-4 overflow-visible px-4 preserve-3d move-forth sm:flex-row sm:px-4 md:mt-4 md:px-0 xl:-ml-6`}
 									// className={`${animate.button} child:button-3d flex flex-col items-start gap-4 overflow-visible px-4 preserve-3d move-forth sm:flex-row sm:px-4 md:mt-4 md:px-0 xl:-ml-6`}
 								>
-									<Button
+									<LinkButton variant='filled' href='/policy'>
+										Discover app
+										<span className='relative h-5 child:h-full child:fill-violet-200'>
+											<MagnifyingGlass />
+											<MagnifyingGlass
+												className={`${animate.pingingB} absolute top-0.5 left-0.5`}
+											/>
+										</span>
+									</LinkButton>
+									<LinkButton
+										href='/community'
 										variant='outlined'
 										onClick={() => console.log('Join our community')}
 									>
@@ -145,16 +155,6 @@ const Home: NextPage = () => {
 											<PeopleGroup />
 											<PeopleGroup
 												className={`${animate.pingingA} absolute top-0 left-0`}
-											/>
-										</span>
-									</Button>
-
-									<LinkButton variant='filled' href='/article'>
-										Discover app
-										<span className='relative h-5 child:h-full child:fill-violet-200'>
-											<MagnifyingGlass />
-											<MagnifyingGlass
-												className={`${animate.pingingB} absolute top-0.5 left-0.5`}
 											/>
 										</span>
 									</LinkButton>

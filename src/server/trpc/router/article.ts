@@ -1,13 +1,14 @@
+import {TRPCError} from '@trpc/server'
 import cuid from 'cuid'
 import {z} from 'zod'
 
 import {router, publicProcedure, protectedProcedure} from '../trpc'
-import {revalidate, slugify} from 'server/utils/route'
+import {revalidate} from 'server/utils/route'
+import {slugify} from 'utils/literal'
 
-import {CreateArticleSchema, UpdateArticleSchema} from 'types/article'
-import {TRPCError} from '@trpc/server'
+import {articleCreateSchema, articleUpdateSchema} from 'types/article'
+import {requiredIdSchema} from 'types/general'
 
-const requiredIdSchema = z.object({id: z.string()})
 const requiredIdAuthorIdSchema = requiredIdSchema.extend({authorId: z.string()})
 
 export const articleRouter = router({
@@ -23,20 +24,19 @@ export const articleRouter = router({
 		})
 	),
 	create: protectedProcedure
-		.input(CreateArticleSchema)
+		.input(articleCreateSchema)
 		.mutation(({ctx, input}) => {
 			const id = cuid()
 			return ctx.prisma.article.create({
 				data: {
 					...input,
 					id,
-					slug: slugify(input.title, id),
 					authorId: ctx.session.user.id,
 				},
 			})
 		}),
 	update: protectedProcedure
-		.input(UpdateArticleSchema)
+		.input(articleUpdateSchema)
 		.mutation(async ({ctx, input}) => {
 			if (ctx.session.user.id !== input.authorId)
 				throw new TRPCError({
@@ -46,21 +46,19 @@ export const articleRouter = router({
 			return ctx.prisma.article
 				.update({
 					where: {id: input.id},
-					data: {
-						...input,
-						slug: slugify(input.title, input.id),
-					},
+					data: input,
 				})
 				.then(async (updated) => {
 					// TODO: Revert update on revalidation error
-					await revalidate('article', updated.slug)
+					await revalidate('article', slugify(updated.title, updated.id))
 					return updated
 				})
 		}),
 	delete: protectedProcedure
 		.input(requiredIdAuthorIdSchema)
 		.mutation(({ctx, input}) => {
-			if (ctx.session.user.id !== input.authorId)
+			const {user} = ctx.session
+			if (user.id !== input.authorId && user.role !== 'ADMIN')
 				throw new TRPCError({
 					code: 'FORBIDDEN',
 					message: 'You are not allowed to delete this article',

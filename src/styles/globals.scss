@@ -16,7 +16,10 @@
 		@apply font-heading font-bold text-light-head;
 	}
 
-	p {
+	p,
+	pre,
+	button,
+	label {
 		@apply font-body text-light-body;
 	}
 
@@ -25,6 +28,11 @@
 	textarea,
 	button {
 		@apply outline-brand-600;
+	}
+
+	input,
+	textarea {
+		@apply rounded-md;
 	}
 }
 

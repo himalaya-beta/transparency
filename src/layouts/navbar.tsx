@@ -10,14 +10,18 @@ import MenuButton from 'components/menu-button'
 import {
 	HomeIcon as HomeOutlineIcon,
 	DocumentTextIcon as ArticleOutlineIcon,
+	UserGroupIcon as UserGroupOutlineIcon,
 	ArrowLeftOnRectangleIcon as LoginIcon,
 	ArrowRightOnRectangleIcon as LogoutIcon,
+	LockClosedIcon,
 } from '@heroicons/react/24/outline'
 
 import {
 	HomeIcon as HomeSolidIcon,
+	UserGroupIcon as UserGroupSolidIcon,
 	DocumentTextIcon as ArticleSolidIcon,
 	UserIcon,
+	LockOpenIcon,
 } from '@heroicons/react/24/solid'
 
 import {capFirstChar} from 'utils/literal'
@@ -26,11 +30,9 @@ const Button = dynamic(() =>
 	import('components/button').then((buttons) => buttons.Button)
 )
 
-export default function NavbarTopLayout({
-	children,
-}: {
-	children: React.ReactNode
-}) {
+export default function NavbarLayout({children}: {children: React.ReactNode}) {
+	const {data} = useSession()
+
 	const {pathname} = useRouter()
 	const routes = [
 		{
@@ -38,21 +40,42 @@ export default function NavbarTopLayout({
 			label: 'home',
 			Icon: HomeOutlineIcon,
 			IconActive: HomeSolidIcon,
+			admin: false,
 		},
 		{
-			href: '/article',
-			label: 'article',
+			href: '/policy',
+			label: 'App Policy',
 			Icon: ArticleOutlineIcon,
 			IconActive: ArticleSolidIcon,
+			admin: false,
+		},
+		{
+			href: '/community',
+			label: 'Community',
+			Icon: UserGroupOutlineIcon,
+			IconActive: UserGroupSolidIcon,
+			admin: false,
+		},
+		{
+			href: '/admin',
+			label: 'admin',
+			Icon: LockClosedIcon,
+			IconActive: LockOpenIcon,
+			admin: true,
 		},
 	]
 
+	const filteredRoutes =
+		!data || data?.user.role === 'USER'
+			? routes.filter((route) => !route.admin)
+			: routes
+
 	return (
 		<div className='to-bg-dark to-bg-brand relative min-h-screen bg-gradient-to-br from-brand-700 via-brand-900 to-dark-bg'>
-			<div className='fixed bottom-0 z-10 flex w-full items-center justify-between border-t-0 bg-brand-900/50 bg-opacity-30 py-2 underline-offset-4 shadow-sm backdrop-blur-lg md:relative md:bg-inherit'>
+			<div className='fixed bottom-0 z-10 flex w-full items-center justify-between border-t-0 bg-brand-900/50 bg-opacity-30 py-2 underline-offset-4 backdrop-blur-lg md:relative md:bg-inherit'>
 				<div className='w-12' />
 				<nav className='flex h-fit items-center gap-2'>
-					{routes.map(({href, label, Icon, IconActive}, i) => {
+					{filteredRoutes.map(({href, label, Icon, IconActive}, i) => {
 						const isActive = pathname === href
 						return (
 							<React.Fragment key={label}>
@@ -73,8 +96,8 @@ export default function NavbarTopLayout({
 									</span>
 								</Link>
 
-								{i !== routes.length - 1 && (
-									<span className='invisible text-light-head md:visible'>
+								{i !== filteredRoutes.length - 1 && (
+									<span className='invisible text-xs text-light-head md:visible'>
 										&#9671;
 									</span>
 								)}
@@ -86,7 +109,7 @@ export default function NavbarTopLayout({
 
 				<AuthButton className='px-2 md:px-4' />
 			</div>
-			<div className='container mx-auto py-12'>{children}</div>
+			<div className='container mx-auto pb-10 md:pb-16'>{children}</div>
 		</div>
 	)
 }

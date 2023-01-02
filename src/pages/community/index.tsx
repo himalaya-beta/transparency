@@ -1,30 +1,27 @@
 import Link from 'next/link'
 import Image from 'next/image'
-import dynamic from 'next/dynamic'
 import dayjs from 'dayjs'
-import {useForm, type SubmitHandler} from 'react-hook-form'
+import {useForm} from 'react-hook-form'
 import {zodResolver} from '@hookform/resolvers/zod'
 
 import {trpc} from 'utils/trpc'
-import NavbarTopLayout from 'layouts/navbar'
+import {slugify} from 'utils/literal'
+
+import NavbarLayout from 'layouts/navbar'
 import MetaHead from 'components/meta-head'
+import QueryWrapper from 'components/query-wrapper'
+import FormWrapper from 'components/form-wrapper'
+import TextAreaInput from 'components/textarea-input'
+import {Button} from 'components/button'
+import {SectionSeparator, TriangleSymbol} from 'components/ornaments'
 import {PencilIcon} from '@heroicons/react/24/solid'
 
+import {type SubmitHandler} from 'react-hook-form'
 import {
-	CreateArticleSchema,
-	type CreateArticleType,
+	articleCreateSchema,
+	type ArticleCreateType,
 	type ArticleType,
 } from 'types/article'
-import QueryWrapper from 'components/query-wrapper'
-
-import {type FormWrapperProps} from 'components/form-wrapper'
-const FormWrapper = dynamic<FormWrapperProps<CreateArticleType>>(
-	() => import('components/form-wrapper')
-)
-const TextAreaInput = dynamic(() => import('components/textarea-input'))
-const Button = dynamic(() =>
-	import('components/button').then((buttons) => buttons.Button)
-)
 
 export default function ArticlePage() {
 	const articlesQuery = trpc.article.fetchAll.useQuery(undefined, {
@@ -34,12 +31,12 @@ export default function ArticlePage() {
 	return (
 		<>
 			<MetaHead
-				title='Articles (example) | Create T3 App'
-				description='Example on how to build full stack app using extended T3 stack'
+				title='Community Blog'
+				description='Place where every member share their thought'
 				imageUrl={`https://${process.env.NEXT_PUBLIC_VERCEL_URL}/images/articles.jpg`}
 			/>
-			<main className='container mx-auto max-w-screen-lg space-y-8 px-8 pb-10 md:pb-8'>
-				<h1 className='text-3xl'>Articles</h1>
+			<main className='container mx-auto max-w-screen-lg space-y-8 px-8 pt-8'>
+				<h1 className='text-2xl'>Community Blog</h1>
 				<QueryWrapper {...articlesQuery}>
 					{(articles) => (
 						<div className='grid grid-cols-6 gap-4'>
@@ -55,11 +52,11 @@ export default function ArticlePage() {
 	)
 }
 
-const Card = ({slug, title, content, createdAt, author}: ArticleType) => {
+const Card = ({id, title, content, createdAt, author}: ArticleType) => {
 	return (
 		<Link
-			href={`./article/${slug}`}
-			className={`hover:shadow-bg-light relative col-span-full flex h-72 flex-col overflow-hidden rounded rounded-br-3xl rounded-tl-2xl border-2 border-light-head/25 bg-light-head bg-opacity-20 p-6 pb-4 duration-100 hover:bg-opacity-30 hover:shadow-lg md:col-span-3 lg:col-span-2`}
+			href={`./community/${slugify(title, id)}`}
+			className={`hover:shadow-bg-light relative col-span-full flex h-64 flex-col overflow-hidden rounded rounded-br-3xl rounded-tl-2xl border-2 border-light-head/25 bg-light-head bg-opacity-20 p-6 pb-4 duration-100 hover:bg-opacity-30 hover:shadow-lg md:col-span-3 lg:col-span-2`}
 		>
 			<div className='absolute top-0 left-0'>
 				<div className='flex rounded-br-xl bg-dark-bg/30 shadow'>
@@ -84,16 +81,16 @@ const Card = ({slug, title, content, createdAt, author}: ArticleType) => {
 					</div>
 				)}
 			</div>
-			<div className='mt-1 h-fit w-full text-xl text-light-head'>
+			<div className='mt-1 w-full text-xl text-light-head'>
 				{author.image && <div className='float-left mr-2 h-12 w-12' />}
-				<h2 className=''>{title}</h2>
-				<div className='mt-0.5 flex h-1 items-center gap-2'>
+				<h2 className='pt-1 pb-0.5 leading-5 line-clamp-3'>{title}</h2>
+				<div className='mt-1 flex h-1 items-center gap-2'>
 					<div className='h-[1px] w-auto grow rounded-full bg-brand-500/50' />
-					<Triangle className='' />
+					<TriangleSymbol className='' />
 				</div>
 			</div>
 
-			<p className='h-full overflow-hidden pt-4 text-right indent-12 leading-5 text-light-body'>
+			<p className='pt-4 text-sm leading-5 text-light-body line-clamp-6'>
 				{content}
 			</p>
 		</Link>
@@ -101,9 +98,9 @@ const Card = ({slug, title, content, createdAt, author}: ArticleType) => {
 }
 
 const CreateArticleForm = ({refetchList}: {refetchList: () => void}) => {
-	const methods = useForm<CreateArticleType>({
+	const methods = useForm<ArticleCreateType>({
 		mode: 'onTouched',
-		resolver: zodResolver(CreateArticleSchema),
+		resolver: zodResolver(articleCreateSchema),
 	})
 
 	const {mutate, isLoading} = trpc.article.create.useMutation({
@@ -120,32 +117,26 @@ const CreateArticleForm = ({refetchList}: {refetchList: () => void}) => {
 		},
 	})
 
-	const onValidSubmit: SubmitHandler<CreateArticleType> = (data) => {
+	const onValidSubmit: SubmitHandler<ArticleCreateType> = (data) => {
 		mutate(data)
 	}
 
 	return (
 		<div className='space-y-2'>
-			<div className='flex items-center justify-center gap-4  text-light-head'>
-				<div className='h-[1px] w-auto grow rounded-full bg-brand-500/50' />
-				<Triangle />
-				<p className='w-fit text-lg'>Create New Article</p>
-				<Triangle className='rotate-180' />
-				<div className='h-[1px] w-auto grow rounded-full bg-brand-500/50' />
-			</div>
+			<SectionSeparator>Create new</SectionSeparator>
 			<div className='mx-auto lg:w-3/4 '>
 				<FormWrapper
 					methods={methods}
 					onValidSubmit={onValidSubmit}
 					className='flex flex-col gap-4'
 				>
-					<TextAreaInput
+					<TextAreaInput<ArticleCreateType>
 						name='title'
-						className='h-[5.4em] md:h-[4em] lg:h-[2.5em]'
+						inputClassName='h-[5.4em] md:h-[4em] lg:h-[2.5em]'
 					/>
-					<TextAreaInput
+					<TextAreaInput<ArticleCreateType>
 						name='content'
-						className='h-[16em] md:h-[12.8em] lg:h-[10em]'
+						inputClassName='h-[16em] md:h-[12.8em] lg:h-[10em]'
 					/>
 					<Button type='submit' variant='outlined' isLoading={isLoading}>
 						Create <PencilIcon className='h-4 w-4' />
@@ -156,10 +147,6 @@ const CreateArticleForm = ({refetchList}: {refetchList: () => void}) => {
 	)
 }
 
-const Triangle = ({className}: {className?: string}) => {
-	return <span className={`${className} text-brand-300`}>⨞</span>
-}
-
 ArticlePage.getLayout = function getLayout(page: React.ReactElement) {
-	return <NavbarTopLayout>{page}</NavbarTopLayout>
+	return <NavbarLayout>{page}</NavbarLayout>
 }

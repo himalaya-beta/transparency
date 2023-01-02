@@ -18,8 +18,12 @@ type Extension = {
 type CustomButtonProps = NativeButtonProps & Extension
 type LinkButtonProps = LinkProps & Extension
 
+const disabled =
+	'disabled:border-gray-600 disabled:border-2 disabled:bg-gray-400'
+
 const base =
-	'relative whitespace-nowrap text-light-head w-fit rounded-xl shadow-md transition ease-out focus:outline-none focus:ring-2 active:translate-y-2 active:shadow-md active:shadow-brand-400 disabled:pointer-events-none disabled:border-gray-600 disabled:border-2 disabled:bg-gray-400'
+	'relative whitespace-nowrap text-light-head w-fit rounded-xl shadow-md transition ease-out focus:outline-none focus:ring-2 active:translate-y-2 active:shadow-md active:shadow-brand-400 disabled:pointer-events-none' +
+	disabled
 
 const outlined =
 	'border-[0.2rem] border-brand-600 px-5 py-2 hover:border-brand-100 hover:bg-brand-700 hover:shadow-brand-200 focus:border-brand-100 focus:ring-bg-light active:bg-brand-900'
@@ -72,6 +76,21 @@ export function Button({
 			className={`${className} ${base} ${variantClass}`}
 		>
 			<Children isLoading={isLoading}>{children}</Children>
+		</button>
+	)
+}
+
+export const IconButton = ({
+	children,
+	className,
+	...props
+}: Omit<CustomButtonProps, 'variant'>) => {
+	return (
+		<button
+			className={`mr-0.5 rounded-full p-0.5 align-middle text-brand-400 hover:bg-brand-200/75 hover:text-brand-500 active:bg-brand-200 active:text-brand-600 md:mt-1 ${className}`}
+			{...props}
+		>
+			{children}
 		</button>
 	)
 }

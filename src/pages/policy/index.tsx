@@ -1,5 +1,5 @@
 /* eslint-disable unicorn/no-useless-undefined */
-import React from 'react'
+import React, {ChangeEvent} from 'react'
 import Image from 'next/image'
 import Link from 'next/link'
 import dayjs from 'dayjs'
@@ -15,10 +15,20 @@ import {PuzzlePieceIcon} from '@heroicons/react/24/outline'
 import {AppType} from 'types/app'
 import MetaHead from 'components/meta-head'
 
+import debounce from 'utils/debounce'
+
 export default function PolicyPage() {
 	const [query, setQuery] = React.useState<string | undefined>(undefined)
 	const queryMod = query === '' ? undefined : query
 	const appQuery = trpc.app.search.useQuery({query: queryMod})
+
+	const delayedQuery = debounce((query: string | undefined) => {
+		setQuery(query)
+	}, 350)
+
+	const onChange = (e: ChangeEvent<HTMLInputElement>) => {
+		delayedQuery(e.target.value === '' ? undefined : e.target.value)
+	}
 
 	return (
 		<>
@@ -31,10 +41,7 @@ export default function PolicyPage() {
 				<div className='space-y-2'>
 					<h1 className='text-2xl'>Search for app policy</h1>
 					<div className='grid grid-cols-2 gap-4'>
-						<input
-							className='h-10 p-2'
-							onChange={(e) => setQuery(e.target.value)}
-						/>
+						<input className='h-10 p-2' onChange={onChange} />
 					</div>
 				</div>
 

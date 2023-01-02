@@ -1,7 +1,10 @@
+import {z} from 'zod'
 import {publicProcedure, router, adminProcedure} from '../trpc'
 import {appCreateSchema, appUpdateSchema} from 'types/app'
 import {requiredIdSchema} from 'types/general'
-import {z} from 'zod'
+
+import {revalidate} from 'server/utils/route'
+import {slugify} from 'utils/literal'
 
 export const appRouter = router({
 	fetchAll: publicProcedure.query(({ctx}) =>
@@ -27,16 +30,21 @@ export const appRouter = router({
 	create: adminProcedure
 		.input(appCreateSchema)
 		.mutation(({ctx, input: {criteria, ...input}}) =>
-			ctx.prisma.app.create({
-				data: {
-					...input,
-					AppCriteria: {
-						createMany: {
-							data: criteria,
+			ctx.prisma.app
+				.create({
+					data: {
+						...input,
+						AppCriteria: {
+							createMany: {
+								data: criteria,
+							},
 						},
 					},
-				},
-			})
+				})
+				.then(async (updated) => {
+					await revalidate('policy', slugify(updated.name, updated.id))
+					return updated
+				})
 		),
 	update: adminProcedure
 		.input(appUpdateSchema)

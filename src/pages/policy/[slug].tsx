@@ -22,6 +22,7 @@ export const getStaticProps: GetStaticProps<{
 
 	const app = await prisma.app.findUnique({
 		where: {id},
+		include: {AppCriteria: true},
 	})
 
 	if (!app) return {notFound: true}

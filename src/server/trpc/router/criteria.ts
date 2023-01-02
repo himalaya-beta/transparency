@@ -1,5 +1,5 @@
 /* eslint-disable unicorn/no-null */
-import {adminProcedure, protectedProcedure, router} from '../trpc'
+import {adminProcedure, publicProcedure, router} from '../trpc'
 
 import {
 	criteriaCreateSchema,
@@ -10,22 +10,20 @@ import {requiredIdSchema} from 'types/general'
 import {z} from 'zod'
 
 export const criteriaRouter = router({
-	fetchRoot: protectedProcedure
-		.input(criteriaFetchSchema)
-		.query(({ctx, input}) =>
-			ctx.prisma.criteria.findMany({
-				...(input.noParent && {where: {parent: null}}),
-				include: {children: true},
-				orderBy: {order: 'asc'},
-			})
-		),
-	fetchOne: protectedProcedure.input(requiredIdSchema).query(({ctx, input}) =>
+	fetchRoot: adminProcedure.input(criteriaFetchSchema).query(({ctx, input}) =>
+		ctx.prisma.criteria.findMany({
+			...(input.noParent && {where: {parent: null}}),
+			include: {children: true},
+			orderBy: {order: 'asc'},
+		})
+	),
+	fetchOne: adminProcedure.input(requiredIdSchema).query(({ctx, input}) =>
 		ctx.prisma.criteria.findUnique({
 			where: {id: input.id},
 			include: {children: true},
 		})
 	),
-	fetchByApp: protectedProcedure
+	fetchByApp: publicProcedure
 		.input(z.object({appId: z.string()}))
 		.query(({ctx, input}) => {
 			const criteriaRes = ctx.prisma.criteria.findMany({

@@ -109,6 +109,8 @@ const CriteriaList = ({criteria, sub}: CriteriaLisProps) => {
 	const hasChildren = sub ? false : criteria.children.length > 0
 	const [isExpanded, setIsExpanded] = React.useState(criteria.checked)
 
+	const [refAnimate] = useAutoAnimate<HTMLUListElement>()
+
 	const onExpand = () => {
 		if (hasChildren) {
 			setIsExpanded(!isExpanded)
@@ -178,14 +180,14 @@ const CriteriaList = ({criteria, sub}: CriteriaLisProps) => {
 					</div>
 				</div>
 
-				<DivAnimate className=''>
+				<ul ref={refAnimate}>
 					{isExpanded &&
 						hasChildren &&
 						!sub &&
 						criteria.children.map((child) => (
 							<CriteriaList key={child.id} criteria={child} sub />
 						))}
-				</DivAnimate>
+				</ul>
 			</div>
 		</li>
 	)

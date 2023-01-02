@@ -57,7 +57,7 @@ model App {
 model AppCriteria {
     appId       String
     criteriaId  String
-    explanation String?
+    explanation String?  @db.Text()
     assignedAt  DateTime @default(now())
     assignedBy  String
     app         App      @relation(fields: [appId], references: [id])

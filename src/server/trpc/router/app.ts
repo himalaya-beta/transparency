@@ -30,26 +30,26 @@ export const appRouter = router({
 	create: adminProcedure
 		.input(appCreateSchema)
 		.mutation(({ctx, input: {criteria, ...input}}) =>
-			ctx.prisma.app
-				.create({
-					data: {
-						...input,
-						AppCriteria: {
-							createMany: {
-								data: criteria,
-							},
+			ctx.prisma.app.create({
+				data: {
+					...input,
+					AppCriteria: {
+						createMany: {
+							data: criteria,
 						},
 					},
-				})
-				.then(async (updated) => {
-					await revalidate('policy', slugify(updated.name, updated.id))
-					return updated
-				})
+				},
+			})
 		),
 	update: adminProcedure
 		.input(appUpdateSchema)
 		.mutation(({ctx, input: {id, ...input}}) =>
-			ctx.prisma.app.update({where: {id}, data: input})
+			ctx.prisma.app
+				.update({where: {id}, data: input})
+				.then(async (updated) => {
+					await revalidate('policy', slugify(updated.name, updated.id))
+					return updated
+				})
 		),
 	delete: adminProcedure.input(requiredIdSchema).mutation(({ctx, input}) =>
 		ctx.prisma.$transaction([

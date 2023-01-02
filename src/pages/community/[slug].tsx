@@ -4,6 +4,7 @@ import {useSession} from 'next-auth/react'
 import {useForm} from 'react-hook-form'
 import {zodResolver} from '@hookform/resolvers/zod'
 import {useAutoAnimate} from '@formkit/auto-animate/react'
+import dayjs from 'dayjs'
 
 import {prisma} from 'server/db/client'
 import {trpc} from 'utils/trpc'
@@ -148,8 +149,14 @@ const ArticleDetailsPage = ({
 					</FormWrapper>
 				) : (
 					<>
-						<h1 className='text-3xl'>{article.title}</h1>
-						<p className='text-lg '>{article.content}</p>
+						<div>
+							<h1 className='text-3xl'>{article.title}</h1>
+							<p className='italic'>by {article.author.name}</p>
+							<p className='float-right -mt-2 italic'>
+								{dayjs(article.updatedAt).format('MMM D, YYYY')}
+							</p>
+						</div>
+						<p className='text-lg'>{article.content}</p>
 						{status === 'authenticated' && (
 							<div className='flex gap-4'>
 								<Button

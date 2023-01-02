@@ -78,7 +78,9 @@ const AppDetailsPage = ({
 				<div className='max-w-screen-md'>
 					<h1 className='text-3xl'>{app.name}</h1>
 					<div className='flex justify-between text-opacity-75 child:italic'>
-						<p>{app.company}</p>
+						<p>
+							{app.company} - {app.headquarter}
+						</p>
 						<p>Last updated: {dayjs(app.updatedAt).format('MMM D, YYYY')}</p>
 					</div>
 					<p className='mt-4 text-lg'>{app.about}</p>

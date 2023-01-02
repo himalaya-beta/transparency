@@ -1,3 +1,4 @@
+/* eslint-disable unicorn/no-useless-undefined */
 import React from 'react'
 import Image from 'next/image'
 import Link from 'next/link'
@@ -15,7 +16,9 @@ import {AppType} from 'types/app'
 import MetaHead from 'components/meta-head'
 
 export default function PolicyPage() {
-	const appQuery = trpc.app.fetchAll.useQuery()
+	const [query, setQuery] = React.useState<string | undefined>(undefined)
+	const queryMod = query === '' ? undefined : query
+	const appQuery = trpc.app.search.useQuery({query: queryMod})
 
 	return (
 		<>
@@ -25,7 +28,15 @@ export default function PolicyPage() {
 				imageUrl={`https://${process.env.NEXT_PUBLIC_VERCEL_URL}/images/articles.jpg`}
 			/>
 			<main className='container mx-auto max-w-screen-lg space-y-8 px-8 pt-8'>
-				<h1 className='text-2xl'>Search for app policy</h1>
+				<div className='space-y-2'>
+					<h1 className='text-2xl'>Search for app policy</h1>
+					<div className='grid grid-cols-2 gap-4'>
+						<input
+							className='h-10 p-2'
+							onChange={(e) => setQuery(e.target.value)}
+						/>
+					</div>
+				</div>
 
 				<QueryWrapper {...appQuery}>
 					{(data) => (
@@ -48,7 +59,7 @@ const Card = ({
 	about,
 	updatedAt,
 	className,
-}: AppType & {className?: string}) => {
+}: Omit<AppType, 'AppCriteria'> & {className?: string}) => {
 	const logo = ''
 	return (
 		<Link

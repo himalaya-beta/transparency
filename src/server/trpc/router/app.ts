@@ -1,6 +1,7 @@
 import {publicProcedure, router, adminProcedure} from '../trpc'
 import {appCreateSchema, appUpdateSchema} from 'types/app'
 import {requiredIdSchema} from 'types/general'
+import {z} from 'zod'
 
 export const appRouter = router({
 	fetchAll: publicProcedure.query(({ctx}) =>
@@ -12,6 +13,17 @@ export const appRouter = router({
 			include: {AppCriteria: true},
 		})
 	),
+	search: publicProcedure
+		.input(z.object({query: z.string().optional()}))
+		.query(({ctx, input}) =>
+			ctx.prisma.app.findMany({
+				where: {
+					name: {search: input.query},
+					company: {search: input.query},
+					about: {search: input.query},
+				},
+			})
+		),
 	create: adminProcedure
 		.input(appCreateSchema)
 		.mutation(({ctx, input: {criteria, ...input}}) =>

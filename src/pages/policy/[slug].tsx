@@ -9,7 +9,6 @@ import {extractIdFromSlug, slugify} from 'utils/literal'
 import NavbarLayout from 'layouts/navbar'
 import MetaHead from 'components/meta-head'
 import QueryWrapper from 'components/query-wrapper'
-import DivAnimate from 'components/div-animate'
 import {TriangleSymbol} from 'components/ornaments'
 import {CheckIcon} from '@heroicons/react/24/outline'
 
@@ -120,7 +119,7 @@ const CriteriaList = ({criteria, sub}: CriteriaLisProps) => {
 	return (
 		<li
 			className={`group relative flex list-none items-start gap-2 ${
-				sub ? 'py-0.5 first:mt-1 last:mb-2' : 'py-2'
+				sub ? 'group/sub py-0.5 first:mt-1 last:mb-2' : 'py-2'
 			}`}
 		>
 			<TriangleSymbol
@@ -134,8 +133,8 @@ const CriteriaList = ({criteria, sub}: CriteriaLisProps) => {
 			<div className='w-full'>
 				<div
 					className={`
-						group/sub grid grid-cols-8  border-b-[1px] border-brand-100 border-opacity-50 transition-all
-						${sub ? 'rounded border-dashed hover:bg-brand-100/50 hover:pl-2' : ''}
+						grid grid-cols-8 border-b-[1px] border-brand-100 border-opacity-50 transition-all
+						${sub ? 'rounded border-dashed hover:pl-2 group-hover/sub:bg-brand-100/50' : ''}
 					`}
 				>
 					<h3

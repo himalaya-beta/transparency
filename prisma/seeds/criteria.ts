@@ -76,7 +76,7 @@ async function main() {
 		{value: 'Exclude from personalized marketing options'},
 		{value: 'Data transfer', type: 'EXPLANATION'},
 		{value: 'Manage personal data'},
-		{value: 'Personal data retention period'},
+		{value: 'Personal data retention period', type: 'EXPLANATION'},
 		{
 			value: 'Personal data options',
 			children: [

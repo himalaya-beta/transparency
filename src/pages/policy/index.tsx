@@ -41,7 +41,11 @@ export default function PolicyPage() {
 				<div className='space-y-2'>
 					<h1 className='text-2xl'>Search for app policy</h1>
 					<div className='grid grid-cols-2 gap-4'>
-						<input className='h-10 p-2' onChange={onChange} />
+						<input
+							className='h-10 p-2 placeholder:font-body placeholder:text-sm placeholder:italic'
+							onChange={onChange}
+							placeholder='name, company, keyword...'
+						/>
 					</div>
 				</div>
 

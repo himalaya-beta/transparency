@@ -28,27 +28,40 @@ export const criteriaRouter = router({
 	fetchByApp: protectedProcedure
 		.input(z.object({appId: z.string()}))
 		.query(({ctx, input}) => {
-			const criteria = ctx.prisma.criteria.findMany({
+			const criteriaRes = ctx.prisma.criteria.findMany({
 				where: {parentId: null},
 				include: {children: true},
 				orderBy: {order: 'asc'},
 			})
 
-			const appCriteria = ctx.prisma.appCriteria.findMany({
+			const appCriteriaRes = ctx.prisma.appCriteria.findMany({
 				where: {appId: input.appId},
 			})
 
-			return Promise.all([criteria, appCriteria]).then((data) => {
+			return Promise.all([criteriaRes, appCriteriaRes]).then((data) => {
 				const [criteriaData, appCriteriaData] = data
 
 				return criteriaData.map((criteria) => {
-					const checked = appCriteriaData.find(
+					const children = criteria.children.map((child) => {
+						const childFound = appCriteriaData.find(
+							(c) => c.criteriaId === child.id
+						)
+						return {
+							...child,
+							checked: !!childFound,
+							explanation: childFound?.explanation ?? null,
+						}
+					})
+
+					const found = appCriteriaData.find(
 						(c) => c.criteriaId === criteria.id
 					)
+
 					return {
 						...criteria,
-						checked: !!checked,
-						explanation: checked?.explanation ?? null,
+						children,
+						checked: !!found,
+						explanation: found?.explanation ?? null,
 					}
 				})
 			})

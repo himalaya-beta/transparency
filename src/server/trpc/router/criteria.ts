@@ -7,6 +7,7 @@ import {
 	criteriaUpdateSchema,
 } from 'types/criteria'
 import {requiredIdSchema} from 'types/general'
+import {z} from 'zod'
 
 export const criteriaRouter = router({
 	fetchRoot: protectedProcedure
@@ -24,6 +25,35 @@ export const criteriaRouter = router({
 			include: {children: true},
 		})
 	),
+	fetchByApp: protectedProcedure
+		.input(z.object({appId: z.string()}))
+		.query(({ctx, input}) => {
+			const criteria = ctx.prisma.criteria.findMany({
+				where: {parentId: null},
+				include: {children: true},
+				orderBy: {order: 'asc'},
+			})
+
+			const appCriteria = ctx.prisma.appCriteria.findMany({
+				where: {appId: input.appId},
+			})
+
+			return Promise.all([criteria, appCriteria]).then((data) => {
+				const [criteriaData, appCriteriaData] = data
+
+				return criteriaData.map((criteria) => {
+					const checked = appCriteriaData.find(
+						(c) => c.criteriaId === criteria.id
+					)
+					return {
+						...criteria,
+						checked: !!checked,
+						explanation: checked?.explanation ?? null,
+					}
+				})
+			})
+		}),
+
 	create: adminProcedure.input(criteriaCreateSchema).mutation(({ctx, input}) =>
 		ctx.prisma.criteria.create({
 			data: input,

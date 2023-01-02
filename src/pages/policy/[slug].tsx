@@ -11,7 +11,7 @@ import NavbarLayout from 'layouts/navbar'
 import MetaHead from 'components/meta-head'
 import QueryWrapper from 'components/query-wrapper'
 import {TriangleSymbol} from 'components/ornaments'
-import {CheckIcon} from '@heroicons/react/24/outline'
+import {CheckIcon, MinusIcon} from '@heroicons/react/24/outline'
 
 import {
 	type GetStaticPaths,
@@ -72,23 +72,27 @@ const AppDetailsPage = ({
 				imageUrl={`https://${process.env.NEXT_PUBLIC_VERCEL_URL}/images/articles.jpg`}
 			/>
 			<main
-				className='container mx-auto max-w-screen-lg space-y-8 px-6 pt-6'
+				className='container mx-auto max-w-screen-lg px-6 pt-6'
 				ref={toggleAnimation}
 			>
-				<div className='max-w-screen-md'>
+				<div className=''>
 					<h1 className='text-3xl'>{app.name}</h1>
 					<div className='flex justify-between text-opacity-75 child:italic'>
 						<p>
 							{app.company} - {app.headquarter}
 						</p>
-						<p>Last updated: {dayjs(app.updatedAt).format('MMM D, YYYY')}</p>
 					</div>
-					<p className='mt-4 text-lg'>{app.about}</p>
+					<p className='mt-4 max-w-screen-sm text-lg md:pr-8'>{app.about}</p>
 				</div>
 
 				<QueryWrapper {...criteriaQ}>
 					{(data) => (
-						<ul className='relative space-y-0'>
+						<ul className='relative'>
+							<div className='relative flex w-full flex-row-reverse py-2'>
+								<p className=''>
+									Last updated: {dayjs(app.updatedAt).format('MMM D, YYYY')}
+								</p>
+							</div>
 							<div className='absolute right-0 h-full w-[37.5%] rounded bg-dark-bg/10'></div>
 							{data.map((criteria) => (
 								<CriteriaList key={criteria.id} criteria={criteria} />
@@ -112,7 +116,7 @@ type CriteriaLisProps =
 	  }
 const CriteriaList = ({criteria, sub}: CriteriaLisProps) => {
 	const hasChildren = sub ? false : criteria.children.length > 0
-	const [isExpanded, setIsExpanded] = React.useState(criteria.checked)
+	const [isExpanded, setIsExpanded] = React.useState(false)
 
 	const [refAnimate] = useAutoAnimate<HTMLUListElement>()
 
@@ -124,18 +128,21 @@ const CriteriaList = ({criteria, sub}: CriteriaLisProps) => {
 
 	return (
 		<li
-			className={`group relative flex list-none items-start gap-2 ${
-				sub ? 'group/sub py-0.5 first:mt-1 last:mb-2' : 'py-2'
-			}`}
+			className={`
+				group relative flex list-none items-start gap-2 
+				${sub ? 'group/sub py-0.5 first:mt-1 last:mb-2' : 'py-2'}
+			`}
 		>
-			<TriangleSymbol
-				onClick={onExpand}
-				className={`
-					w-fit transition-transform hover:cursor-pointer
-					${hasChildren ? 'visible' : 'invisible'}
-					${isExpanded ? '-rotate-90' : '-rotate-180'}
-				`}
-			/>
+			{!sub && (
+				<TriangleSymbol
+					onClick={onExpand}
+					className={`
+						w-6 transition-transform hover:cursor-pointer
+						${hasChildren ? 'visible' : 'invisible'}
+						${isExpanded ? 'mt-4 -rotate-90' : 'mt-0.5 -rotate-180'}
+					`}
+				/>
+			)}
 			<div className='w-full'>
 				<div
 					className={`
@@ -147,40 +154,72 @@ const CriteriaList = ({criteria, sub}: CriteriaLisProps) => {
 						onClick={onExpand}
 						className={`
 							col-span-5 transition-all
+							${hasChildren ? 'hover:cursor-pointer' : ''}
 							${
 								sub
 									? 'text-sm font-normal'
-									: 'text-lg font-medium group-hover:pl-2 group-hover:text-xl group-hover:font-semibold'
+									: 'text-lg font-medium group-hover:text-xl group-hover:font-semibold'
 							}
-							${hasChildren ? 'hover:cursor-pointer' : ''}
 						`}
 					>
 						{criteria.value}
 					</h3>
 
 					<div className='col-span-3 flex h-full justify-center px-2'>
-						{criteria.type === 'TRUE_FALSE' && criteria.checked && (
+						{criteria.checked && (
+							<>
+								{criteria.type === 'TRUE_FALSE' && (
+									<div
+										className={`
+											flex justify-center
+											${
+												sub
+													? 'mr-2 h-6 w-8'
+													: `h-8 w-8 ${
+															isExpanded && hasChildren
+																? 'invisible'
+																: 'visible'
+													  }`
+											} 
+										`}
+									>
+										<CheckIcon
+											className={`
+												transition-all
+												${
+													sub
+														? 'w-5 text-brand-400 group-hover/sub:text-white'
+														: 'w-6 text-brand-200 group-hover:w-8 group-hover:text-white'
+												}
+											`}
+										/>
+									</div>
+								)}
+								{criteria.type === 'EXPLANATION' && (
+									<p className='text-center text-sm group-hover:font-semibold'>
+										{criteria.explanation}
+									</p>
+								)}
+							</>
+						)}
+						{!criteria.checked && (
 							<div
-								className={`${
-									sub ? 'mr-2 h-6 w-8' : 'h-8 w-8'
-								} flex justify-center `}
+								className={`
+									flex justify-center
+									${sub ? 'mr-2 h-6 w-8' : `h-8 w-8 ${isExpanded ? 'invisible' : 'visible'}`} 
+								`}
 							>
-								<CheckIcon
+								<MinusIcon
 									className={`
 										transition-all
 										${
 											sub
-												? 'w-5 text-brand-400 group-hover/sub:text-white'
-												: 'w-6 text-brand-200 group-hover:w-8 group-hover:text-white'
+												? 'w-5 text-gray-500/75 group-hover/sub:text-gray-300'
+												: 'w-6 text-gray-500/75 group-hover:w-8 group-hover:text-gray-300'
 										}
 									`}
 								/>
 							</div>
-						)}
-						{criteria.type === 'EXPLANATION' && (
-							<p className='text-center text-sm group-hover:font-semibold'>
-								{criteria.explanation}
-							</p>
 						)}
 					</div>
 				</div>

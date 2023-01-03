@@ -92,6 +92,6 @@ const Error = ({
 	)
 
 const Empty = ({CustomEmpty}: {CustomEmpty?: JSX.Element}) =>
-	CustomEmpty ?? <p>There is not data</p>
+	CustomEmpty ?? <p>There is no data</p>
 
 export default QueryWrapper

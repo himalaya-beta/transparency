@@ -90,6 +90,7 @@ export default function AppSection() {
 		}
 	)
 	const {mutate: appCreate} = trpc.app.create.useMutation({
+		onError: (err) => alert(err.message),
 		onSuccess: () => {
 			setIsCreate(false)
 			reset()

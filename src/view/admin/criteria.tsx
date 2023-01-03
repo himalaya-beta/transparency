@@ -262,7 +262,7 @@ const CriteriaCard = ({
 					<div className='flex flex-1 items-center justify-between gap-2'>
 						<h2
 							className={`
-								leading-5 md:text-lg md:leading-none
+								leading-5 md:text-lg md:leading-normal
 								${haveChildren ? 'hover:cursor-pointer' : ''} 
 							`}
 							onClick={onExpand}

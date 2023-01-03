@@ -82,7 +82,7 @@ const AppDetailsPage = ({
 							{app.company} - {app.headquarter}
 						</p>
 					</div>
-					<p className='mt-4 max-w-screen-sm leading-5 md:pr-8 md:text-lg md:leading-none'>
+					<p className='mt-4 max-w-screen-sm leading-5 md:pr-8 md:text-lg md:leading-normal'>
 						{app.about}
 					</p>
 				</div>
@@ -155,7 +155,7 @@ const CriteriaList = ({criteria, sub}: CriteriaLisProps) => {
 					<h3
 						onClick={onExpand}
 						className={`
-							col-span-4 leading-5 transition-all md:col-span-5 md:whitespace-nowrap md:leading-none
+							col-span-4 leading-5 transition-all md:col-span-5 md:whitespace-nowrap md:leading-normal
 							${hasChildren ? 'hover:cursor-pointer' : ''}
 							${
 								sub

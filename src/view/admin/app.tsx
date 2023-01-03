@@ -397,7 +397,7 @@ const AppItem = ({appData: appP}: {appData: AppType}) => {
 			<DivAnimate className='flex flex-1 flex-col justify-start'>
 				<div className='flex items-center justify-between'>
 					<div className='space-y-0.5'>
-						<h2 className='leading-5 md:text-lg md:leading-none'>
+						<h2 className='leading-5 md:text-lg md:leading-normal'>
 							{appP.name}
 						</h2>
 						<p className='text-xs text-light-body/75'>{appP.company}</p>

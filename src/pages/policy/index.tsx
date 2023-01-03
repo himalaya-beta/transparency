@@ -37,12 +37,12 @@ export default function PolicyPage() {
 				description='Search for app policy'
 				imageUrl={`https://${process.env.NEXT_PUBLIC_VERCEL_URL}/images/articles.jpg`}
 			/>
-			<main className='container mx-auto max-w-screen-lg space-y-8 px-8 pt-8'>
+			<main className='container mx-auto max-w-screen-lg space-y-8 px-5 pt-8 md:px-8'>
 				<div className='space-y-2'>
 					<h1 className='text-2xl'>Search for app policy</h1>
 					<div className='grid grid-cols-2 gap-4'>
 						<input
-							className='h-10 p-2 placeholder:font-body placeholder:text-sm placeholder:italic'
+							className='col-span-full h-10 p-2 placeholder:font-body placeholder:text-sm placeholder:italic md:col-span-1'
 							onChange={onChange}
 							placeholder='name, company, keyword...'
 						/>
@@ -53,7 +53,11 @@ export default function PolicyPage() {
 					{(data) => (
 						<div className='grid grid-cols-4 gap-4'>
 							{data.map((app) => (
-								<Card key={app.id} {...app} className='col-span-2' />
+								<Card
+									key={app.id}
+									{...app}
+									className='col-span-full md:col-span-2'
+								/>
 							))}
 						</div>
 					)}

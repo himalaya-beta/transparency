@@ -65,13 +65,13 @@ export default function NavbarLayout({children}: {children: React.ReactNode}) {
 
 	return (
 		<div className='to-bg-dark to-bg-brand relative min-h-screen bg-gradient-to-br from-brand-700 via-brand-900 to-dark-bg'>
-			<div className='fixed bottom-0 z-10 flex w-full items-center justify-between border-t-0 bg-brand-900/50 bg-opacity-30 py-2 underline-offset-4 backdrop-blur-lg md:relative md:bg-inherit'>
+			<div className='fixed bottom-0 z-10 flex w-full items-center justify-between border-t-0 bg-brand-900/50 bg-opacity-30 py-1 underline-offset-4 backdrop-blur-lg md:relative md:bg-inherit md:py-2'>
 				<div className='ml-2 hidden h-10 w-10 md:block' />
 				<Link
 					href='/'
 					className='ml-2 flex items-center justify-center rounded-full bg-brand-200/30 p-0.5 md:hidden'
 				>
-					<button className='h-9 w-9 rounded-full bg-dark-bg/50 p-1'>
+					<button className='h-8 w-8 rounded-full bg-dark-bg/50 p-1'>
 						<HomeOutlineIcon className='h-full w-full text-brand-100' />
 					</button>
 				</Link>
@@ -84,7 +84,7 @@ export default function NavbarLayout({children}: {children: React.ReactNode}) {
 								<Link
 									href={href}
 									className={`
-										flex w-16 flex-col items-center gap-1 rounded px-2 font-medium text-light-head md:w-fit md:flex-row md:gap-2 md:py-1 
+										flex w-16 flex-col items-center gap-0.5 rounded px-2 font-medium text-light-head md:w-fit md:flex-row md:gap-2 md:py-1 
 										${label === 'home' ? 'hidden md:flex' : ''}
 										${isActive ? 'pointer-events-none' : 'hover:underline'}
 									`}
@@ -114,14 +114,14 @@ export default function NavbarLayout({children}: {children: React.ReactNode}) {
 					})}
 				</nav>
 
-				<AuthButton className='mr-2 h-10 md:-mt-1 md:px-4' />
+				<AuthButton className='mr-2 mt-0.5 h-10 md:px-4' />
 			</div>
 
 			<div className='container -mt-1 w-full bg-white'>
 				<div className='h-0.5' />
 			</div>
 
-			<div className='container mx-auto pb-10 md:pb-16'>{children}</div>
+			<div className='container mx-auto pb-20 md:pb-16'>{children}</div>
 		</div>
 	)
 }
@@ -157,7 +157,7 @@ function AuthButton({className}: {className?: string}) {
 			) : (
 				<div className='flex items-center justify-center rounded-full bg-brand-200 bg-opacity-30 p-0.5 transition-all hover:bg-opacity-60 md:rounded-xl'>
 					<button
-						className='h-9 w-9 rounded-full bg-dark-bg bg-opacity-60 p-1 transition-all hover:bg-opacity-80 md:flex md:w-fit md:rounded-xl'
+						className='h-8 w-8 rounded-full bg-dark-bg bg-opacity-60 p-1 transition-all hover:bg-opacity-80 md:flex md:w-fit md:rounded-xl'
 						onClick={() => signIn()}
 					>
 						<LoginIcon className='h-full w-full rotate-180 text-brand-100 md:ml-0.5' />

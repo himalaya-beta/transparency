@@ -17,7 +17,13 @@ export const appRouter = router({
 		})
 	),
 	search: publicProcedure
-		.input(z.object({query: z.string().optional()}))
+		.input(
+			z.object({
+				query: z.string().optional(),
+				dataPerPage: z.number().optional(),
+				cursorId: z.string().optional(),
+			})
+		)
 		.query(({ctx, input}) =>
 			ctx.prisma.app.findMany({
 				where: {
@@ -25,8 +31,14 @@ export const appRouter = router({
 					company: {search: input.query},
 					about: {search: input.query},
 				},
+				take: input.dataPerPage ?? 8,
+				orderBy: {
+					updatedAt: 'desc',
+				},
+				...(input.cursorId && {cursor: {id: input.cursorId}, skip: 1}),
 			})
 		),
+
 	create: adminProcedure
 		.input(appCreateSchema)
 		.mutation(({ctx, input: {criteria, ...input}}) =>

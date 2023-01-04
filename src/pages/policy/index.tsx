@@ -1,3 +1,4 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 /* eslint-disable unicorn/no-useless-undefined */
 import React, {ChangeEvent} from 'react'
 import Image from 'next/image'
@@ -6,21 +7,53 @@ import dayjs from 'dayjs'
 
 import {trpc} from 'utils/trpc'
 import {slugify} from 'utils/literal'
-
-import NavbarLayout from 'layouts/navbar'
-import QueryWrapper from 'components/query-wrapper'
-import {TriangleSymbol} from 'components/ornaments'
-import {PuzzlePieceIcon} from '@heroicons/react/24/outline'
-
-import {AppType} from 'types/app'
-import MetaHead from 'components/meta-head'
-
 import debounce from 'utils/debounce'
 
+import NavbarLayout from 'layouts/navbar'
+import MetaHead from 'components/meta-head'
+import QueryWrapper from 'components/query-wrapper'
+import {TriangleSymbol} from 'components/ornaments'
+import {
+	ChevronDoubleLeftIcon,
+	ChevronDoubleRightIcon,
+	PuzzlePieceIcon,
+} from '@heroicons/react/24/outline'
+
+import {type AppType} from 'types/app'
+
+const DATA_PER_PAGE = 1
+
 export default function PolicyPage() {
+	const [cursorIds, setCursorIds] = React.useState<Array<string | undefined>>([
+		undefined,
+	])
+	const [page, setPage] = React.useState(0)
+
 	const [query, setQuery] = React.useState<string | undefined>(undefined)
 	const queryMod = query === '' ? undefined : query
-	const appQuery = trpc.app.search.useQuery({query: queryMod})
+
+	const appQuery = trpc.app.search.useQuery(
+		{query: queryMod, cursorId: cursorIds[page], dataPerPage: DATA_PER_PAGE},
+		{keepPreviousData: true, staleTime: 60_000}
+	)
+
+	React.useEffect(() => {
+		const {data, isPreviousData} = appQuery
+
+		if (!isPreviousData && data?.length === DATA_PER_PAGE) {
+			const cursor = data[data.length - 1]
+			setCursorIds([...cursorIds, cursor?.id])
+		}
+	}, [appQuery.isPreviousData])
+
+	React.useEffect(() => {
+		const {data, isInitialLoading} = appQuery
+
+		if (!isInitialLoading && data) {
+			const cursor = data[data.length - 1]
+			setCursorIds([...cursorIds, cursor?.id])
+		}
+	}, [appQuery.isInitialLoading])
 
 	const delayedQuery = debounce((query: string | undefined) => {
 		setQuery(query)
@@ -62,8 +95,132 @@ export default function PolicyPage() {
 						</div>
 					)}
 				</QueryWrapper>
+
+				<div className='mx-auto flex h-16 w-fit items-center gap-2 transition-all'>
+					<button
+						onClick={() => setPage(page - 1)}
+						disabled={page === 0}
+						className='p-2 transition-transform hover:scale-150 disabled:transform-none disabled:text-gray-400'
+					>
+						<ChevronDoubleLeftIcon className='h-4 w-4' />
+					</button>
+
+					<div className='flex h-12 items-center gap-3'>
+						{cursorIds.map((id, i) => {
+							const span = 3 + 1
+							const isFirst = i === 0
+							const isActive = i === page
+							const isLast = i === cursorIds.length - 1
+
+							const onClick = () => setPage(i)
+							const label = i + 1
+							const key = `page_button_${id}`
+
+							return (
+								<React.Fragment key={key}>
+									{isFirst && !isActive && (
+										<>
+											<PageButton
+												key={`${key}_first`}
+												label={page >= 2 + span ? 'first' : label}
+												isActive={isActive}
+												onClick={onClick}
+											/>
+											{page >= 2 + span && (
+												<span
+													key={`${key}_dot_left`}
+													className='text-light-body'
+												>
+													...
+												</span>
+											)}
+										</>
+									)}
+
+									{i < page && i > page - span && !isFirst && (
+										<PageButton
+											key={`${key}_left_${i}`}
+											label={label}
+											isActive={isActive}
+											onClick={onClick}
+										/>
+									)}
+
+									{isActive && (
+										<PageButton
+											key={`${key}_active`}
+											label={label}
+											isActive={isActive}
+											onClick={onClick}
+										/>
+									)}
+
+									{i > page && i < page + span && !isLast && (
+										<PageButton
+											key={`${key}_right_${i}`}
+											label={label}
+											isActive={isActive}
+											onClick={onClick}
+										/>
+									)}
+
+									{isLast && !isActive && (
+										<>
+											{i > page + span + 1 && (
+												<span
+													key={`${key}_dot_left`}
+													className='text-light-body'
+												>
+													...
+												</span>
+											)}
+											<PageButton
+												key={`${key}_last`}
+												label={i > page + span + 1 ? 'last' : label}
+												isActive={isActive}
+												onClick={onClick}
+											/>
+										</>
+									)}
+								</React.Fragment>
+							)
+						})}
+					</div>
+
+					<button
+						onClick={() => setPage(page + 1)}
+						disabled={page === cursorIds.length - 1}
+						className='p-2 transition-transform hover:scale-125 disabled:transform-none disabled:text-gray-400'
+					>
+						<ChevronDoubleRightIcon className='h-4 w-4' />
+					</button>
+				</div>
 			</main>
 		</>
+	)
+}
+
+const PageButton = ({
+	isActive,
+	onClick,
+	label,
+}: {
+	isActive: boolean
+	onClick: () => void
+	label: string | number
+}) => {
+	return (
+		<button
+			onClick={onClick}
+			disabled={isActive}
+			className={`
+				h-8 transition-all disabled:scale-125
+				${typeof label === 'number' ? 'hover:scale-150' : 'text-sm hover:scale-125'}
+				${isActive ? '-mt-0.5 font-heading text-xl font-bold' : ''}
+			`}
+		>
+			{label}
+		</button>
 	)
 }
 

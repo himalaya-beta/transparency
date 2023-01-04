@@ -57,19 +57,19 @@ export default function ArticlePage() {
 			/>
 			<main className='container mx-auto max-w-screen-lg space-y-8 px-5 pt-8 md:px-8'>
 				<h1 className='text-2xl'>Community Blog</h1>
+				<QueryWrapper {...articlesQuery}>
+					{(articles) => (
+						<div className='grid grid-cols-6 gap-4'>
+							{articles.map((article) => (
+								<Card key={article.id} {...article} />
+							))}
+						</div>
+					)}
+				</QueryWrapper>
 				<div>
-					<QueryWrapper {...articlesQuery}>
-						{(articles) => (
-							<div className='grid grid-cols-6 gap-4'>
-								{articles.map((article) => (
-									<Card key={article.id} {...article} />
-								))}
-							</div>
-						)}
-					</QueryWrapper>
 					<PaginationNav {...paginateProps} setCursorId={setCursorId} />
+					<CreateArticleForm refetchList={articlesQuery.refetch} />
 				</div>
-				<CreateArticleForm refetchList={articlesQuery.refetch} />
 			</main>
 		</>
 	)

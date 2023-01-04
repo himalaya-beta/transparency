@@ -129,7 +129,7 @@ const Card = ({
 				<p className='float-right mr-5 text-sm italic'>{company}</p>
 			</div>
 
-			<p className='h-full overflow-hidden pt-4 text-right indent-12 leading-5 text-light-body'>
+			<p className='h-full pt-4 text-right indent-12 leading-5 text-light-body line-clamp-4 md:line-clamp-3 '>
 				{about}
 			</p>
 		</Link>

@@ -29,7 +29,7 @@ const usePaginate = (
 	}, [isPreviousData])
 
 	React.useEffect(() => {
-		if (!isInitialLoading && data) {
+		if (!isInitialLoading && data && data?.length > 0) {
 			const cursor = data[data.length - 1]
 			setCursorIds([...cursorIds, cursor?.id])
 		}

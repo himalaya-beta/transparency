@@ -12,11 +12,30 @@ import {requiredIdSchema} from 'types/general'
 const requiredIdAuthorIdSchema = requiredIdSchema.extend({authorId: z.string()})
 
 export const articleRouter = router({
-	fetchAll: publicProcedure.query(({ctx}) =>
-		ctx.prisma.article.findMany({
-			include: {author: {select: {name: true, image: true}}},
-		})
-	),
+	fetchAll: publicProcedure
+		.input(
+			z
+				.object({
+					dataPerPage: z.number(),
+					cursorId: z.string().optional(),
+				})
+				.optional()
+		)
+		.query(({ctx, input}) =>
+			ctx.prisma.article.findMany({
+				include: {author: {select: {name: true, image: true}}},
+				...(input?.cursorId && {
+					cursor: {id: input.cursorId},
+					skip: 1,
+				}),
+				...(input?.dataPerPage && {
+					take: input.dataPerPage,
+				}),
+				orderBy: {
+					updatedAt: 'desc',
+				},
+			})
+		),
 	fetchOne: publicProcedure.input(requiredIdSchema).query(({ctx, input}) =>
 		ctx.prisma.article.findUnique({
 			where: {id: input.id},

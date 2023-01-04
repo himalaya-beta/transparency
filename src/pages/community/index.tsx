@@ -1,3 +1,5 @@
+/* eslint-disable unicorn/no-useless-undefined */
+import React from 'react'
 import Link from 'next/link'
 import Image from 'next/image'
 import dayjs from 'dayjs'
@@ -6,10 +8,12 @@ import {zodResolver} from '@hookform/resolvers/zod'
 
 import {trpc} from 'utils/trpc'
 import {slugify} from 'utils/literal'
+import usePagination from 'utils/hooks/use-paginate'
 
 import NavbarLayout from 'layouts/navbar'
 import MetaHead from 'components/meta-head'
 import QueryWrapper from 'components/query-wrapper'
+import PaginationNav from 'components/pagination-nav'
 import FormWrapper from 'components/form-wrapper'
 import TextAreaInput from 'components/textarea-input'
 import {Button} from 'components/button'
@@ -23,10 +27,26 @@ import {
 	type ArticleType,
 } from 'types/article'
 
+const PER_PAGE = 9
+
 export default function ArticlePage() {
-	const articlesQuery = trpc.article.fetchAll.useQuery(undefined, {
-		refetchOnMount: false,
-	})
+	const [cursorId, setCursorId] = React.useState<string | undefined>(undefined)
+
+	const articlesQuery = trpc.article.fetchAll.useQuery(
+		{cursorId, dataPerPage: PER_PAGE},
+		{
+			refetchOnMount: false,
+			keepPreviousData: true,
+			staleTime: 60_000,
+		}
+	)
+
+	const paginateProps = usePagination(
+		PER_PAGE,
+		articlesQuery.data,
+		articlesQuery.isPreviousData,
+		articlesQuery.isInitialLoading
+	)
 
 	return (
 		<>
@@ -37,15 +57,18 @@ export default function ArticlePage() {
 			/>
 			<main className='container mx-auto max-w-screen-lg space-y-8 px-5 pt-8 md:px-8'>
 				<h1 className='text-2xl'>Community Blog</h1>
-				<QueryWrapper {...articlesQuery}>
-					{(articles) => (
-						<div className='grid grid-cols-6 gap-4'>
-							{articles.map((article) => (
-								<Card key={article.id} {...article} />
-							))}
-						</div>
-					)}
-				</QueryWrapper>
+				<div>
+					<QueryWrapper {...articlesQuery}>
+						{(articles) => (
+							<div className='grid grid-cols-6 gap-4'>
+								{articles.map((article) => (
+									<Card key={article.id} {...article} />
+								))}
+							</div>
+						)}
+					</QueryWrapper>
+					<PaginationNav {...paginateProps} setCursorId={setCursorId} />
+				</div>
 				<CreateArticleForm refetchList={articlesQuery.refetch} />
 			</main>
 		</>

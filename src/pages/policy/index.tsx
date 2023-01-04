@@ -19,7 +19,7 @@ import {PuzzlePieceIcon} from '@heroicons/react/24/outline'
 import {type AppType} from 'types/app'
 import {useDebounceState} from 'utils/hooks/use-debounce'
 
-const DATA_PER_PAGE = 6
+const DATA_PER_PAGE = 3
 
 export default function PolicyPage() {
 	const [cursorId, setCursorId] = React.useState<string | undefined>(undefined)
@@ -34,7 +34,8 @@ export default function PolicyPage() {
 		DATA_PER_PAGE,
 		appQuery.data,
 		appQuery.isPreviousData,
-		appQuery.isInitialLoading
+		appQuery.isInitialLoading,
+		setCursorId
 	)
 
 	const onChange = (e: React.ChangeEvent<HTMLInputElement>) => {

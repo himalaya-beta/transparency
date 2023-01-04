@@ -45,7 +45,8 @@ export default function ArticlePage() {
 		PER_PAGE,
 		articlesQuery.data,
 		articlesQuery.isPreviousData,
-		articlesQuery.isInitialLoading
+		articlesQuery.isInitialLoading,
+		setCursorId
 	)
 
 	return (

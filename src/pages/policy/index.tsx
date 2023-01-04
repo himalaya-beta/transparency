@@ -7,7 +7,6 @@ import dayjs from 'dayjs'
 
 import {trpc} from 'utils/trpc'
 import {slugify} from 'utils/literal'
-import debounce from 'utils/debounce'
 import usePaginate from 'utils/hooks/use-paginate'
 
 import NavbarLayout from 'layouts/navbar'
@@ -18,18 +17,19 @@ import {TriangleSymbol} from 'components/ornaments'
 import {PuzzlePieceIcon} from '@heroicons/react/24/outline'
 
 import {type AppType} from 'types/app'
+import {useDebounceState} from 'utils/hooks/use-debounce'
 
 const DATA_PER_PAGE = 6
 
 export default function PolicyPage() {
 	const [cursorId, setCursorId] = React.useState<string | undefined>(undefined)
-	const [query, setQuery] = React.useState<string | undefined>(undefined)
-	const queryMod = query === '' ? undefined : query
+	const [query, setQuery] = useDebounceState<string | undefined>(undefined, 350)
 
 	const appQuery = trpc.app.search.useQuery(
-		{query: queryMod, cursorId, dataPerPage: DATA_PER_PAGE},
+		{query, cursorId, dataPerPage: DATA_PER_PAGE},
 		{keepPreviousData: true, staleTime: 60_000}
 	)
+
 	const paginateProps = usePaginate(
 		DATA_PER_PAGE,
 		appQuery.data,
@@ -37,12 +37,8 @@ export default function PolicyPage() {
 		appQuery.isInitialLoading
 	)
 
-	const delayedQuery = debounce((query: string | undefined) => {
-		setQuery(query)
-	}, 350)
-
 	const onChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-		delayedQuery(e.target.value === '' ? undefined : e.target.value)
+		setQuery(e.target.value === '' ? undefined : e.target.value)
 	}
 
 	return (

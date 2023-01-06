@@ -8,6 +8,7 @@ import dayjs from 'dayjs'
 import {trpc} from 'utils/trpc'
 import {slugify} from 'utils/literal'
 import {useDebounceState} from 'utils/hooks/use-debounce'
+import useDeviceDetect from 'utils/hooks/use-device-detect'
 
 import NavbarLayout from 'layouts/navbar'
 import MetaHead from 'components/meta-head'
@@ -47,6 +48,8 @@ export default function PolicyPage() {
 		setSearchQuery(e.target.value === '' ? undefined : e.target.value)
 	}
 
+	const device = useDeviceDetect()
+
 	return (
 		<>
 			<MetaHead
@@ -66,7 +69,6 @@ export default function PolicyPage() {
 					</div>
 				</div>
 
-				{/* TODO: load more on mobile */}
 				<DivAnimate>
 					{isLoading ? (
 						<LoadingPlaceholder label='app policies' />
@@ -76,24 +78,43 @@ export default function PolicyPage() {
 						<EmptyPlaceholder label='app policy' />
 					) : (
 						<React.Fragment>
-							{data.pages.map(({items, nextCursor}, i) => {
-								if (i + 1 !== page) return
-								return (
-									<div
-										className='grid grid-cols-4 gap-4'
-										key={`section_${nextCursor}`}
-									>
-										{items.map((item) => (
-											<Card
-												key={item.id}
-												className='col-span-full md:col-span-2'
-												{...item}
-											/>
-										))}
+							<div className='hidden md:block'>
+								{data.pages.map(({items, nextCursor}, i) => {
+									if (i + 1 !== page) return
+									return (
+										<div
+											className='grid grid-cols-4 gap-4'
+											key={`section_md_${nextCursor}`}
+										>
+											{items.map((item) => (
+												<Card key={item.id} {...item} className='col-span-2' />
+											))}
+										</div>
+									)
+								})}
+								{!device.isPhone && (
+									<PaginationNav
+										{...{page, setPage, hasNextPage, fetchNextPage}}
+									/>
+								)}
+							</div>
+
+							<DivAnimate className='space-y-4 md:hidden'>
+								{data.pages.map(({items}) =>
+									items.map((item) => <Card key={item.id} {...item} />)
+								)}
+
+								{hasNextPage && (
+									<div className='flex justify-center'>
+										<button
+											onClick={() => fetchNextPage()}
+											className='rounded-lg bg-white/20 px-4 py-2'
+										>
+											Load more ..
+										</button>
 									</div>
-								)
-							})}
-							<PaginationNav {...{page, setPage, hasNextPage, fetchNextPage}} />
+								)}
+							</DivAnimate>
 						</React.Fragment>
 					)}
 				</DivAnimate>

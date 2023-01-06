@@ -162,7 +162,7 @@ const ArticleDetailsPage = ({
 								{dayjs(article.updatedAt).format('D MMMM YYYY')}
 							</p>
 						</div>
-						<p className='md:text-lg'>{article.content}</p>
+						<p className='whitespace-pre-wrap md:text-lg'>{article.content}</p>
 						{status === 'authenticated' && (
 							<div className='flex gap-4'>
 								<Button

@@ -198,7 +198,7 @@ const CriteriaList = ({criteria, sub}: CriteriaLisProps) => {
 									</div>
 								)}
 								{criteria.type === 'EXPLANATION' && (
-									<p className='text-center text-sm group-hover:font-semibold'>
+									<p className='whitespace-pre-wrap text-center text-sm group-hover:font-semibold'>
 										{criteria.explanation}
 									</p>
 								)}

@@ -8,6 +8,7 @@ import {
 	type FetchNextPageOptions,
 	type UseInfiniteQueryResult,
 } from '@tanstack/react-query'
+import {atom, useAtom} from 'jotai'
 
 type Props = {
 	page: number
@@ -18,10 +19,12 @@ type Props = {
 	) => Promise<UseInfiniteQueryResult>
 }
 
+const policyPages = atom([1])
+
 const PaginationNav: React.FC<Props> = (props) => {
 	const {page, setPage, hasNextPage, fetchNextPage} = props
 
-	const [pages, setPages] = React.useState<Array<number>>([1])
+	const [pages, setPages] = useAtom(policyPages)
 	const maxPage = pages.length
 
 	React.useEffect(() => {

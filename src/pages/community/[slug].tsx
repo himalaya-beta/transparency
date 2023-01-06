@@ -71,16 +71,22 @@ const ArticleDetailsPage = ({
 	const router = useRouter()
 	const [isEdit, setIsEdit] = React.useState(false)
 
+	const query = trpc.useContext().article.fetchAll
+
 	const {mutate: deleteArticle, isLoading: isDeleteLoading} =
 		trpc.article.delete.useMutation({
 			onError: (err) => alert(err.message),
-			onSuccess: () => router.push('/community'),
+			onSuccess: () => {
+				query.invalidate()
+				router.push('/community')
+			},
 		})
 
 	const {mutate: updateArticle, isLoading: isUpdateLoading} =
 		trpc.article.update.useMutation({
 			onError: (err) => alert(err.message),
 			onSuccess: () => {
+				query.invalidate()
 				router.push('/community')
 			},
 		})

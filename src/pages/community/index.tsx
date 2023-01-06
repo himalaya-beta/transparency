@@ -8,12 +8,17 @@ import {zodResolver} from '@hookform/resolvers/zod'
 
 import {trpc} from 'utils/trpc'
 import {slugify} from 'utils/literal'
-import usePagination from 'utils/hooks/use-paginate'
+import useDeviceDetect from 'utils/hooks/use-device-detect'
 
 import NavbarLayout from 'layouts/navbar'
 import MetaHead from 'components/meta-head'
-import QueryWrapper from 'components/query-wrapper'
+import {
+	EmptyPlaceholder,
+	ErrorPlaceholder,
+	LoadingPlaceholder,
+} from 'components/query-wrapper'
 import PaginationNav from 'components/pagination-nav'
+import DivAnimate from 'components/div-animate'
 import FormWrapper from 'components/form-wrapper'
 import TextAreaInput from 'components/textarea-input'
 import {Button} from 'components/button'
@@ -30,24 +35,19 @@ import {
 const PER_PAGE = 9
 
 export default function ArticlePage() {
-	const [cursorId, setCursorId] = React.useState<string | undefined>(undefined)
+	const [page, setPage] = React.useState(1)
 
-	const articlesQuery = trpc.article.fetchAll.useQuery(
-		{cursorId, dataPerPage: PER_PAGE},
-		{
-			refetchOnMount: false,
-			keepPreviousData: true,
-			staleTime: 60_000,
-		}
-	)
+	const {error, refetch, data, hasNextPage, fetchNextPage, isError, isLoading} =
+		trpc.article.fetchAll.useInfiniteQuery(
+			{dataPerPage: PER_PAGE},
+			{
+				refetchOnWindowFocus: false,
+				staleTime: 60_000,
+				getNextPageParam: (lastPage) => lastPage.nextCursor,
+			}
+		)
 
-	const paginateProps = usePagination(
-		PER_PAGE,
-		articlesQuery.data,
-		articlesQuery.isPreviousData,
-		articlesQuery.isInitialLoading,
-		setCursorId
-	)
+	const device = useDeviceDetect()
 
 	return (
 		<>
@@ -58,29 +58,79 @@ export default function ArticlePage() {
 			/>
 			<main className='container mx-auto max-w-screen-lg space-y-8 px-5 pt-8 md:px-8'>
 				<h1 className='text-2xl'>Community Blog</h1>
-				<QueryWrapper {...articlesQuery}>
-					{(articles) => (
-						<div className='grid grid-cols-6 gap-4'>
-							{articles.map((article) => (
-								<Card key={article.id} {...article} />
-							))}
-						</div>
+
+				<DivAnimate>
+					{isLoading ? (
+						<LoadingPlaceholder label='app policies' />
+					) : isError ? (
+						<ErrorPlaceholder error={error} refetch={refetch} />
+					) : data.pages.length === 0 ? (
+						<EmptyPlaceholder label='app policy' />
+					) : (
+						<React.Fragment>
+							<DivAnimate className='hidden md:block'>
+								{data.pages.map(({items, nextCursor}, i) => {
+									if (i + 1 !== page) return
+									return (
+										<DivAnimate
+											className='grid grid-cols-6 gap-4'
+											key={`section_md_${nextCursor}`}
+										>
+											{items.map((item) => (
+												<Card
+													key={item.id}
+													{...item}
+													className='col-span-full md:col-span-3 lg:col-span-2'
+												/>
+											))}
+										</DivAnimate>
+									)
+								})}
+								{!device.isPhone && (
+									<PaginationNav
+										{...{page, setPage, hasNextPage, fetchNextPage}}
+									/>
+								)}
+							</DivAnimate>
+
+							<DivAnimate className='space-y-4 md:hidden'>
+								{data.pages.map(({items}) =>
+									items.map((item) => <Card key={item.id} {...item} />)
+								)}
+
+								{hasNextPage && (
+									<div className='flex justify-center'>
+										<button
+											onClick={() => fetchNextPage()}
+											className='rounded-lg bg-white/20 px-4 py-2'
+										>
+											Load more ..
+										</button>
+									</div>
+								)}
+							</DivAnimate>
+						</React.Fragment>
 					)}
-				</QueryWrapper>
-				<div>
-					<PaginationNav {...paginateProps} setCursorId={setCursorId} />
-					<CreateArticleForm refetchList={articlesQuery.refetch} />
-				</div>
+				</DivAnimate>
+
+				<CreateArticleForm refetchList={refetch} />
 			</main>
 		</>
 	)
 }
 
-const Card = ({id, title, content, createdAt, author}: ArticleType) => {
+const Card = ({
+	id,
+	title,
+	content,
+	createdAt,
+	author,
+	className,
+}: ArticleType & {className?: string}) => {
 	return (
 		<Link
 			href={`./community/${slugify(title, id)}`}
-			className={`hover:shadow-bg-light relative col-span-full flex h-64 flex-col overflow-hidden rounded rounded-br-3xl rounded-tl-2xl border-2 border-light-head/25 bg-light-head bg-opacity-20 p-6 pb-4 duration-100 hover:bg-opacity-30 hover:shadow-lg md:col-span-3 lg:col-span-2`}
+			className={`hover:shadow-bg-light relative flex h-64 flex-col overflow-hidden rounded rounded-br-3xl rounded-tl-2xl border-2 border-light-head/25 bg-light-head bg-opacity-20 p-6 pb-4 duration-100 hover:bg-opacity-30 hover:shadow-lg ${className}`}
 		>
 			<div className='absolute top-0 left-0'>
 				<div className='flex rounded-br-xl bg-dark-bg/30 shadow'>

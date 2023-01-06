@@ -9,28 +9,6 @@ import {
 	type UseInfiniteQueryResult,
 } from '@tanstack/react-query'
 
-type ButtonProps = {
-	isActive: boolean
-	onClick: () => void
-	label: string | number
-}
-
-const PageButton: React.FC<ButtonProps> = ({isActive, onClick, label}) => {
-	return (
-		<button
-			onClick={onClick}
-			disabled={isActive}
-			className={`
-				h-8 transition-all disabled:scale-125
-				${typeof label === 'number' ? 'hover:scale-150' : 'text-sm hover:scale-125'}
-				${isActive ? '-mt-0.5 font-heading text-xl font-bold' : ''}
-			`}
-		>
-			{label}
-		</button>
-	)
-}
-
 type Props = {
 	page: number
 	setPage: React.Dispatch<React.SetStateAction<number>>
@@ -40,27 +18,23 @@ type Props = {
 	) => Promise<UseInfiniteQueryResult>
 }
 
-const PaginationNav2: React.FC<Props> = (props) => {
+const PaginationNav: React.FC<Props> = (props) => {
 	const {page, setPage, hasNextPage, fetchNextPage} = props
 
 	const [pages, setPages] = React.useState<Array<number>>([1])
 	const maxPage = pages.length
 
-	const onPreviousPage = () => {
-		setPage(page - 1)
-	}
-	const onNextPage = () => {
-		if (page === maxPage) {
+	React.useEffect(() => {
+		if (hasNextPage && page === maxPage) {
 			fetchNextPage()
 			setPages([...pages, page + 1])
 		}
-		setPage(page + 1)
-	}
+	}, [hasNextPage, page, maxPage, fetchNextPage, setPages, pages])
 
 	return (
 		<div className='mx-auto flex h-16 w-fit items-center gap-2 transition-all'>
 			<button
-				onClick={onPreviousPage}
+				onClick={() => setPage(page - 1)}
 				disabled={page === 1}
 				className='p-2 transition-transform hover:scale-150 disabled:transform-none disabled:text-gray-400'
 			>
@@ -147,7 +121,7 @@ const PaginationNav2: React.FC<Props> = (props) => {
 			</div>
 
 			<button
-				onClick={onNextPage}
+				onClick={() => setPage(page + 1)}
 				disabled={!hasNextPage && page === maxPage}
 				className='p-2 transition-transform hover:scale-125 disabled:transform-none disabled:text-gray-400'
 			>
@@ -157,4 +131,26 @@ const PaginationNav2: React.FC<Props> = (props) => {
 	)
 }
 
-export default PaginationNav2
+type ButtonProps = {
+	isActive: boolean
+	onClick: () => void
+	label: string | number
+}
+
+const PageButton: React.FC<ButtonProps> = ({isActive, onClick, label}) => {
+	return (
+		<button
+			onClick={onClick}
+			disabled={isActive}
+			className={`
+				h-8 transition-all disabled:scale-125
+				${typeof label === 'number' ? 'hover:scale-150' : 'text-sm hover:scale-125'}
+				${isActive ? '-mt-0.5 font-heading text-xl font-bold' : ''}
+			`}
+		>
+			{label}
+		</button>
+	)
+}
+
+export default PaginationNav

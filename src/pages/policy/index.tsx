@@ -78,7 +78,7 @@ export default function PolicyPage() {
 						<EmptyPlaceholder label='app policy' />
 					) : (
 						<React.Fragment>
-							<div className='hidden md:block'>
+							<DivAnimate className='hidden md:block'>
 								{data.pages.map(({items, nextCursor}, i) => {
 									if (i + 1 !== page) return
 									return (
@@ -97,7 +97,7 @@ export default function PolicyPage() {
 										{...{page, setPage, hasNextPage, fetchNextPage}}
 									/>
 								)}
-							</div>
+							</DivAnimate>
 
 							<DivAnimate className='space-y-4 md:hidden'>
 								{data.pages.map(({items}) =>

@@ -28,7 +28,7 @@ export default function MenuButton({
 		<Menu as='div' className='relative inline-block text-left'>
 			<div>
 				<Menu.Button
-					className={`inline-flex w-full justify-center rounded-full bg-light-bg bg-opacity-25 p-1 text-sm font-medium text-light-head hover:bg-opacity-30 focus:outline-none focus-visible:ring-2 focus-visible:ring-light-head focus-visible:ring-opacity-75 ${buttonClassName}`}
+					className={`inline-flex w-full justify-center rounded-full bg-light-bg bg-opacity-25 p-0.5 text-sm font-medium text-light-head hover:bg-opacity-30 focus:outline-none focus-visible:ring-2 focus-visible:ring-light-head focus-visible:ring-opacity-75 md:-mt-0.5 md:p-1 ${buttonClassName}`}
 				>
 					{children}
 				</Menu.Button>

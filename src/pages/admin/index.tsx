@@ -21,9 +21,9 @@ export default function AdminPage() {
 	}, [data, router, status])
 
 	return (
-		<div>
+		<main>
 			<Tabs tabs={tabs} tabActive={tabActive} setTabActive={setTabActive} />
-			<DivAnimate className='-mt-2'>
+			<DivAnimate className='container -mt-2 px-5 md:px-8'>
 				{tabActive === 'App' && (
 					<div className='mx-auto max-w-screen-md space-y-4'>
 						<AppSection />
@@ -35,7 +35,7 @@ export default function AdminPage() {
 					</div>
 				)}
 			</DivAnimate>
-		</div>
+		</main>
 	)
 }
 

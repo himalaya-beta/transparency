@@ -3,6 +3,11 @@ import {type DefaultErrorShape} from '@trpc/server'
 import {type DefaultErrorData} from '@trpc/server/dist/error/formatter'
 import {type UseTRPCQueryResult} from '@trpc/react-query/shared'
 import {useAutoAnimate} from '@formkit/auto-animate/react'
+import {
+	ArchiveBoxIcon,
+	ArrowPathIcon,
+	ExclamationTriangleIcon,
+} from '@heroicons/react/24/outline'
 
 type ErrorType = {
 	message: string
@@ -48,11 +53,15 @@ const QueryWrapper = <T,>({
 	return (
 		<div ref={containerRef}>
 			{isLoading && !isRefetching ? (
-				<Loading CustomLoading={CustomLoading} />
+				<LoadingPlaceholder CustomLoading={CustomLoading} />
 			) : isError ? (
-				<Error error={error} CustomError={CustomError} refetch={refetch} />
+				<ErrorPlaceholder
+					error={error}
+					CustomError={CustomError}
+					refetch={refetch}
+				/>
 			) : (Array.isArray(data) && data.length === 0) || data === null ? (
-				<Empty CustomEmpty={CustomEmpty} />
+				<EmptyPlaceholder CustomEmpty={CustomEmpty} />
 			) : (
 				<React.Fragment />
 			)}
@@ -63,10 +72,24 @@ const QueryWrapper = <T,>({
 	)
 }
 
-const Loading = ({CustomLoading}: {CustomLoading?: JSX.Element}) =>
-	CustomLoading ?? <p>Loading...</p>
+export const LoadingPlaceholder = ({
+	CustomLoading,
+	label,
+}: {
+	label?: string
+	CustomLoading?: JSX.Element
+}) => {
+	return (
+		CustomLoading ?? (
+			<div className='flex h-96 w-full flex-col items-center justify-center gap-2 rounded-lg border border-white/25 bg-white/10'>
+				<ArrowPathIcon className='w-12 animate-spin text-light-head' />
+				<p>Loading {label ?? 'data'}...</p>
+			</div>
+		)
+	)
+}
 
-const Error = ({
+export const ErrorPlaceholder = ({
 	error,
 	CustomError,
 	refetch,
@@ -74,24 +97,45 @@ const Error = ({
 	error: ErrorType
 	CustomError?: (error: ErrorType) => JSX.Element
 	refetch: () => void
-}) =>
-	CustomError ? (
+}) => {
+	return CustomError ? (
 		CustomError(error)
 	) : (
-		<>
-			{error.data && (
-				<p>
-					[{error.data.httpStatus}] {error.data.code} at {error.data.path}
-				</p>
-			)}
-			<pre>{error.message}</pre>
-			<button onClick={() => refetch()} className='mt-2 rounded border px-2'>
+		<div className='flex min-h-fit w-full flex-col items-center justify-center gap-2 rounded-lg border border-white/25 bg-white/10 p-8'>
+			<div className='relative'>
+				<ExclamationTriangleIcon className='absolute w-12 animate-ping text-light-head' />
+				<ExclamationTriangleIcon className='w-12 text-light-head' />
+			</div>
+			<div className='rounded bg-dark-bg/20 px-4 py-2'>
+				{error.data && (
+					<p>
+						[{error.data.httpStatus}] {error.data.code} at {error.data.path}
+					</p>
+				)}
+				<pre className='text-xs'>{error.message}</pre>
+			</div>
+			<button onClick={() => refetch()} className='rounded border px-3 py-1'>
 				Retry
 			</button>
-		</>
+		</div>
 	)
+}
 
-const Empty = ({CustomEmpty}: {CustomEmpty?: JSX.Element}) =>
-	CustomEmpty ?? <p>There is not data</p>
+export const EmptyPlaceholder = ({
+	CustomEmpty,
+	label,
+}: {
+	label?: string
+	CustomEmpty?: JSX.Element
+}) => {
+	return (
+		CustomEmpty ?? (
+			<div className='flex h-96 w-full flex-col items-center justify-center gap-2 rounded-lg border border-white/25 bg-white/10'>
+				<ArchiveBoxIcon className='w-12 text-light-head' />
+				<p>There is no {label ?? 'data'} yet</p>
+			</div>
+		)
+	)
+}
 
 export default QueryWrapper

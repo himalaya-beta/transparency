@@ -82,18 +82,20 @@ const AppDetailsPage = ({
 							{app.company} - {app.headquarter}
 						</p>
 					</div>
-					<p className='mt-4 max-w-screen-sm text-lg md:pr-8'>{app.about}</p>
+					<p className='mt-4 max-w-screen-sm leading-5 md:pr-8 md:text-lg md:leading-normal'>
+						{app.about}
+					</p>
 				</div>
 
 				<QueryWrapper {...criteriaQ}>
 					{(data) => (
 						<ul className='relative'>
-							<div className='relative flex w-full flex-row-reverse py-2'>
-								<p className=''>
-									Last updated: {dayjs(app.updatedAt).format('MMM D, YYYY')}
+							<div className='relative flex w-full flex-row-reverse pt-3 md:py-2'>
+								<p className='text-sm md:text-base'>
+									Updated: {dayjs(app.updatedAt).format('D MMMM YYYY')}
 								</p>
 							</div>
-							<div className='absolute right-0 h-full w-[37.5%] rounded bg-dark-bg/10'></div>
+							<div className='absolute right-0 h-full w-1/2 rounded bg-dark-bg/10 md:w-[37.5%]'></div>
 							{data.map((criteria) => (
 								<CriteriaList key={criteria.id} criteria={criteria} />
 							))}
@@ -130,42 +132,42 @@ const CriteriaList = ({criteria, sub}: CriteriaLisProps) => {
 		<li
 			className={`
 				group relative flex list-none items-start gap-2 
-				${sub ? 'group/sub py-0.5 first:mt-1 last:mb-2' : 'py-2'}
+				${sub ? 'group/sub py-0.5 first:mt-1 last:mb-2' : 'py-1 md:py-2'}
 			`}
 		>
 			{!sub && (
 				<TriangleSymbol
 					onClick={onExpand}
 					className={`
-						w-6 transition-transform hover:cursor-pointer
+						-ml-6 w-4 transition-transform hover:cursor-pointer md:ml-0 md:w-6
 						${hasChildren ? 'visible' : 'invisible'}
-						${isExpanded ? 'mt-4 -rotate-90' : 'mt-0.5 -rotate-180'}
+						${isExpanded ? 'mt-5 -rotate-90 md:mt-4' : '-rotate-180 md:mt-0.5'}
 					`}
 				/>
 			)}
 			<div className='w-full'>
 				<div
 					className={`
-						grid grid-cols-8 border-b-[1px] border-brand-100 border-opacity-50 transition-all
+						grid grid-cols-8 border-b-[1px] border-brand-100 border-opacity-50 pb-1 transition-all
 						${sub ? 'rounded border-dashed hover:pl-2 group-hover/sub:bg-brand-100/50' : ''}
 					`}
 				>
 					<h3
 						onClick={onExpand}
 						className={`
-							col-span-5 transition-all
+							col-span-4 leading-5 transition-all md:col-span-5 md:whitespace-nowrap md:leading-normal
 							${hasChildren ? 'hover:cursor-pointer' : ''}
 							${
 								sub
-									? 'text-sm font-normal'
-									: 'text-lg font-medium group-hover:text-xl group-hover:font-semibold'
+									? 'text-xs font-normal md:text-sm'
+									: 'font-medium group-hover:font-semibold md:text-lg md:group-hover:text-xl'
 							}
 						`}
 					>
 						{criteria.value}
 					</h3>
 
-					<div className='col-span-3 flex h-full justify-center px-2'>
+					<div className='col-span-4 flex h-full justify-center px-2 md:col-span-3'>
 						{criteria.checked && (
 							<>
 								{criteria.type === 'TRUE_FALSE' && (
@@ -196,7 +198,7 @@ const CriteriaList = ({criteria, sub}: CriteriaLisProps) => {
 									</div>
 								)}
 								{criteria.type === 'EXPLANATION' && (
-									<p className='text-center text-sm group-hover:font-semibold'>
+									<p className='whitespace-pre-wrap text-center text-sm group-hover:font-semibold'>
 										{criteria.explanation}
 									</p>
 								)}

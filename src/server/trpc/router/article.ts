@@ -1,3 +1,5 @@
+/* eslint-disable @typescript-eslint/no-non-null-assertion */
+/* eslint-disable unicorn/no-useless-undefined */
 import {TRPCError} from '@trpc/server'
 import cuid from 'cuid'
 import {z} from 'zod'
@@ -11,12 +13,43 @@ import {requiredIdSchema} from 'types/general'
 
 const requiredIdAuthorIdSchema = requiredIdSchema.extend({authorId: z.string()})
 
+const PER_PAGE = 10
+
 export const articleRouter = router({
-	fetchAll: publicProcedure.query(({ctx}) =>
-		ctx.prisma.article.findMany({
-			include: {author: {select: {name: true, image: true}}},
-		})
-	),
+	fetchAll: publicProcedure
+		.input(
+			z.object({
+				dataPerPage: z.number(),
+				cursor: z.string().optional(),
+			})
+		)
+		.query(({ctx, input}) => {
+			const perPage = input?.dataPerPage ?? PER_PAGE
+			return ctx.prisma.article
+				.findMany({
+					take: perPage + 1,
+					...(input?.cursor && {
+						cursor: {id: input.cursor},
+					}),
+					include: {author: {select: {name: true, image: true}}},
+					orderBy: {
+						updatedAt: 'desc',
+					},
+				})
+				.then((data) => {
+					let nextCursor: string | undefined = undefined
+
+					if (data.length > perPage) {
+						const lastItem = data.pop()!
+						nextCursor = lastItem.id
+					}
+
+					return {
+						items: data,
+						nextCursor,
+					}
+				})
+		}),
 	fetchOne: publicProcedure.input(requiredIdSchema).query(({ctx, input}) =>
 		ctx.prisma.article.findUnique({
 			where: {id: input.id},

@@ -71,16 +71,22 @@ const ArticleDetailsPage = ({
 	const router = useRouter()
 	const [isEdit, setIsEdit] = React.useState(false)
 
+	const query = trpc.useContext().article.fetchAll
+
 	const {mutate: deleteArticle, isLoading: isDeleteLoading} =
 		trpc.article.delete.useMutation({
 			onError: (err) => alert(err.message),
-			onSuccess: () => router.push('/community'),
+			onSuccess: () => {
+				query.invalidate()
+				router.push('/community')
+			},
 		})
 
 	const {mutate: updateArticle, isLoading: isUpdateLoading} =
 		trpc.article.update.useMutation({
 			onError: (err) => alert(err.message),
 			onSuccess: () => {
+				query.invalidate()
 				router.push('/community')
 			},
 		})
@@ -152,25 +158,25 @@ const ArticleDetailsPage = ({
 						<div>
 							<h1 className='text-3xl'>{article.title}</h1>
 							<p className='italic'>by {article.author.name}</p>
-							<p className='float-right -mt-2 italic'>
-								{dayjs(article.updatedAt).format('MMM D, YYYY')}
+							<p className='float-right -mt-2 text-sm italic md:text-base'>
+								{dayjs(article.updatedAt).format('D MMMM YYYY')}
 							</p>
 						</div>
-						<p className='text-lg'>{article.content}</p>
+						<p className='whitespace-pre-wrap md:text-lg'>{article.content}</p>
 						{status === 'authenticated' && (
 							<div className='flex gap-4'>
 								<Button
 									variant='filled'
 									isLoading={isDeleteLoading}
 									onClick={() => deleteArticle(defaultValues)}
-									className='bg-light-bg text-red-500 hover:bg-red-500 hover:text-light-body'
+									className='bg-light-bg px-4 text-red-500 hover:bg-red-500 hover:text-light-body'
 								>
 									Delete <TrashIcon className='h-4 w-4' />
 								</Button>
 								<Button
 									variant='filled'
 									onClick={() => setIsEdit(true)}
-									className='bg-light-bg text-violet-500 hover:bg-violet-500 hover:text-light-body'
+									className='bg-light-bg px-4 text-violet-500 hover:bg-violet-500 hover:text-light-body'
 								>
 									Update <PencilSquareIcon className='h-4 w-4' />
 								</Button>

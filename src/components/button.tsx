@@ -87,7 +87,7 @@ export const IconButton = ({
 }: Omit<CustomButtonProps, 'variant'>) => {
 	return (
 		<button
-			className={`mr-0.5 rounded-full p-0.5 align-middle text-brand-400 hover:bg-brand-200/75 hover:text-brand-500 active:bg-brand-200 active:text-brand-600 md:mt-1 ${className}`}
+			className={`mr-0.5 rounded-full p-0.5 align-middle text-brand-400 transition-all hover:bg-brand-200/75 hover:text-brand-500 active:bg-brand-200 active:text-brand-600 md:mt-1 ${className}`}
 			{...props}
 		>
 			{children}

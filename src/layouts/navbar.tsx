@@ -1,12 +1,10 @@
 import React from 'react'
-import {useRouter} from 'next/router'
 import Link from 'next/link'
-import dynamic from 'next/dynamic'
-import {useSession, signIn, signOut} from 'next-auth/react'
 import Image from 'next/image'
+import {useRouter} from 'next/router'
+import {useSession, signIn, signOut} from 'next-auth/react'
 
 import MenuButton from 'components/menu-button'
-
 import {
 	HomeIcon as HomeOutlineIcon,
 	DocumentTextIcon as ArticleOutlineIcon,
@@ -15,7 +13,6 @@ import {
 	ArrowRightOnRectangleIcon as LogoutIcon,
 	LockClosedIcon,
 } from '@heroicons/react/24/outline'
-
 import {
 	HomeIcon as HomeSolidIcon,
 	UserGroupIcon as UserGroupSolidIcon,
@@ -25,10 +22,6 @@ import {
 } from '@heroicons/react/24/solid'
 
 import {capFirstChar} from 'utils/literal'
-
-const Button = dynamic(() =>
-	import('components/button').then((buttons) => buttons.Button)
-)
 
 export default function NavbarLayout({children}: {children: React.ReactNode}) {
 	const {data} = useSession()
@@ -72,9 +65,18 @@ export default function NavbarLayout({children}: {children: React.ReactNode}) {
 
 	return (
 		<div className='to-bg-dark to-bg-brand relative min-h-screen bg-gradient-to-br from-brand-700 via-brand-900 to-dark-bg'>
-			<div className='fixed bottom-0 z-10 flex w-full items-center justify-between border-t-0 bg-brand-900/50 bg-opacity-30 py-2 underline-offset-4 backdrop-blur-lg md:relative md:bg-inherit'>
-				<div className='w-12' />
-				<nav className='flex h-fit items-center gap-2'>
+			<div className='fixed bottom-0 z-10 flex w-full items-center justify-between border-t-0 bg-brand-900/50 bg-opacity-30 pt-2 pb-1 underline-offset-4 backdrop-blur-lg md:relative md:bg-inherit md:py-2'>
+				<div className='ml-2 hidden h-10 w-10 md:block' />
+				<Link
+					href='/'
+					className='ml-2 flex items-center justify-center rounded-full bg-brand-200/30 p-0.5 md:hidden'
+				>
+					<button className='h-8 w-8 rounded-full bg-dark-bg/50 p-1'>
+						<HomeOutlineIcon className='h-full w-full text-brand-100' />
+					</button>
+				</Link>
+
+				<nav className='flex h-fit items-center gap-4'>
 					{filteredRoutes.map(({href, label, Icon, IconActive}, i) => {
 						const isActive = pathname === href
 						return (
@@ -82,34 +84,44 @@ export default function NavbarLayout({children}: {children: React.ReactNode}) {
 								<Link
 									href={href}
 									className={`
-										flex items-start gap-2 rounded px-2 py-1 font-medium text-light-head 
+										flex w-16 flex-col items-center gap-0.5 rounded px-2 font-medium text-light-head md:w-fit md:flex-row md:gap-2 md:py-1 
+										${label === 'home' ? 'hidden md:flex' : ''}
 										${isActive ? 'pointer-events-none' : 'hover:underline'}
 									`}
 								>
 									{isActive ? (
-										<IconActive className='h-6 w-6 rounded-lg text-xl ' />
+										<IconActive className='h-6 w-6 rounded-lg text-xl' />
 									) : (
 										<Icon className='h-6 w-6' />
 									)}
-									<span className={isActive ? 'underline' : ''}>
+									<span
+										className={`
+											whitespace-nowrap text-xs md:text-base
+											${isActive ? 'underline' : ''}
+										`}
+									>
 										{capFirstChar(label)}
 									</span>
 								</Link>
 
 								{i !== filteredRoutes.length - 1 && (
-									<span className='invisible text-xs text-light-head md:visible'>
+									<span className='mx-2 hidden text-xs text-light-head md:mx-0 md:block lg:mx-2'>
 										&#9671;
 									</span>
 								)}
 							</React.Fragment>
 						)
 					})}
-					<div />
 				</nav>
 
-				<AuthButton className='px-2 md:px-4' />
+				<AuthButton className='mr-2 h-10 md:px-4' />
 			</div>
-			<div className='container mx-auto pb-10 md:pb-16'>{children}</div>
+
+			<div className='container mx-auto -mt-1 w-full bg-white'>
+				<div className='h-0.5' />
+			</div>
+
+			<div className='container mx-auto pb-20 md:pb-16'>{children}</div>
 		</div>
 	)
 }
@@ -125,32 +137,33 @@ function AuthButton({className}: {className?: string}) {
 			{status === 'authenticated' ? (
 				<MenuButton
 					menuItems={menuItems}
-					itemsClassName='-top-full md:top-full right-0'
-					buttonClassName='hover:bg-opacity-50 transition-all duration-500'
+					itemsClassName='-top-full md:top-full right-0 -mt-3 md:mt-2'
+					buttonClassName='hover:bg-opacity-50 transition-all'
 				>
 					{data.user?.image ? (
 						<Image
 							src={data.user.image}
 							alt='user picture'
-							width={32}
-							height={32}
+							width={36}
+							height={36}
 							className='rounded-full'
 						/>
 					) : (
-						<div className='h-8 w-8 rounded-full bg-light-bg p-1'>
+						<div className='h-9 w-9 rounded-full bg-light-bg p-0.5'>
 							<UserIcon className='h-full w-full text-brand-500' />
 						</div>
 					)}
 				</MenuButton>
 			) : (
-				<Button
-					variant='filled'
-					className='rounded-lg bg-transparent px-2 py-1 text-sm font-medium'
-					onClick={() => signIn()}
-				>
-					<span className='hidden md:block'>Signin</span>
-					<LoginIcon className='h-7 w-7 rotate-180 text-xl md:h-6 md:w-6' />
-				</Button>
+				<div className='flex items-center justify-center rounded-full bg-brand-200 bg-opacity-30 p-0.5 transition-all hover:bg-opacity-60 md:rounded-xl'>
+					<button
+						className='h-8 w-8 rounded-full bg-dark-bg bg-opacity-60 p-1 transition-all hover:bg-opacity-80 md:flex md:w-fit md:rounded-xl'
+						onClick={() => signIn()}
+					>
+						<LoginIcon className='h-full w-full rotate-180 text-brand-100 md:ml-0.5' />
+						<span className='mx-1 mt-0.5 hidden md:block'>Signin</span>
+					</button>
+				</div>
 			)}
 		</div>
 	)

@@ -65,7 +65,7 @@ export default function NavbarLayout({children}: {children: React.ReactNode}) {
 
 	return (
 		<div className='to-bg-dark to-bg-brand relative min-h-screen bg-gradient-to-br from-brand-700 via-brand-900 to-dark-bg'>
-			<div className='fixed bottom-0 z-10 flex w-full items-center justify-between border-t-0 bg-brand-900/50 bg-opacity-30 py-1 underline-offset-4 backdrop-blur-lg md:relative md:bg-inherit md:py-2'>
+			<div className='fixed bottom-0 z-10 flex w-full items-center justify-between border-t-0 bg-brand-900/50 bg-opacity-30 pt-2 pb-1 underline-offset-4 backdrop-blur-lg md:relative md:bg-inherit md:py-2'>
 				<div className='ml-2 hidden h-10 w-10 md:block' />
 				<Link
 					href='/'
@@ -114,7 +114,7 @@ export default function NavbarLayout({children}: {children: React.ReactNode}) {
 					})}
 				</nav>
 
-				<AuthButton className='mr-2 mt-0.5 h-10 md:px-4' />
+				<AuthButton className='mr-2 h-10 md:px-4' />
 			</div>
 
 			<div className='container mx-auto -mt-1 w-full bg-white'>

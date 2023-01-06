@@ -7,16 +7,21 @@ import dayjs from 'dayjs'
 
 import {trpc} from 'utils/trpc'
 import {slugify} from 'utils/literal'
+import {useDebounceState} from 'utils/hooks/use-debounce'
 
 import NavbarLayout from 'layouts/navbar'
 import MetaHead from 'components/meta-head'
+import DivAnimate from 'components/div-animate'
 import PaginationNav from 'components/pagination-nav'
+import {
+	LoadingPlaceholder,
+	ErrorPlaceholder,
+	EmptyPlaceholder,
+} from 'components/query-wrapper'
 import {TriangleSymbol} from 'components/ornaments'
 import {PuzzlePieceIcon} from '@heroicons/react/24/outline'
 
 import {type AppType} from 'types/app'
-import {useDebounceState} from 'utils/hooks/use-debounce'
-import DivAnimate from 'components/div-animate'
 
 const PER_PAGE = 8
 
@@ -35,7 +40,8 @@ export default function PolicyPage() {
 			getNextPageParam: (lastPage) => lastPage.nextCursor,
 		}
 	)
-	const {hasNextPage, fetchNextPage, data} = appQuery
+	const {hasNextPage, fetchNextPage, data, isLoading, isError, error, refetch} =
+		appQuery
 
 	const onChange = (e: React.ChangeEvent<HTMLInputElement>) => {
 		setSearchQuery(e.target.value === '' ? undefined : e.target.value)
@@ -60,29 +66,37 @@ export default function PolicyPage() {
 					</div>
 				</div>
 
-				{/* TODO: modify query wrapper & use it */}
 				{/* TODO: load more on mobile */}
 				<DivAnimate>
-					{data?.pages.map(({items, nextCursor}, i) => {
-						if (i + 1 !== page) return
-						return (
-							<div
-								key={`section_${nextCursor}`}
-								className='grid grid-cols-4 gap-4'
-							>
-								{items.map((item) => (
-									<Card
-										key={item.id}
-										className='col-span-full md:col-span-2'
-										{...item}
-									/>
-								))}
-							</div>
-						)
-					})}
+					{isLoading ? (
+						<LoadingPlaceholder label='app policies' />
+					) : isError ? (
+						<ErrorPlaceholder error={error} refetch={refetch} />
+					) : data.pages.length === 0 ? (
+						<EmptyPlaceholder label='app policy' />
+					) : (
+						<React.Fragment>
+							{data.pages.map(({items, nextCursor}, i) => {
+								if (i + 1 !== page) return
+								return (
+									<div
+										className='grid grid-cols-4 gap-4'
+										key={`section_${nextCursor}`}
+									>
+										{items.map((item) => (
+											<Card
+												key={item.id}
+												className='col-span-full md:col-span-2'
+												{...item}
+											/>
+										))}
+									</div>
+								)
+							})}
+							<PaginationNav {...{page, setPage, hasNextPage, fetchNextPage}} />
+						</React.Fragment>
+					)}
 				</DivAnimate>
-
-				<PaginationNav {...{page, setPage, hasNextPage, fetchNextPage}} />
 			</main>
 		</>
 	)
@@ -100,7 +114,7 @@ const Card = ({
 	return (
 		<Link
 			href={`./policy/${slugify(name, id)}`}
-			className={`hover:shadow-bg-light min-h-48 relative flex max-h-60 flex-col overflow-hidden rounded rounded-br-3xl rounded-tl-2xl border-2 border-light-head/25 bg-light-head bg-opacity-20 p-6 pb-4 duration-100 hover:bg-opacity-30 hover:shadow-lg ${className}`}
+			className={`hover:shadow-bg-light min-h-48 relative flex max-h-60 flex-col overflow-hidden rounded rounded-br-3xl rounded-tl-2xl border border-light-head/25 bg-light-head bg-opacity-20 p-6 pb-4 duration-100 hover:bg-opacity-30 hover:shadow-lg ${className}`}
 		>
 			<div className='absolute top-0 left-0'>
 				<div className='flex rounded-br-xl bg-dark-bg/30 shadow'>

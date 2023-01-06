@@ -1,3 +1,4 @@
+/* eslint-disable unicorn/no-useless-undefined */
 import {z} from 'zod'
 import {publicProcedure, router, adminProcedure} from '../trpc'
 import {appCreateSchema, appUpdateSchema} from 'types/app'
@@ -5,6 +6,8 @@ import {requiredIdSchema} from 'types/general'
 
 import {revalidate} from 'server/utils/route'
 import {slugify} from 'utils/literal'
+
+const DEFAULT_PER_PAGE = 10
 
 export const appRouter = router({
 	fetchAll: publicProcedure.query(({ctx}) =>
@@ -21,23 +24,41 @@ export const appRouter = router({
 			z.object({
 				query: z.string().optional(),
 				dataPerPage: z.number().optional(),
-				cursorId: z.string().optional(),
+				cursor: z.string().optional(),
 			})
 		)
-		.query(({ctx, input}) =>
-			ctx.prisma.app.findMany({
-				where: {
-					name: {search: input.query},
-					company: {search: input.query},
-					about: {search: input.query},
-				},
-				take: input.dataPerPage ?? 8,
-				orderBy: {
-					updatedAt: 'desc',
-				},
-				...(input.cursorId && {cursor: {id: input.cursorId}, skip: 1}),
-			})
-		),
+
+		.query(({ctx, input}) => {
+			const perPage = input.dataPerPage ?? DEFAULT_PER_PAGE
+
+			return ctx.prisma.app
+				.findMany({
+					where: {
+						name: {search: input.query},
+						company: {search: input.query},
+						about: {search: input.query},
+					},
+					take: perPage + 1,
+					orderBy: {
+						updatedAt: 'desc',
+					},
+					...(input.cursor && {cursor: {id: input.cursor}}),
+				})
+				.then((data) => {
+					let nextCursor: string | undefined = undefined
+
+					if (data.length > perPage) {
+						// eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+						const lastItem = data.pop()!
+						nextCursor = lastItem.id
+					}
+
+					return {
+						items: data,
+						nextCursor,
+					}
+				})
+		}),
 
 	create: adminProcedure
 		.input(appCreateSchema)

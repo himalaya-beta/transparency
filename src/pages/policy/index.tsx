@@ -7,39 +7,38 @@ import dayjs from 'dayjs'
 
 import {trpc} from 'utils/trpc'
 import {slugify} from 'utils/literal'
-import usePaginate from 'utils/hooks/use-paginate'
 
 import NavbarLayout from 'layouts/navbar'
 import MetaHead from 'components/meta-head'
-import QueryWrapper from 'components/query-wrapper'
 import PaginationNav from 'components/pagination-nav'
 import {TriangleSymbol} from 'components/ornaments'
 import {PuzzlePieceIcon} from '@heroicons/react/24/outline'
 
 import {type AppType} from 'types/app'
 import {useDebounceState} from 'utils/hooks/use-debounce'
+import DivAnimate from 'components/div-animate'
 
-const DATA_PER_PAGE = 8
+const PER_PAGE = 8
 
 export default function PolicyPage() {
-	const [cursorId, setCursorId] = React.useState<string | undefined>(undefined)
-	const [query, setQuery] = useDebounceState<string | undefined>(undefined, 350)
-
-	const appQuery = trpc.app.search.useQuery(
-		{query, cursorId, dataPerPage: DATA_PER_PAGE},
-		{keepPreviousData: true, staleTime: 60_000}
+	const [page, setPage] = React.useState(1)
+	const [searchQuery, setSearchQuery] = useDebounceState<string | undefined>(
+		undefined,
+		350
 	)
 
-	const paginateProps = usePaginate(
-		DATA_PER_PAGE,
-		appQuery.data,
-		appQuery.isPreviousData,
-		appQuery.isInitialLoading,
-		setCursorId
+	const appQuery = trpc.app.search.useInfiniteQuery(
+		{query: searchQuery, dataPerPage: PER_PAGE},
+		{
+			staleTime: 60_000,
+			refetchOnWindowFocus: false,
+			getNextPageParam: (lastPage) => lastPage.nextCursor,
+		}
 	)
+	const {hasNextPage, fetchNextPage, data} = appQuery
 
 	const onChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-		setQuery(e.target.value === '' ? undefined : e.target.value)
+		setSearchQuery(e.target.value === '' ? undefined : e.target.value)
 	}
 
 	return (
@@ -61,21 +60,29 @@ export default function PolicyPage() {
 					</div>
 				</div>
 
-				<QueryWrapper {...appQuery}>
-					{(data) => (
-						<div className='grid grid-cols-4 gap-4'>
-							{data.map((app) => (
-								<Card
-									key={app.id}
-									{...app}
-									className='col-span-full md:col-span-2'
-								/>
-							))}
-						</div>
-					)}
-				</QueryWrapper>
+				{/* TODO: modify query wrapper & use it */}
+				{/* TODO: load more on mobile */}
+				<DivAnimate>
+					{data?.pages.map(({items, nextCursor}, i) => {
+						if (i + 1 !== page) return
+						return (
+							<div
+								key={`section_${nextCursor}`}
+								className='grid grid-cols-4 gap-4'
+							>
+								{items.map((item) => (
+									<Card
+										key={item.id}
+										className='col-span-full md:col-span-2'
+										{...item}
+									/>
+								))}
+							</div>
+						)
+					})}
+				</DivAnimate>
 
-				<PaginationNav setCursorId={setCursorId} {...paginateProps} />
+				<PaginationNav {...{page, setPage, hasNextPage, fetchNextPage}} />
 			</main>
 		</>
 	)

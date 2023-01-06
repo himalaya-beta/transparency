@@ -74,6 +74,7 @@ export default function AppSection() {
 	} = methods
 
 	// ------------------------ QUERIES, MUTATIONS --------------------------- //
+	const appSearchQ = trpc.useContext().app.search
 	const appQ = trpc.app.fetchAll.useQuery()
 	const criteriaQ = trpc.criteria.fetchRoot.useQuery(
 		{noParent: false},
@@ -92,6 +93,7 @@ export default function AppSection() {
 	const {mutate: appCreate} = trpc.app.create.useMutation({
 		onError: (err) => alert(err.message),
 		onSuccess: () => {
+			appSearchQ.invalidate()
 			setIsCreate(false)
 			reset()
 		},
@@ -282,6 +284,7 @@ const AppItem = ({appData: appP}: {appData: AppType}) => {
 	} = methods
 
 	// ------------------------ QUERIES, MUTATIONS --------------------------- //
+	const appSearchQ = trpc.useContext().app.search
 	const appQ = trpc.app.fetchAll.useQuery(undefined, {
 		refetchOnWindowFocus: false,
 	})
@@ -297,11 +300,13 @@ const AppItem = ({appData: appP}: {appData: AppType}) => {
 	const appUpdate = trpc.app.update.useMutation({
 		onSuccess: () => {
 			appQ.refetch()
+			appSearchQ.invalidate()
 		},
 	})
 	const appRemove = trpc.app.delete.useMutation({
 		onSuccess: () => {
 			appQ.refetch()
+			appSearchQ.invalidate()
 		},
 	})
 	const criteriaUpdate = trpc.appCriteria.update.useMutation({

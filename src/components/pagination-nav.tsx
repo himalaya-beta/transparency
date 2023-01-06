@@ -36,9 +36,9 @@ const PaginationNav: React.FC<Props> = (props) => {
 			<button
 				onClick={() => setPage(page - 1)}
 				disabled={page === 1}
-				className='p-2 transition-transform hover:scale-150 disabled:transform-none disabled:text-gray-400'
+				className='p-2 text-white transition-transform hover:scale-150 disabled:transform-none disabled:text-gray-500'
 			>
-				<ChevronDoubleLeftIcon className='h-4 w-4' />
+				<ChevronDoubleLeftIcon className='h-4 w-4 ' />
 			</button>
 
 			<div className='flex h-12 items-center gap-3'>
@@ -123,7 +123,7 @@ const PaginationNav: React.FC<Props> = (props) => {
 			<button
 				onClick={() => setPage(page + 1)}
 				disabled={!hasNextPage && page === maxPage}
-				className='p-2 transition-transform hover:scale-125 disabled:transform-none disabled:text-gray-400'
+				className='p-2 text-white transition-transform hover:scale-125 disabled:transform-none disabled:text-gray-500'
 			>
 				<ChevronDoubleRightIcon className='h-4 w-4' />
 			</button>

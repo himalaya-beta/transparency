@@ -64,7 +64,7 @@ export default function ArticlePage() {
 						<LoadingPlaceholder label='app policies' />
 					) : isError ? (
 						<ErrorPlaceholder error={error} refetch={refetch} />
-					) : data.pages.length === 0 ? (
+					) : data.pages[0]?.items.length === 0 ? (
 						<EmptyPlaceholder label='app policy' />
 					) : (
 						<React.Fragment>

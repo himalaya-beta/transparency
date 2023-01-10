@@ -14,7 +14,7 @@ import NavbarLayout from 'layouts/navbar'
 import MetaHead from 'components/meta-head'
 import DivAnimate from 'components/div-animate'
 import PaginationNav from 'components/pagination-nav'
-import {Button} from 'components/button'
+import {Button, IconButton} from 'components/button'
 import {
 	LoadingPlaceholder,
 	ErrorPlaceholder,
@@ -25,12 +25,14 @@ import {
 	CheckIcon,
 	MinusIcon,
 	PuzzlePieceIcon,
+	XMarkIcon,
 } from '@heroicons/react/24/outline'
 
 import {type AppType} from 'types/app'
 import {useAutoAnimate} from '@formkit/auto-animate/react'
 import {CriteriaComparisonType} from 'types/criteria'
 import {ArrayElement} from 'types/general'
+import {Transition, Dialog} from '@headlessui/react'
 
 const PER_PAGE = 8
 
@@ -68,8 +70,16 @@ export default function SideBar() {
 	const removeFromComparison = (app: IdName) =>
 		setAppsToCompare([...appsToCompare].filter((item) => item.id !== app.id))
 
-	const {refetch: compareApps, data: comparisonData} =
-		trpc.criteria.compareApps.useQuery({appIds}, {enabled: false})
+	const {
+		refetch: compareApps,
+		isFetching: isComparisonLoading,
+		data: comparisonData,
+	} = trpc.criteria.compareApps.useQuery(
+		{appIds},
+		{enabled: false, onSuccess: () => setIsOpen(true)}
+	)
+
+	const [isOpen, setIsOpen] = React.useState(false)
 
 	return (
 		<>
@@ -92,6 +102,7 @@ export default function SideBar() {
 							<Button
 								variant='filled'
 								className='ml-auto px-3 py-1.5'
+								isLoading={isComparisonLoading}
 								onClick={() => compareApps()}
 							>
 								Compare
@@ -167,9 +178,14 @@ export default function SideBar() {
 					)}
 				</DivAnimate>
 
-				{comparisonData && (
-					<ul className='relative max-w-screen-2xl'>
-						<div className='absolute right-0 -top-2 h-full w-[calc((100%-30px)*0.75)] rounded bg-dark-bg/10' />
+				<Modal isOpen={isOpen} setIsOpen={setIsOpen}>
+					<ul className='relative max-w-screen-2xl rounded-lg bg-gradient-to-br from-brand-700 via-brand-900 to-dark-bg py-6 pl-2 pr-4'>
+						<div className='absolute right-0 top-0 h-full w-[calc((100%-30px)*0.75)] rounded bg-dark-bg/10' />
+						<div className='absolute right-0 top-0 z-20'>
+							<IconButton onClick={() => setIsOpen(false)}>
+								<XMarkIcon className='w-8' />
+							</IconButton>
+						</div>
 						<div className='relative grid grid-cols-4 pl-8'>
 							<div />
 							{appsToCompare.map((app) => {
@@ -185,14 +201,14 @@ export default function SideBar() {
 								)
 							})}
 						</div>
-						{comparisonData.map((comparisonCriteria) => (
+						{comparisonData?.map((comparisonCriteria) => (
 							<CriteriaList
 								key={comparisonCriteria.id}
 								criteria={comparisonCriteria}
 							/>
 						))}
 					</ul>
-				)}
+				</Modal>
 			</main>
 		</>
 	)
@@ -304,7 +320,7 @@ const CriteriaList = ({criteria, sub}: CriteriaLisProps) => {
 	return (
 		<li
 			className={`
-				group relative flex list-none items-start gap-2 
+				group relative flex list-none items-start gap-2
 				${sub ? 'group/sub py-0.5 first:mt-1 last:mb-2' : 'py-1 md:py-2'}
 			`}
 		>
@@ -420,6 +436,54 @@ const CriteriaList = ({criteria, sub}: CriteriaLisProps) => {
 				</ul>
 			</div>
 		</li>
+	)
+}
+
+function Modal({
+	isOpen,
+	setIsOpen,
+	children,
+}: {
+	isOpen: boolean
+	setIsOpen: React.Dispatch<React.SetStateAction<boolean>>
+	children: React.ReactNode
+}) {
+	return (
+		<Transition appear show={isOpen} as={React.Fragment}>
+			<Dialog
+				as='div'
+				className='relative z-10'
+				onClose={() => setIsOpen(false)}
+			>
+				<Transition.Child
+					as={React.Fragment}
+					enter='ease-out duration-300'
+					enterFrom='opacity-0'
+					enterTo='opacity-100'
+					leave='ease-in duration-200'
+					leaveFrom='opacity-100'
+					leaveTo='opacity-0'
+				>
+					<div className='fixed inset-0 bg-black bg-opacity-25' />
+				</Transition.Child>
+
+				<div className='fixed inset-0 overflow-y-auto'>
+					<div className='flex min-h-full items-center justify-center p-4 py-20'>
+						<Transition.Child
+							as={React.Fragment}
+							enter='ease-out duration-300'
+							enterFrom='opacity-0 scale-95'
+							enterTo='opacity-100 scale-100'
+							leave='ease-in duration-200'
+							leaveFrom='opacity-100 scale-100'
+							leaveTo='opacity-0 scale-95'
+						>
+							{children}
+						</Transition.Child>
+					</div>
+				</div>
+			</Dialog>
+		</Transition>
 	)
 }
 

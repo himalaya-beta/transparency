@@ -164,16 +164,21 @@ function AuthButton({className}: {className?: string}) {
 						leaveTo='transform opacity-0 scale-95'
 					>
 						<Menu.Items
-							className={`divi absolute -top-full right-0 -mt-3 w-40 origin-top-right divide-y divide-brand-600/75 rounded-md bg-light-head p-1 shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none md:top-full md:mt-2`}
+							className={`absolute -top-full right-0 -mt-3 w-48 origin-top-right divide-y-0 divide-brand-600/75 rounded-md bg-light-head py-1.5 px-2 shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none md:top-full md:mt-2`}
 						>
-							<div className='p-1 font-body text-dark-body'>
+							<div className='flex justify-between p-1 font-body font-medium text-dark-body'>
 								<span className='truncate'>
 									{data.user.name?.split(' ')[0]}
 								</span>
-								<span> ({data.user.role.toLocaleLowerCase()})</span>
+								<div className='flex gap-2'>
+									<span className='italic'>
+										{data.user.role.toLocaleLowerCase()}
+									</span>
+									<UserIcon className='w-5 text-brand-800' />
+								</div>
 							</div>
 							<MenuItem
-								className='w-full pt-1'
+								className='pt-1'
 								label='Sign out'
 								Icon={LogoutIcon}
 								onClick={() => signOut()}
@@ -221,6 +226,7 @@ const MenuItem = ({
 							${buttonClassName}
 						`}
 					>
+						{label}
 						<Icon
 							className={`
 								h-5 w-5 
@@ -228,7 +234,6 @@ const MenuItem = ({
 							`}
 							aria-hidden='true'
 						/>
-						{label}
 					</button>
 				)}
 			</Menu.Item>

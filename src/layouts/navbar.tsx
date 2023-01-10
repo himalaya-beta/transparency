@@ -4,7 +4,6 @@ import Image from 'next/image'
 import {useRouter} from 'next/router'
 import {useSession, signIn, signOut} from 'next-auth/react'
 
-import MenuButton from 'components/menu-button'
 import {
 	HomeIcon as HomeOutlineIcon,
 	DocumentTextIcon as ArticleOutlineIcon,
@@ -22,6 +21,9 @@ import {
 } from '@heroicons/react/24/solid'
 
 import {capFirstChar} from 'utils/literal'
+import {Menu, Transition} from '@headlessui/react'
+
+type Icon = (props: React.ComponentProps<'svg'>) => JSX.Element
 
 export default function NavbarLayout({children}: {children: React.ReactNode}) {
 	const {data} = useSession()
@@ -128,32 +130,52 @@ export default function NavbarLayout({children}: {children: React.ReactNode}) {
 
 function AuthButton({className}: {className?: string}) {
 	const {status, data} = useSession()
-	const menuItems = [
-		{label: 'Sign out', Icon: LogoutIcon, onClick: () => signOut()},
-	]
 
 	return (
 		<div className={className}>
 			{status === 'authenticated' ? (
-				<MenuButton
-					menuItems={menuItems}
-					itemsClassName='-top-full md:top-full right-0 -mt-3 md:mt-2'
-					buttonClassName='hover:bg-opacity-50 transition-all'
-				>
-					{data.user?.image ? (
-						<Image
-							src={data.user.image}
-							alt='user picture'
-							width={36}
-							height={36}
-							className='rounded-full'
-						/>
-					) : (
-						<div className='h-9 w-9 rounded-full bg-light-bg p-0.5'>
-							<UserIcon className='h-full w-full text-brand-500' />
-						</div>
-					)}
-				</MenuButton>
+				<Menu as='div' className='relative inline-block text-left'>
+					<div>
+						<Menu.Button
+							className={`inline-flex w-full justify-center rounded-full bg-light-bg bg-opacity-25 p-0.5 text-sm font-medium text-light-head transition-all hover:bg-opacity-50 focus:outline-none focus-visible:ring-2 focus-visible:ring-light-head focus-visible:ring-opacity-75 md:-mt-0.5 md:p-1`}
+						>
+							{data.user?.image ? (
+								<Image
+									src={data.user.image}
+									alt='user picture'
+									width={36}
+									height={36}
+									className='rounded-full'
+								/>
+							) : (
+								<div className='h-9 w-9 rounded-full bg-light-bg p-0.5'>
+									<UserIcon className='h-full w-full text-brand-500' />
+								</div>
+							)}
+						</Menu.Button>
+					</div>
+					<Transition
+						as={React.Fragment}
+						enter='transition ease-out duration-100'
+						enterFrom='transform opacity-0 scale-95'
+						enterTo='transform opacity-100 scale-100'
+						leave='transition ease-in duration-75'
+						leaveFrom='transform opacity-100 scale-100'
+						leaveTo='transform opacity-0 scale-95'
+					>
+						<Menu.Items
+							className={`absolute -top-full right-0 -mt-3 w-fit origin-top-right divide-y divide-gray-100 rounded-md bg-light-head shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none md:top-full md:mt-2`}
+						>
+							<div className='px-1 py-1'>
+								<MenuItem
+									label='Sign out'
+									Icon={LogoutIcon}
+									onClick={() => signOut()}
+								/>
+							</div>
+						</Menu.Items>
+					</Transition>
+				</Menu>
 			) : (
 				<div className='flex items-center justify-center rounded-full bg-brand-200 bg-opacity-30 p-0.5 transition-all hover:bg-opacity-60 md:rounded-xl'>
 					<button
@@ -166,5 +188,38 @@ function AuthButton({className}: {className?: string}) {
 				</div>
 			)}
 		</div>
+	)
+}
+
+const MenuItem = ({
+	label,
+	Icon,
+	onClick,
+}: {
+	label: string
+	Icon: Icon
+	onClick: () => void
+}) => {
+	return (
+		<Menu.Item>
+			{({active}) => (
+				<button
+					onClick={onClick}
+					className={`
+						group flex w-fit items-center whitespace-nowrap rounded-md px-2 py-2 text-sm
+						${active ? 'bg-brand-600 text-light-head' : 'text-dark-head'}
+					`}
+				>
+					<Icon
+						className={`
+							mr-2 h-5 w-5 
+							${active ? 'text-brand-100' : 'text-brand-700'}
+						`}
+						aria-hidden='true'
+					/>
+					{label}
+				</button>
+			)}
+		</Menu.Item>
 	)
 }

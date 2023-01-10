@@ -376,7 +376,13 @@ const CriteriaList = ({criteria, sub}: CriteriaLisProps) => {
 									)}
 									{criteria.type === 'EXPLANATION' && (
 										<p className='whitespace-pre-wrap text-center text-xs group-hover:font-semibold'>
-											{explanation}
+											{explanation?.includes('http') ? (
+												<a href={explanation} target='_blank' rel='noreferrer'>
+													{explanation}
+												</a>
+											) : (
+												<span>{explanation}</span>
+											)}
 										</p>
 									)}
 								</>

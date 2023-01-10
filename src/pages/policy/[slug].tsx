@@ -199,7 +199,17 @@ const CriteriaList = ({criteria, sub}: CriteriaLisProps) => {
 								)}
 								{criteria.type === 'EXPLANATION' && (
 									<p className='whitespace-pre-wrap text-center text-sm group-hover:font-semibold'>
-										{criteria.explanation}
+										{criteria.explanation?.includes('http') ? (
+											<a
+												href={criteria.explanation}
+												target='_blank'
+												rel='noreferrer'
+											>
+												{criteria.explanation}
+											</a>
+										) : (
+											<span>{criteria.explanation}</span>
+										)}
 									</p>
 								)}
 							</>

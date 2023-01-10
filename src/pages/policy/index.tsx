@@ -23,6 +23,7 @@ import {
 import {TriangleSymbol} from 'components/ornaments'
 import {
 	CheckIcon,
+	LinkIcon,
 	MinusIcon,
 	PuzzlePieceIcon,
 	XMarkIcon,
@@ -92,16 +93,28 @@ export default function SideBar() {
 				<div className='mx-auto max-w-screen-lg space-y-2'>
 					<h1 className='text-2xl'>Search for app policy</h1>
 					<DivAnimate className='grid grid-cols-2 gap-4'>
-						<input
-							className='col-span-full h-10 p-2 placeholder:font-body placeholder:text-sm placeholder:italic md:col-span-1'
-							onChange={onChange}
-							placeholder='name, company, keyword...'
-						/>
+						<DivAnimate className='col-span-full flex gap-2 md:col-span-1'>
+							<input
+								className='h-10 flex-1 p-2 placeholder:font-body placeholder:text-sm placeholder:italic'
+								onChange={onChange}
+								placeholder='name, company, keyword...'
+							/>
+							{appsToCompare.length > 1 && (
+								<Button
+									variant='filled'
+									className='px-2.5 py-1 md:hidden'
+									isLoading={isComparisonLoading}
+									onClick={() => compareApps()}
+								>
+									Compare
+								</Button>
+							)}
+						</DivAnimate>
 
 						{appsToCompare.length > 1 && (
 							<Button
 								variant='filled'
-								className='ml-auto px-3 py-1.5'
+								className='ml-auto hidden px-3 py-1.5 md:block'
 								isLoading={isComparisonLoading}
 								onClick={() => compareApps()}
 							>
@@ -127,7 +140,7 @@ export default function SideBar() {
 											<Card
 												key={item.id}
 												app={item}
-												disabled={appIds.length === 3}
+												disabled={appIds.length === 2}
 												checked={appIds.includes(item.id)}
 												addToComparison={addToComparison}
 												removeFromComparison={removeFromComparison}
@@ -179,21 +192,24 @@ export default function SideBar() {
 				</DivAnimate>
 
 				<Modal isOpen={isOpen} setIsOpen={setIsOpen}>
-					<ul className='relative max-w-screen-2xl rounded-lg bg-gradient-to-br from-brand-700 via-brand-900 to-dark-bg py-6 pl-2 pr-4'>
-						<div className='absolute right-0 top-0 h-full w-[calc((100%-30px)*0.75)] rounded bg-dark-bg/10' />
+					<ul className='relative max-w-screen-2xl rounded-lg bg-gradient-to-br from-brand-700 via-brand-900 to-dark-bg py-6 pl-4 pr-4 md:pl-2'>
+						<div className='absolute right-0 top-0 h-full w-[calc((100%-12px)*0.66)] rounded bg-dark-bg/10 md:w-[calc((100%-30px)*0.75)]' />
 						<div className='absolute right-0 top-0 z-20'>
 							<IconButton onClick={() => setIsOpen(false)}>
-								<XMarkIcon className='w-8' />
+								<XMarkIcon className='w-6 md:w-8' />
 							</IconButton>
 						</div>
-						<div className='relative grid grid-cols-4 pl-8'>
+						<div className='relative grid grid-cols-3 md:grid-cols-4 md:pl-8'>
 							<div />
 							{appsToCompare.map((app) => {
 								return (
-									<div key={app.id} className='mx-auto'>
+									<div
+										key={app.id}
+										className='text-center leading-4 md:leading-5'
+									>
 										<Link
 											href={`./policy/${slugify(app.name, app.id)}`}
-											className='font-heading font-bold text-light-body underline hover:cursor-pointer hover:underline-offset-4'
+											className='font-heading text-xs font-bold text-light-body underline hover:cursor-pointer hover:underline-offset-4 md:text-base'
 										>
 											{app.name}
 										</Link>
@@ -328,9 +344,9 @@ const CriteriaList = ({criteria, sub}: CriteriaLisProps) => {
 				<TriangleSymbol
 					onClick={onExpand}
 					className={`
-						-ml-6 w-4 transition-transform hover:cursor-pointer md:ml-0 md:w-6
+						-ml-4 w-4 transition-transform hover:cursor-pointer md:ml-0 md:w-6
 						${hasChildren ? 'visible' : 'invisible'}
-						${isExpanded ? 'mt-5 -rotate-90 md:mt-4' : '-rotate-180 md:mt-0.5'}
+						${isExpanded ? 'mt-6 -rotate-90 md:mt-4' : '-mt-1.5 -rotate-180 md:mt-0.5'}
 					`}
 				/>
 			)}
@@ -344,12 +360,12 @@ const CriteriaList = ({criteria, sub}: CriteriaLisProps) => {
 					<h3
 						onClick={onExpand}
 						className={`
-							col-span-3 leading-5 transition-all md:col-span-3 md:leading-normal
+							col-span-4 leading-3 transition-all md:col-span-3 md:leading-5
 							${hasChildren ? 'hover:cursor-pointer' : ''}
 							${
 								sub
-									? 'text-xs font-normal'
-									: 'font-medium group-hover:font-semibold md:text-base md:group-hover:text-lg md:group-hover:leading-6'
+									? 'text-xs font-normal '
+									: 'text-xs font-medium group-hover:font-semibold md:text-base md:group-hover:text-lg md:group-hover:leading-6'
 							}
 						`}
 					>
@@ -358,7 +374,7 @@ const CriteriaList = ({criteria, sub}: CriteriaLisProps) => {
 
 					{criteria.comparison.map(({checked, explanation, appId}) => (
 						<div
-							className='col-span-3 flex h-full justify-center px-2 md:col-span-3'
+							className='col-span-4 flex h-full justify-center px-2 md:col-span-3'
 							key={`${appId}_${criteria.id}_checked`}
 						>
 							{checked && (
@@ -391,13 +407,18 @@ const CriteriaList = ({criteria, sub}: CriteriaLisProps) => {
 										</div>
 									)}
 									{criteria.type === 'EXPLANATION' && (
-										<p className='whitespace-pre-wrap text-center text-xs group-hover:font-semibold'>
+										<p className='w-full text-center text-xs leading-3 group-hover:font-semibold md:leading-normal'>
 											{explanation?.includes('http') ? (
 												<a href={explanation} target='_blank' rel='noreferrer'>
-													{explanation}
+													<span className='hidden truncate md:block'>
+														{explanation}
+													</span>
+													<LinkIcon className='mx-auto w-5 text-light-body md:hidden' />
 												</a>
 											) : (
-												<span>{explanation}</span>
+												<span className='whitespace-pre-wrap break-words'>
+													{explanation}
+												</span>
 											)}
 										</p>
 									)}
@@ -468,7 +489,7 @@ function Modal({
 				</Transition.Child>
 
 				<div className='fixed inset-0 overflow-y-auto'>
-					<div className='flex min-h-full items-center justify-center p-4 py-20'>
+					<div className='flex min-h-full items-center justify-center py-16 md:px-4 md:py-20'>
 						<Transition.Child
 							as={React.Fragment}
 							enter='ease-out duration-300'

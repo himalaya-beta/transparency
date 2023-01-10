@@ -24,3 +24,8 @@ export type CriteriaAppType = Exclude<
 	RouterOutputs['criteria']['fetchByApp'],
 	null
 >
+
+export type CriteriaComparisonType = Exclude<
+	RouterOutputs['criteria']['compareApps'],
+	null
+>

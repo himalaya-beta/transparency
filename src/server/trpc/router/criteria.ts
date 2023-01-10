@@ -1,4 +1,6 @@
+/* eslint-disable @typescript-eslint/no-non-null-assertion */
 /* eslint-disable unicorn/no-null */
+import {z} from 'zod'
 import {adminProcedure, publicProcedure, router} from '../trpc'
 
 import {
@@ -7,7 +9,8 @@ import {
 	criteriaUpdateSchema,
 } from 'types/criteria'
 import {requiredIdSchema} from 'types/general'
-import {z} from 'zod'
+
+import {type PrismaPromise, type AppCriteria} from '@prisma/client'
 
 export const criteriaRouter = router({
 	fetchRoot: adminProcedure.input(criteriaFetchSchema).query(({ctx, input}) =>
@@ -63,6 +66,62 @@ export const criteriaRouter = router({
 					}
 				})
 			})
+		}),
+
+	compareApps: publicProcedure
+		.input(z.object({appIds: z.string().array()}))
+		.query(({ctx, input}) => {
+			const criteriaPromise = ctx.prisma.criteria.findMany({
+				where: {parentId: null},
+				include: {children: true},
+				orderBy: {order: 'asc'},
+			})
+
+			const appCriteriaPromises: PrismaPromise<AppCriteria[]>[] = []
+			for (const appId of input.appIds) {
+				appCriteriaPromises.push(
+					ctx.prisma.appCriteria.findMany({
+						where: {appId},
+					})
+				)
+			}
+
+			return Promise.all([criteriaPromise, ...appCriteriaPromises]).then(
+				(data) => {
+					const [criteriaData, ...appsCriteriaData] = data
+
+					type status = {
+						appId: string
+						checked: boolean
+						explanation: string | null
+					}
+					const getComparison = (criteriaId: string) => {
+						const comparison: status[] = []
+						appsCriteriaData.map((appCriteria, i) => {
+							const found = appCriteria.find((c) => c.criteriaId === criteriaId)
+							comparison.push({
+								appId: input.appIds[i]!,
+								checked: !!found,
+								explanation: found?.explanation ?? null,
+							})
+						})
+						return comparison
+					}
+
+					return criteriaData.map((criteria) => {
+						const children = criteria.children.map((child) => ({
+							...child,
+							comparison: getComparison(child.id),
+						}))
+
+						return {
+							...criteria,
+							comparison: getComparison(criteria.id),
+							children,
+						}
+					})
+				}
+			)
 		}),
 
 	create: adminProcedure.input(criteriaCreateSchema).mutation(({ctx, input}) =>

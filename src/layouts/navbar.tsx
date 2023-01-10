@@ -164,26 +164,31 @@ function AuthButton({className}: {className?: string}) {
 						leaveTo='transform opacity-0 scale-95'
 					>
 						<Menu.Items
-							className={`absolute -top-full right-0 -mt-3 w-fit origin-top-right divide-y divide-gray-100 rounded-md bg-light-head shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none md:top-full md:mt-2`}
+							className={`divi absolute -top-full right-0 -mt-3 w-40 origin-top-right divide-y divide-brand-600/75 rounded-md bg-light-head p-1 shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none md:top-full md:mt-2`}
 						>
-							<div className='px-1 py-1'>
-								<MenuItem
-									label='Sign out'
-									Icon={LogoutIcon}
-									onClick={() => signOut()}
-								/>
+							<div className='p-1 font-body text-dark-body'>
+								<span className='truncate'>
+									{data.user.name?.split(' ')[0]}
+								</span>
+								<span> ({data.user.role.toLocaleLowerCase()})</span>
 							</div>
+							<MenuItem
+								className='w-full pt-1'
+								label='Sign out'
+								Icon={LogoutIcon}
+								onClick={() => signOut()}
+							/>
 						</Menu.Items>
 					</Transition>
 				</Menu>
 			) : (
 				<div className='flex items-center justify-center rounded-full bg-brand-200 bg-opacity-30 p-0.5 transition-all hover:bg-opacity-60 md:rounded-xl'>
 					<button
-						className='h-8 w-8 rounded-full bg-dark-bg bg-opacity-60 p-1 transition-all hover:bg-opacity-80 md:flex md:w-fit md:rounded-xl'
+						className='h-8 w-8 items-center rounded-full bg-dark-bg bg-opacity-60 p-1 transition-all hover:bg-opacity-80 md:flex md:w-fit md:rounded-xl'
 						onClick={() => signIn()}
 					>
 						<LoginIcon className='h-full w-full rotate-180 text-brand-100 md:ml-0.5' />
-						<span className='mx-1 mt-0.5 hidden md:block'>Signin</span>
+						<span className='mx-1 hidden md:block'>Signin</span>
 					</button>
 				</div>
 			)}
@@ -195,31 +200,38 @@ const MenuItem = ({
 	label,
 	Icon,
 	onClick,
+	className,
+	buttonClassName,
 }: {
 	label: string
 	Icon: Icon
 	onClick: () => void
+	className?: string
+	buttonClassName?: string
 }) => {
 	return (
-		<Menu.Item>
-			{({active}) => (
-				<button
-					onClick={onClick}
-					className={`
-						group flex w-fit items-center whitespace-nowrap rounded-md px-2 py-2 text-sm
-						${active ? 'bg-brand-600 text-light-head' : 'text-dark-head'}
-					`}
-				>
-					<Icon
+		<div className={className}>
+			<Menu.Item>
+				{({active}) => (
+					<button
+						onClick={onClick}
 						className={`
-							mr-2 h-5 w-5 
-							${active ? 'text-brand-100' : 'text-brand-700'}
+							group flex w-full items-center justify-between whitespace-nowrap rounded-md bg-brand-600 bg-opacity-75 px-1 py-2 text-light-head transition-colors hover:bg-brand-500
+							${active ? 'bg-brand-400 text-light-head' : 'text-light-body'}
+							${buttonClassName}
 						`}
-						aria-hidden='true'
-					/>
-					{label}
-				</button>
-			)}
-		</Menu.Item>
+					>
+						<Icon
+							className={`
+								h-5 w-5 
+								${active ? 'text-brand-100' : 'text-brand-200'}
+							`}
+							aria-hidden='true'
+						/>
+						{label}
+					</button>
+				)}
+			</Menu.Item>
+		</div>
 	)
 }

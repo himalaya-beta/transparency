@@ -401,7 +401,10 @@ const AppItem = ({appData: appP}: {appData: AppType}) => {
 
 			<DivAnimate className='flex flex-1 flex-col justify-start'>
 				<div className='flex items-center justify-between'>
-					<div className='space-y-0.5'>
+					<div
+						className='space-y-0.5 hover:cursor-pointer'
+						onClick={() => setIsExpanded(!isExpanded)}
+					>
 						<h2 className='leading-5 md:text-lg md:leading-normal'>
 							{appP.name}
 						</h2>

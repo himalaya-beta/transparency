@@ -5,6 +5,7 @@
 @layer base {
 	html {
 		-webkit-tap-highlight-color: transparent;
+		@apply bg-gradient-to-br from-brand-900 to-dark-bg;
 	}
 
 	h1,

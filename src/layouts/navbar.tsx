@@ -164,7 +164,7 @@ function AuthButton({className}: {className?: string}) {
 						leaveTo='transform opacity-0 scale-95'
 					>
 						<Menu.Items
-							className={`absolute -top-full right-0 -mt-3 w-48 origin-top-right divide-y-0 divide-brand-600/75 rounded-md bg-light-head py-1.5 px-2 shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none md:top-full md:mt-2`}
+							className={`absolute -top-24 right-0 -mt-3 w-48 origin-top-right divide-y-0 divide-brand-600/75 rounded-md bg-light-head py-1.5 px-2 shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none md:top-full md:mt-2`}
 						>
 							<div className='flex justify-between p-1 font-body font-medium text-dark-body'>
 								<span className='truncate'>

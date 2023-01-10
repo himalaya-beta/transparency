@@ -126,9 +126,9 @@ const Home: NextPage = () => {
 											force us to agree on something we don&apos;t want.&nbsp;
 											<br className='hidden md:inline' />
 										</span>
-										With the community, transparency give you the concise
-										points, summarizing the verbose and confusing terms that
-										company provide.
+										With the community, we give you the concise points,
+										summarizing the verbose and confusing terms that company
+										provide.
 									</p>
 								</div>
 

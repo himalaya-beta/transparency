@@ -114,7 +114,7 @@ const ArticleDetailsPage = ({
 
 	const [toggleAnimation] = useAutoAnimate<HTMLDivElement>()
 
-	const {status} = useSession()
+	const {status, data} = useSession()
 
 	return (
 		<>
@@ -163,25 +163,27 @@ const ArticleDetailsPage = ({
 							</p>
 						</div>
 						<p className='whitespace-pre-wrap md:text-lg'>{article.content}</p>
-						{status === 'authenticated' && (
-							<div className='flex gap-4'>
-								<Button
-									variant='filled'
-									isLoading={isDeleteLoading}
-									onClick={() => deleteArticle(defaultValues)}
-									className='bg-light-bg px-4 text-red-500 hover:bg-red-500 hover:text-light-body'
-								>
-									Delete <TrashIcon className='h-4 w-4' />
-								</Button>
-								<Button
-									variant='filled'
-									onClick={() => setIsEdit(true)}
-									className='bg-light-bg px-4 text-violet-500 hover:bg-violet-500 hover:text-light-body'
-								>
-									Update <PencilSquareIcon className='h-4 w-4' />
-								</Button>
-							</div>
-						)}
+						{status === 'authenticated' &&
+							(data.user.role === 'ADMIN' ||
+								data.user.id === article.authorId) && (
+								<div className='flex gap-4'>
+									<Button
+										variant='filled'
+										isLoading={isDeleteLoading}
+										onClick={() => deleteArticle(defaultValues)}
+										className='bg-light-bg px-4 text-red-500 hover:bg-red-500 hover:text-light-body'
+									>
+										Delete <TrashIcon className='h-4 w-4' />
+									</Button>
+									<Button
+										variant='filled'
+										onClick={() => setIsEdit(true)}
+										className='bg-light-bg px-4 text-violet-500 hover:bg-violet-500 hover:text-light-body'
+									>
+										Update <PencilSquareIcon className='h-4 w-4' />
+									</Button>
+								</div>
+							)}
 					</>
 				)}
 			</main>

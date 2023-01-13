@@ -26,6 +26,7 @@ import {
 	LinkIcon,
 	MinusIcon,
 	PuzzlePieceIcon,
+	ScaleIcon,
 	XMarkIcon,
 } from '@heroicons/react/24/outline'
 
@@ -107,6 +108,7 @@ export default function SideBar() {
 									onClick={() => compareApps()}
 								>
 									Compare
+									<ScaleIcon className='w-6 text-light-bg' />
 								</Button>
 							)}
 						</DivAnimate>
@@ -119,6 +121,7 @@ export default function SideBar() {
 								onClick={() => compareApps()}
 							>
 								Compare
+								<ScaleIcon className='w-6 text-inherit' />
 							</Button>
 						)}
 					</DivAnimate>

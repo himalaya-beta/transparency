@@ -26,6 +26,7 @@ import {
 	LinkIcon,
 	MinusIcon,
 	PuzzlePieceIcon,
+	ScaleIcon,
 	XMarkIcon,
 } from '@heroicons/react/24/outline'
 
@@ -107,6 +108,7 @@ export default function SideBar() {
 									onClick={() => compareApps()}
 								>
 									Compare
+									<ScaleIcon className='w-6 text-light-bg' />
 								</Button>
 							)}
 						</DivAnimate>
@@ -119,6 +121,7 @@ export default function SideBar() {
 								onClick={() => compareApps()}
 							>
 								Compare
+								<ScaleIcon className='w-6 text-inherit' />
 							</Button>
 						)}
 					</DivAnimate>
@@ -248,6 +251,7 @@ const Card = ({
 	const logo = ''
 
 	const onCheck = (e: React.MouseEvent<HTMLInputElement, MouseEvent>) => {
+		console.log(e.currentTarget.checked)
 		e.stopPropagation()
 		if (e.currentTarget.checked) {
 			addToComparison(app)
@@ -259,10 +263,10 @@ const Card = ({
 	return (
 		<Link
 			href={`./policy/${slugify(app.name, app.id)}`}
-			className={`hover:shadow-bg-light min-h-48 relative flex max-h-60 flex-col overflow-hidden rounded rounded-br-3xl rounded-tl-2xl border border-light-head/25 bg-light-head bg-opacity-20 p-6 pb-4 duration-100 hover:bg-opacity-30 hover:shadow-lg ${className}`}
+			className={`hover:shadow-bg-light min-h-48 relative flex max-h-60 flex-col overflow-hidden rounded rounded-br-3xl rounded-tl-2xl border border-light-head/25 bg-light-head bg-opacity-20 p-6 pb-9 duration-100 hover:bg-opacity-30 hover:shadow-lg ${className}`}
 		>
 			<div className='absolute top-0 left-0'>
-				<div className='flex rounded-br-xl bg-dark-bg/30 shadow'>
+				<div className='flex rounded-br-2xl bg-dark-bg/30 shadow'>
 					<div className='flex w-16 items-center justify-center'>
 						{/* <StarIcon className='text-sm text-yellow-300' /> */}
 					</div>
@@ -286,15 +290,6 @@ const Card = ({
 					)}
 				</div>
 			</div>
-			<div className='absolute right-2 top-2'>
-				<input
-					type='checkbox'
-					onClick={onCheck}
-					defaultChecked={checked}
-					disabled={disabled && !checked}
-					className='h-4 w-4 rounded-lg border-gray-300 text-brand-600 hover:cursor-pointer focus:ring-brand-500'
-				/>
-			</div>
 			<div className='mt-1 h-fit w-full text-xl text-light-head'>
 				<div className='float-left mr-2 h-12 w-12' />
 				<h2 className=''>{app.name}</h2>
@@ -305,9 +300,41 @@ const Card = ({
 				<p className='float-right mr-5 text-sm italic'>{app.company}</p>
 			</div>
 
-			<p className='h-full pt-4 text-right indent-12 leading-5 text-light-body line-clamp-4 md:line-clamp-3 '>
+			<p className='h-full pt-3 text-right indent-12 leading-5 text-light-body line-clamp-4 md:line-clamp-3 '>
 				{app.about}
 			</p>
+
+			<div className='absolute bottom-0 right-0'>
+				<div
+					className={`flex origin-bottom-right items-center rounded-tl-3xl transition-all hover:scale-110  ${
+						checked
+							? 'border-t border-l border-brand-300/50 bg-brand-600'
+							: disabled
+							? 'bg-gray-400/75'
+							: 'bg-dark-bg/25 hover:bg-brand-800/75'
+					}`}
+					onClick={(e) => {
+						e.stopPropagation()
+					}}
+				>
+					<label
+						htmlFor={`compare_${app.id}`}
+						className={`y-0.5 w-36 px-8 text-sm italic text-light-bg hover:cursor-copy ${
+							checked ? 'text-opacity-100' : 'text-opacity-80'
+						}`}
+					>
+						compare
+					</label>
+					<input
+						id={`compare_${app.id}`}
+						type='checkbox'
+						onClick={onCheck}
+						defaultChecked={checked}
+						disabled={disabled && !checked}
+						className={`absolute right-5 h-4 w-4 rounded-lg border-gray-300 checked:bg-brand-800 hover:cursor-copy focus:ring-brand-500 disabled:border-gray-500 disabled:bg-gray-400`}
+					/>
+				</div>
+			</div>
 		</Link>
 	)
 }

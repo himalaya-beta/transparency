@@ -93,36 +93,56 @@ export default function SideBar() {
 			<main className='container mx-auto space-y-8 px-5 pt-8 md:px-8'>
 				<div className='mx-auto max-w-screen-lg space-y-2'>
 					<h1 className='text-2xl'>Search for app policy</h1>
-					<DivAnimate className='grid grid-cols-2 gap-4'>
-						<DivAnimate className='col-span-full flex gap-2 md:col-span-1'>
+					<DivAnimate className='grid grid-cols-4 gap-x-4 gap-y-2'>
+						<DivAnimate className='col-span-full flex gap-2  md:col-span-2'>
 							<input
-								className='h-10 flex-1 p-2 placeholder:font-body placeholder:text-sm placeholder:italic'
+								className='h-10 flex-1 rounded rounded-tl-lg rounded-br-2xl p-2 placeholder:font-body placeholder:text-sm placeholder:italic'
 								onChange={onChange}
 								placeholder='name, company, keyword...'
 							/>
-							{appsToCompare.length > 1 && (
+						</DivAnimate>
+
+						{appsToCompare.length > 1 && (
+							<div className='col-span-full row-start-3 flex items-end gap-2 md:col-start-4 md:row-span-2 md:flex-col'>
 								<Button
 									variant='filled'
-									className='px-2.5 py-1 md:hidden'
+									className='rounded rounded-tl-lg rounded-br-2xl bg-brand-500 px-3 py-1.5 md:block'
 									isLoading={isComparisonLoading}
 									onClick={() => compareApps()}
 								>
 									Compare
-									<ScaleIcon className='w-6 text-light-bg' />
+									<ScaleIcon className='w-6 text-inherit' />
 								</Button>
-							)}
-						</DivAnimate>
+								<button
+									className='group h-8 rounded-br-2xl border-b border-r border-brand-300 pb-1 pl-4 pr-3 hover:cursor-pointer hover:border-r-2 hover:border-b-2'
+									onClick={() => setAppsToCompare([])}
+								>
+									<span className='group-hover pr-2'>Clear all</span>
+									<XMarkIcon className='group-hover:text-brand-400s inline h-6  align-top text-brand-200' />
+								</button>
+							</div>
+						)}
 
-						{appsToCompare.length > 1 && (
-							<Button
-								variant='filled'
-								className='ml-auto hidden px-3 py-1.5 md:block'
-								isLoading={isComparisonLoading}
-								onClick={() => compareApps()}
-							>
-								Compare
-								<ScaleIcon className='w-6 text-inherit' />
-							</Button>
+						{appsToCompare.length > 0 && (
+							<div className='col-span-3 flex h-8 items-center justify-between'>
+								<DivAnimate className='flex gap-2'>
+									<p className='mb-px whitespace-nowrap'>Selected apps:</p>
+									{appsToCompare.map((app) => {
+										return (
+											<button
+												key={app.id}
+												className='group whitespace-nowrap hover:cursor-pointer'
+												onClick={() => removeFromComparison(app)}
+											>
+												<XMarkIcon className='inline h-6 align-top text-brand-100 group-hover:text-red-400' />
+												<span className='group-hover:underline'>
+													{app.name.split(/: | - /)[0]}
+												</span>
+											</button>
+										)
+									})}
+								</DivAnimate>
+							</div>
 						)}
 					</DivAnimate>
 				</div>
@@ -168,7 +188,7 @@ export default function SideBar() {
 										if (i + 1 !== page) return
 										return (
 											<div
-												className='grid grid-cols-4 gap-4'
+												className='grid grid-cols-4 gap-y-4 gap-x-6'
 												key={`section_md_${nextCursor}`}
 											>
 												{items.map((item) => (
@@ -250,9 +270,7 @@ const Card = ({
 }) => {
 	const logo = ''
 
-	const onCheck = (e: React.MouseEvent<HTMLInputElement, MouseEvent>) => {
-		console.log(e.currentTarget.checked)
-		e.stopPropagation()
+	const onChange = (e: React.ChangeEvent<HTMLInputElement>) => {
 		if (e.currentTarget.checked) {
 			addToComparison(app)
 		} else {
@@ -263,10 +281,10 @@ const Card = ({
 	return (
 		<Link
 			href={`./policy/${slugify(app.name, app.id)}`}
-			className={`hover:shadow-bg-light min-h-48 relative flex max-h-60 flex-col overflow-hidden rounded rounded-br-3xl rounded-tl-2xl border border-light-head/25 bg-light-head bg-opacity-20 p-6 pb-9 duration-100 hover:bg-opacity-30 hover:shadow-lg ${className}`}
+			className={`min-h-48 relative flex max-h-60 flex-col overflow-hidden rounded rounded-br-3xl rounded-tl-2xl border border-light-head/25 bg-gradient-to-br from-light-bg/30 to-light-bg/5 p-6 pb-9 shadow-lg transition-all duration-100 hover:scale-105 hover:from-light-bg/40 hover:shadow-light-bg/25 ${className}`}
 		>
 			<div className='absolute top-0 left-0'>
-				<div className='flex rounded-br-2xl bg-dark-bg/30 shadow'>
+				<div className='flex rounded-br-2xl bg-dark-bg/30'>
 					<div className='flex w-16 items-center justify-center'>
 						{/* <StarIcon className='text-sm text-yellow-300' /> */}
 					</div>
@@ -306,12 +324,12 @@ const Card = ({
 
 			<div className='absolute bottom-0 right-0'>
 				<div
-					className={`flex origin-bottom-right items-center rounded-tl-3xl transition-all hover:scale-110  ${
+					className={`flex origin-bottom-right items-center rounded-tl-3xl shadow-xl shadow-brand-100 transition-all hover:scale-110 ${
 						checked
 							? 'border-t border-l border-brand-300/50 bg-brand-600'
 							: disabled
 							? 'bg-gray-400/75'
-							: 'bg-dark-bg/25 hover:bg-brand-800/75'
+							: 'bg-dark-bg/25 hover:bg-dark-bg/10'
 					}`}
 					onClick={(e) => {
 						e.stopPropagation()
@@ -319,7 +337,7 @@ const Card = ({
 				>
 					<label
 						htmlFor={`compare_${app.id}`}
-						className={`y-0.5 w-36 px-8 text-sm italic text-light-bg hover:cursor-copy ${
+						className={`w-36 py-0.5 px-8 text-sm italic text-light-bg hover:cursor-copy ${
 							checked ? 'text-opacity-100' : 'text-opacity-80'
 						}`}
 					>
@@ -328,8 +346,8 @@ const Card = ({
 					<input
 						id={`compare_${app.id}`}
 						type='checkbox'
-						onClick={onCheck}
-						defaultChecked={checked}
+						onChange={onChange}
+						checked={checked}
 						disabled={disabled && !checked}
 						className={`absolute right-5 h-4 w-4 rounded-lg border-gray-300 checked:bg-brand-800 hover:cursor-copy focus:ring-brand-500 disabled:border-gray-500 disabled:bg-gray-400`}
 					/>

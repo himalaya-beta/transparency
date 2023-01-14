@@ -93,36 +93,56 @@ export default function SideBar() {
 			<main className='container mx-auto space-y-8 px-5 pt-8 md:px-8'>
 				<div className='mx-auto max-w-screen-lg space-y-2'>
 					<h1 className='text-2xl'>Search for app policy</h1>
-					<DivAnimate className='grid grid-cols-2 gap-4'>
-						<DivAnimate className='col-span-full flex gap-2 md:col-span-1'>
+					<DivAnimate className='grid grid-cols-4 gap-x-4 gap-y-2'>
+						<DivAnimate className='col-span-full flex gap-2  md:col-span-2'>
 							<input
-								className='h-10 flex-1 p-2 placeholder:font-body placeholder:text-sm placeholder:italic'
+								className='h-10 flex-1 rounded rounded-tl-lg rounded-br-2xl p-2 placeholder:font-body placeholder:text-sm placeholder:italic'
 								onChange={onChange}
 								placeholder='name, company, keyword...'
 							/>
-							{appsToCompare.length > 1 && (
+						</DivAnimate>
+
+						{appsToCompare.length > 1 && (
+							<div className='col-start-4 row-span-2 flex flex-col items-end gap-2'>
 								<Button
 									variant='filled'
-									className='px-2.5 py-1 md:hidden'
+									className='hidden rounded rounded-tl-lg rounded-br-2xl px-3 py-1.5 md:block'
 									isLoading={isComparisonLoading}
 									onClick={() => compareApps()}
 								>
 									Compare
-									<ScaleIcon className='w-6 text-light-bg' />
+									<ScaleIcon className='w-6 text-inherit' />
 								</Button>
-							)}
-						</DivAnimate>
+								<button
+									className='group h-8 rounded-br-2xl border-b border-r border-brand-300 pb-1 pl-4 pr-3 hover:cursor-pointer hover:border-r-2 hover:border-b-2'
+									onClick={() => setAppsToCompare([])}
+								>
+									<span className='group-hover pr-2'>Clear all</span>
+									<XMarkIcon className='group-hover:text-brand-400s inline h-6  align-top text-brand-200' />
+								</button>
+							</div>
+						)}
 
-						{appsToCompare.length > 1 && (
-							<Button
-								variant='filled'
-								className='ml-auto hidden px-3 py-1.5 md:block'
-								isLoading={isComparisonLoading}
-								onClick={() => compareApps()}
-							>
-								Compare
-								<ScaleIcon className='w-6 text-inherit' />
-							</Button>
+						{appsToCompare.length > 0 && (
+							<div className='col-span-3 flex h-8 items-center justify-between'>
+								<DivAnimate className='flex gap-2'>
+									<p className='mb-px whitespace-nowrap'>Selected apps:</p>
+									{appsToCompare.map((app) => {
+										return (
+											<button
+												key={app.id}
+												className='group whitespace-nowrap hover:cursor-pointer'
+												onClick={() => removeFromComparison(app)}
+											>
+												<XMarkIcon className='inline h-6 align-top text-brand-100 group-hover:text-red-400' />
+												<span className='group-hover:underline'>
+													{app.name}
+												</span>
+											</button>
+										)
+									})}
+								</DivAnimate>
+							</div>
 						)}
 					</DivAnimate>
 				</div>

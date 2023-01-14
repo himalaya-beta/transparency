@@ -103,10 +103,10 @@ export default function SideBar() {
 						</DivAnimate>
 
 						{appsToCompare.length > 1 && (
-							<div className='col-start-4 row-span-2 flex flex-col items-end gap-2'>
+							<div className='col-span-full row-start-3 flex items-end gap-2 md:col-start-4 md:row-span-2 md:flex-col'>
 								<Button
 									variant='filled'
-									className='hidden rounded rounded-tl-lg rounded-br-2xl bg-brand-500 px-3 py-1.5 md:block'
+									className='rounded rounded-tl-lg rounded-br-2xl bg-brand-500 px-3 py-1.5 md:block'
 									isLoading={isComparisonLoading}
 									onClick={() => compareApps()}
 								>

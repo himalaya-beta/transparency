@@ -106,7 +106,7 @@ export default function SideBar() {
 							<div className='col-start-4 row-span-2 flex flex-col items-end gap-2'>
 								<Button
 									variant='filled'
-									className='hidden rounded rounded-tl-lg rounded-br-2xl px-3 py-1.5 md:block'
+									className='hidden rounded rounded-tl-lg rounded-br-2xl bg-brand-500 px-3 py-1.5 md:block'
 									isLoading={isComparisonLoading}
 									onClick={() => compareApps()}
 								>
@@ -188,7 +188,7 @@ export default function SideBar() {
 										if (i + 1 !== page) return
 										return (
 											<div
-												className='grid grid-cols-4 gap-4'
+												className='grid grid-cols-4 gap-y-4 gap-x-6'
 												key={`section_md_${nextCursor}`}
 											>
 												{items.map((item) => (
@@ -270,9 +270,7 @@ const Card = ({
 }) => {
 	const logo = ''
 
-	const onCheck = (e: React.MouseEvent<HTMLInputElement, MouseEvent>) => {
-		console.log(e.currentTarget.checked)
-		e.stopPropagation()
+	const onChange = (e: React.ChangeEvent<HTMLInputElement>) => {
 		if (e.currentTarget.checked) {
 			addToComparison(app)
 		} else {
@@ -283,10 +281,10 @@ const Card = ({
 	return (
 		<Link
 			href={`./policy/${slugify(app.name, app.id)}`}
-			className={`hover:shadow-bg-light min-h-48 relative flex max-h-60 flex-col overflow-hidden rounded rounded-br-3xl rounded-tl-2xl border border-light-head/25 bg-light-head bg-opacity-20 p-6 pb-9 duration-100 hover:bg-opacity-30 hover:shadow-lg ${className}`}
+			className={`min-h-48 relative flex max-h-60 flex-col overflow-hidden rounded rounded-br-3xl rounded-tl-2xl border border-light-head/25 bg-gradient-to-br from-light-bg/30 to-light-bg/5 p-6 pb-9 shadow-lg transition-all duration-100 hover:scale-105 hover:from-light-bg/40 hover:shadow-light-bg/25 ${className}`}
 		>
 			<div className='absolute top-0 left-0'>
-				<div className='flex rounded-br-2xl bg-dark-bg/30 shadow'>
+				<div className='flex rounded-br-2xl bg-dark-bg/30'>
 					<div className='flex w-16 items-center justify-center'>
 						{/* <StarIcon className='text-sm text-yellow-300' /> */}
 					</div>
@@ -326,12 +324,12 @@ const Card = ({
 
 			<div className='absolute bottom-0 right-0'>
 				<div
-					className={`flex origin-bottom-right items-center rounded-tl-3xl transition-all hover:scale-110  ${
+					className={`flex origin-bottom-right items-center rounded-tl-3xl shadow-xl shadow-brand-100 transition-all hover:scale-110 ${
 						checked
 							? 'border-t border-l border-brand-300/50 bg-brand-600'
 							: disabled
 							? 'bg-gray-400/75'
-							: 'bg-dark-bg/25 hover:bg-brand-800/75'
+							: 'bg-dark-bg/25 hover:bg-dark-bg/10'
 					}`}
 					onClick={(e) => {
 						e.stopPropagation()
@@ -339,7 +337,7 @@ const Card = ({
 				>
 					<label
 						htmlFor={`compare_${app.id}`}
-						className={`y-0.5 w-36 px-8 text-sm italic text-light-bg hover:cursor-copy ${
+						className={`w-36 py-0.5 px-8 text-sm italic text-light-bg hover:cursor-copy ${
 							checked ? 'text-opacity-100' : 'text-opacity-80'
 						}`}
 					>
@@ -348,8 +346,8 @@ const Card = ({
 					<input
 						id={`compare_${app.id}`}
 						type='checkbox'
-						onClick={onCheck}
-						defaultChecked={checked}
+						onChange={onChange}
+						checked={checked}
 						disabled={disabled && !checked}
 						className={`absolute right-5 h-4 w-4 rounded-lg border-gray-300 checked:bg-brand-800 hover:cursor-copy focus:ring-brand-500 disabled:border-gray-500 disabled:bg-gray-400`}
 					/>

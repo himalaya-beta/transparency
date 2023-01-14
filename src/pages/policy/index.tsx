@@ -136,7 +136,7 @@ export default function SideBar() {
 											>
 												<XMarkIcon className='inline h-6 align-top text-brand-100 group-hover:text-red-400' />
 												<span className='group-hover:underline'>
-													{app.name}
+													{app.name.split(/: | - /)[0]}
 												</span>
 											</button>
 										)

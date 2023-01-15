@@ -100,7 +100,7 @@ export default function SideBar() {
 					<DivAnimate className='grid grid-cols-4 gap-x-4 gap-y-2'>
 						<DivAnimate className='col-span-full flex gap-2  md:col-span-2'>
 							<input
-								className='h-10 flex-1 rounded rounded-tl-lg rounded-br-2xl p-2 placeholder:font-body placeholder:text-sm placeholder:italic'
+								className='h-10 flex-1 rounded rounded-tl-lg rounded-br-2xl bg-gradient-to-br from-white via-brand-100 to-brand-300 py-2 px-3 placeholder:font-body placeholder:text-sm placeholder:italic'
 								onChange={onChange}
 								placeholder='name, company, keyword...'
 							/>
@@ -110,7 +110,7 @@ export default function SideBar() {
 							<div className='col-span-full row-start-3 flex items-end gap-2 md:col-start-4 md:row-span-2 md:flex-col'>
 								<Button
 									variant='filled'
-									className='rounded rounded-tl-lg rounded-br-2xl bg-brand-500 px-3 py-1.5 md:block'
+									className='rounded rounded-tl-lg rounded-br-2xl bg-gradient-to-r from-brand-400  to-brand-600 px-3 py-1.5 md:block'
 									isLoading={isComparisonLoading}
 									onClick={() => compareApps()}
 								>
@@ -118,11 +118,13 @@ export default function SideBar() {
 									<ScaleIcon className='w-6 text-inherit' />
 								</Button>
 								<button
-									className='group h-8 rounded-br-2xl border-b border-r border-brand-300 pb-1 pl-4 pr-3 hover:cursor-pointer hover:border-r-2 hover:border-b-2'
+									className='group h-8 rounded-br-2xl rounded-tl-lg border-b border-r border-brand-600 bg-gradient-to-br from-transparent via-transparent to-brand-600 pb-1 pl-4 pr-3 hover:cursor-pointer hover:to-brand-200/75 hover:font-bold'
 									onClick={() => setAppsToCompare([])}
 								>
-									<span className='group-hover pr-2'>Clear all</span>
-									<XMarkIcon className='group-hover:text-brand-400s inline h-6  align-top text-brand-200' />
+									<span className='group-hover pr-2 text-light-head'>
+										Clear all
+									</span>
+									<XMarkIcon className='inline h-6 align-top text-brand-200 group-hover:text-red-500' />
 								</button>
 							</div>
 						)}
@@ -138,8 +140,8 @@ export default function SideBar() {
 												className='group whitespace-nowrap hover:cursor-pointer'
 												onClick={() => removeFromComparison(app)}
 											>
-												<XMarkIcon className='inline h-6 align-top text-brand-100 group-hover:text-red-400' />
-												<span className='group-hover:underline'>
+												<XMarkIcon className='inline h-6 align-top text-brand-200 group-hover:text-red-500' />
+												<span className='text-light-head group-hover:font-bold'>
 													{removeNameDesc(app.name)}
 												</span>
 											</button>
@@ -330,7 +332,7 @@ const Card = ({
 				<div
 					className={`flex origin-bottom-right items-center rounded-tl-3xl shadow-xl shadow-brand-100 transition-all hover:scale-110 ${
 						checked
-							? 'border-t border-l border-brand-300/50 bg-brand-600'
+							? 'border-t border-l border-brand-300/50 bg-gradient-to-r from-brand-500 to-brand-700'
 							: disabled
 							? 'bg-gray-400/75'
 							: 'bg-dark-bg/25 hover:bg-dark-bg/10'

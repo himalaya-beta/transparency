@@ -14,6 +14,7 @@ import NavbarLayout from 'layouts/navbar'
 import MetaHead from 'components/meta-head'
 import DivAnimate from 'components/div-animate'
 import PaginationNav from 'components/pagination-nav'
+import Modal from 'components/modal'
 import {Button, IconButton} from 'components/button'
 import {
 	LoadingPlaceholder,
@@ -34,7 +35,6 @@ import {type AppType} from 'types/app'
 import {useAutoAnimate} from '@formkit/auto-animate/react'
 import {CriteriaComparisonType} from 'types/criteria'
 import {ArrayElement} from 'types/general'
-import {Transition, Dialog} from '@headlessui/react'
 
 const PER_PAGE = 8
 
@@ -508,54 +508,6 @@ const CriteriaList = ({criteria, sub}: CriteriaLisProps) => {
 				</ul>
 			</div>
 		</li>
-	)
-}
-
-function Modal({
-	isOpen,
-	setIsOpen,
-	children,
-}: {
-	isOpen: boolean
-	setIsOpen: React.Dispatch<React.SetStateAction<boolean>>
-	children: React.ReactNode
-}) {
-	return (
-		<Transition appear show={isOpen} as={React.Fragment}>
-			<Dialog
-				as='div'
-				className='relative z-10'
-				onClose={() => setIsOpen(false)}
-			>
-				<Transition.Child
-					as={React.Fragment}
-					enter='ease-out duration-300'
-					enterFrom='opacity-0'
-					enterTo='opacity-100'
-					leave='ease-in duration-200'
-					leaveFrom='opacity-100'
-					leaveTo='opacity-0'
-				>
-					<div className='fixed inset-0 bg-black bg-opacity-50' />
-				</Transition.Child>
-
-				<div className='fixed inset-0 overflow-y-auto'>
-					<div className='flex min-h-full items-center justify-center py-16 md:px-4 md:py-20'>
-						<Transition.Child
-							as={React.Fragment}
-							enter='ease-out duration-300'
-							enterFrom='opacity-0 scale-95'
-							enterTo='opacity-100 scale-100'
-							leave='ease-in duration-200'
-							leaveFrom='opacity-100 scale-100'
-							leaveTo='opacity-0 scale-95'
-						>
-							{children}
-						</Transition.Child>
-					</div>
-				</div>
-			</Dialog>
-		</Transition>
 	)
 }
 

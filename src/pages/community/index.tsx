@@ -7,7 +7,7 @@ import {useForm} from 'react-hook-form'
 import {zodResolver} from '@hookform/resolvers/zod'
 
 import {trpc} from 'utils/trpc'
-import {slugify} from 'utils/literal'
+import {slugify, truncate} from 'utils/literal'
 import useDeviceDetect from 'utils/hooks/use-device-detect'
 
 import NavbarLayout from 'layouts/navbar'
@@ -123,23 +123,23 @@ const Card = ({
 	id,
 	title,
 	content,
-	createdAt,
+	updatedAt,
 	author,
 	className,
 }: ArticleType & {className?: string}) => {
 	return (
 		<Link
 			href={`./community/${slugify(title, id)}`}
-			className={`hover:shadow-bg-light relative flex h-64 flex-col overflow-hidden rounded rounded-br-3xl rounded-tl-2xl border-2 border-light-head/25 bg-light-head bg-opacity-20 p-6 pb-4 duration-100 hover:bg-opacity-30 hover:shadow-lg ${className}`}
+			className={`min-h-48 relative flex max-h-64 flex-col overflow-hidden rounded rounded-br-3xl rounded-tl-2xl border border-light-head/25 bg-gradient-to-br from-light-bg/30 to-light-bg/5 p-6 shadow-lg transition-all duration-100 hover:scale-105 hover:from-light-bg/40 hover:shadow-light-bg/25 ${className}`}
 		>
 			<div className='absolute top-0 left-0'>
-				<div className='flex rounded-br-xl bg-dark-bg/30 shadow'>
+				<div className='flex rounded-br-2xl bg-dark-bg/30'>
 					<div className='flex w-16 items-center justify-center'>
 						{/* <StarIcon className='text-sm text-yellow-300' /> */}
 					</div>
 					<div className='py-0.5 px-4 text-sm text-light-head'>
 						<time className='font-body text-sm italic'>
-							{dayjs(createdAt).format('MMM D, YYYY')}
+							{dayjs(updatedAt).format('MMM D, YYYY')}
 						</time>
 					</div>
 				</div>
@@ -155,16 +155,17 @@ const Card = ({
 					</div>
 				)}
 			</div>
-			<div className='mt-1 w-full text-xl text-light-head'>
-				{author.image && <div className='float-left mr-2 h-12 w-12' />}
-				<h2 className='pt-1 pb-0.5 leading-5 line-clamp-3'>{title}</h2>
-				<div className='mt-1 flex h-1 items-center gap-2'>
+			<div className='mt-1 h-fit w-full text-xl text-light-head'>
+				<div className='float-left mr-2 h-12 w-12' />
+				<h2>{truncate(title, 58)}</h2>
+				<div className='mt-0.5 flex h-1 items-center gap-2'>
 					<div className='h-[1px] w-auto grow rounded-full bg-brand-500/50' />
 					<TriangleSymbol className='' />
 				</div>
+				<p className='float-right mr-5 text-sm italic'>by {author.name}</p>
 			</div>
 
-			<p className='pt-4 text-sm leading-5 text-light-body line-clamp-6'>
+			<p className='pt-3 text-right indent-12 leading-5 text-light-body line-clamp-5'>
 				{content}
 			</p>
 		</Link>

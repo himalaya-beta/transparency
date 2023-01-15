@@ -12,6 +12,10 @@ export function pickFirstWord(str: string, maxChar?: number): string {
 	return result
 }
 
+export function truncate(str: string, length: number) {
+	return str.length < length ? str : str.slice(0, length) + '...'
+}
+
 export const slugify = (title: string, id?: string) => {
 	let slug = title
 		.normalize('NFD') // split an accented letter in the base letter and the accent

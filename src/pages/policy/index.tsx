@@ -40,6 +40,10 @@ const PER_PAGE = 8
 
 type IdName = {id: string; name: string}
 
+function removeNameDesc(str: string) {
+	return str.split(/: | - /)[0]
+}
+
 export default function SideBar() {
 	const [page, setPage] = React.useState(1)
 	const [searchQuery, setSearchQuery] = useDebounceState<string | undefined>(
@@ -136,7 +140,7 @@ export default function SideBar() {
 											>
 												<XMarkIcon className='inline h-6 align-top text-brand-100 group-hover:text-red-400' />
 												<span className='group-hover:underline'>
-													{app.name.split(/: | - /)[0]}
+													{removeNameDesc(app.name)}
 												</span>
 											</button>
 										)
@@ -234,7 +238,7 @@ export default function SideBar() {
 											href={`./policy/${slugify(app.name, app.id)}`}
 											className='font-heading text-xs font-bold text-light-body underline hover:cursor-pointer hover:underline-offset-4 md:text-base'
 										>
-											{app.name}
+											{removeNameDesc(app.name)}
 										</Link>
 									</div>
 								)

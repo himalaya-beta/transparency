@@ -161,63 +161,41 @@ export default function SideBar() {
 					) : data.pages[0]?.items.length === 0 ? (
 						<EmptyPlaceholder label='app policy' />
 					) : (
-						<React.Fragment>
-							{device.isPhone ? (
-								<DivAnimate className='space-y-4'>
-									{data.pages.map(({items}) =>
-										items.map((item) => (
-											<Card
-												key={item.id}
-												app={item}
-												disabled={appIds.length === 2}
-												checked={appIds.includes(item.id)}
-												addToComparison={addToComparison}
-												removeFromComparison={removeFromComparison}
-											/>
-										))
-									)}
+						<div className='space-y-4 md:space-y-6'>
+							<DivAnimate className='grid grid-cols-4 gap-y-4 gap-x-6'>
+								{data.pages.map(({items}, i) => {
+									if (i + 1 !== page && !device.isPhone) return
+									return items.map((item) => (
+										<Card
+											key={item.id}
+											className='col-span-full md:col-span-2'
+											app={item}
+											disabled={appIds.length === (device.isPhone ? 2 : 3)}
+											checked={appIds.includes(item.id)}
+											addToComparison={addToComparison}
+											removeFromComparison={removeFromComparison}
+										/>
+									))
+								})}
+							</DivAnimate>
 
-									{hasNextPage && (
-										<div className='flex justify-center'>
-											<button
-												onClick={() => fetchNextPage()}
-												className='rounded-lg bg-white/20 px-4 py-2'
-											>
-												Load more ..
-											</button>
-										</div>
-									)}
-								</DivAnimate>
-							) : (
-								<DivAnimate>
-									{data.pages.map(({items, nextCursor}, i) => {
-										if (i + 1 !== page) return
-										return (
-											<div
-												className='grid grid-cols-4 gap-y-4 gap-x-6'
-												key={`section_md_${nextCursor}`}
-											>
-												{items.map((item) => (
-													<Card
-														key={item.id}
-														className='col-span-2'
-														app={item}
-														disabled={appIds.length === 3}
-														checked={appIds.includes(item.id)}
-														addToComparison={addToComparison}
-														removeFromComparison={removeFromComparison}
-													/>
-												))}
-											</div>
-										)
-									})}
-									<PaginationNav
-										name='policy'
-										{...{page, setPage, hasNextPage, fetchNextPage}}
-									/>
-								</DivAnimate>
+							{device.isPhone && hasNextPage && (
+								<div className='flex justify-center'>
+									<button
+										onClick={() => fetchNextPage()}
+										className='rounded-lg bg-white/20 px-4 py-2'
+									>
+										Load more ..
+									</button>
+								</div>
 							)}
-						</React.Fragment>
+							{!device.isPhone && (
+								<PaginationNav
+									name='community'
+									{...{setPage, hasNextPage, fetchNextPage}}
+								/>
+							)}
+						</div>
 					)}
 				</DivAnimate>
 

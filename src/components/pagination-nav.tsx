@@ -8,10 +8,11 @@ import {
 	type FetchNextPageOptions,
 	type UseInfiniteQueryResult,
 } from '@tanstack/react-query'
-import {atom, useAtom} from 'jotai'
+import {atom, useAtom, useAtomValue} from 'jotai'
+import {focusAtom} from 'jotai-optics'
 
 type Props = {
-	page: number
+	name: string
 	setPage: React.Dispatch<React.SetStateAction<number>>
 	hasNextPage: boolean | undefined
 	fetchNextPage: (
@@ -19,25 +20,58 @@ type Props = {
 	) => Promise<UseInfiniteQueryResult>
 }
 
-const policyPages = atom([1])
+type PaginationObject = {
+	pages: Array<number>
+	pageActive: number
+}
 
+const initParams = {
+	pages: [1],
+	pageActive: 1,
+}
+
+const paginationAtom = atom<Record<string, PaginationObject>>({
+	policy: initParams,
+	community: initParams,
+})
 const PaginationNav: React.FC<Props> = (props) => {
-	const {page, setPage, hasNextPage, fetchNextPage} = props
+	const {hasNextPage, fetchNextPage, name} = props
 
-	const [pages, setPages] = useAtom(policyPages)
-	const maxPage = pages.length
+	const currentPaginationAtom = React.useMemo(
+		() => focusAtom(paginationAtom, (optic) => optic.prop(name)),
+		[name]
+	)
+	const pagesAtom = React.useMemo(
+		() => focusAtom(currentPaginationAtom, (optic) => optic.prop('pages')),
+		[currentPaginationAtom]
+	)
+	const pageAtom = React.useMemo(
+		() => focusAtom(currentPaginationAtom, (optic) => optic.prop('pageActive')),
+		[currentPaginationAtom]
+	)
+	const lastPageAtom = React.useMemo(
+		() => atom((get) => get(currentPaginationAtom).pages.length),
+		[currentPaginationAtom]
+	)
+	const [pages, setPages] = useAtom(pagesAtom)
+	const [page, setPage] = useAtom(pageAtom)
+	const lastPage = useAtomValue(lastPageAtom)
 
-	React.useEffect(() => {
-		if (hasNextPage && page === maxPage) {
-			fetchNextPage()
-			setPages([...pages, page + 1])
-		}
-	}, [hasNextPage, page, maxPage, fetchNextPage, setPages, pages])
+	// Prefetching
+	// React.useEffect(() => {
+	// 	if (hasNextPage && page === lastPage) {
+	// 		fetchNextPage()
+	// 		setPages([...pages, page + 1])
+	// 	}
+	// }, [hasNextPage, page, lastPage, fetchNextPage, setPages, pages])
 
 	return (
 		<div className='mx-auto flex h-16 w-fit items-center gap-2 transition-all'>
 			<button
-				onClick={() => setPage(page - 1)}
+				onClick={() => {
+					setPage(page - 1)
+					props.setPage(page - 1)
+				}}
 				disabled={page === 1}
 				className='p-2 text-white transition-transform hover:scale-150 disabled:transform-none disabled:text-gray-500'
 			>
@@ -56,6 +90,7 @@ const PaginationNav: React.FC<Props> = (props) => {
 
 					const onClick = () => {
 						setPage(i)
+						props.setPage(i)
 					}
 
 					return (
@@ -124,8 +159,15 @@ const PaginationNav: React.FC<Props> = (props) => {
 			</div>
 
 			<button
-				onClick={() => setPage(page + 1)}
-				disabled={!hasNextPage && page === maxPage}
+				onClick={() => {
+					if (hasNextPage && page === lastPage) {
+						fetchNextPage()
+						setPages([...pages, page + 1])
+					}
+					setPage(page + 1)
+					props.setPage(page + 1)
+				}}
+				disabled={!hasNextPage && page === lastPage}
 				className='p-2 text-white transition-transform hover:scale-125 disabled:transform-none disabled:text-gray-500'
 			>
 				<ChevronDoubleRightIcon className='h-4 w-4' />

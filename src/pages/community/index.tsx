@@ -131,6 +131,7 @@ export default function ArticlePage() {
 										)
 									})}
 									<PaginationNav
+										name='community'
 										{...{page, setPage, hasNextPage, fetchNextPage}}
 									/>
 								</DivAnimate>

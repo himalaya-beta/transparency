@@ -212,6 +212,7 @@ export default function SideBar() {
 										)
 									})}
 									<PaginationNav
+										name='policy'
 										{...{page, setPage, hasNextPage, fetchNextPage}}
 									/>
 								</DivAnimate>

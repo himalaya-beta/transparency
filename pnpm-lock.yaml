@@ -36,9 +36,11 @@ specifiers:
   eslint-plugin-unicorn: ^45.0.2
   husky: ^8.0.2
   jotai: ^1.12.1
+  jotai-optics: ^0.2.0
   next: 13.1.1
   next-auth: ^4.18.7
   next-superjson-plugin: ^0.5.2
+  optics-ts: ^2.4.0
   postcss: ^8.4.20
   prettier: ^2.8.1
   prettier-plugin-tailwindcss: ^0.2.1
@@ -72,10 +74,12 @@ dependencies:
   '@trpc/server': 10.7.0
   cuid: 2.1.8
   dayjs: 1.11.7
-  jotai: 1.12.1_dojr2aquw55jwdpbannhlirjf4
+  jotai: 1.12.1_b3xcogysrnnucjcgiv6yqpnizi
+  jotai-optics: 0.2.0_xfb66toi3ivbhggj3zk3oxwdkq
   next: 13.1.1_fuzycnceajikl2b5me3wqzks2m
   next-auth: 4.18.7_q76c2b4vyoegvsbrcwkfvimnai
   next-superjson-plugin: 0.5.2_4jth3s7cpp4vevq7cz6bexafye
+  optics-ts: 2.4.0
   react: 18.2.0
   react-dom: 18.2.0_react@18.2.0
   react-hook-form: 7.41.3_react@18.2.0
@@ -4417,7 +4421,17 @@ packages:
     resolution: {integrity: sha512-YRv4Tk/Wlug8qicwqFNFVEZSdbROCHRAC6qu/i0dyNKr5JQdoa2pIGoS04lLO/jXQX7Z9omoNewYIVIxqZBd9Q==}
     dev: false
 
-  /jotai/1.12.1_dojr2aquw55jwdpbannhlirjf4:
+  /jotai-optics/0.2.0_xfb66toi3ivbhggj3zk3oxwdkq:
+    resolution: {integrity: sha512-/vYSIPc9Sfl2pIlk1wQRFwZw+JnxHnB0WNREE4AYgv1D1RwCUbmEF37SQQrqfojA2fUkgcqK4oFVhkEF7FFBSA==}
+    peerDependencies:
+      jotai: '*'
+      optics-ts: '*'
+    dependencies:
+      jotai: 1.12.1_b3xcogysrnnucjcgiv6yqpnizi
+      optics-ts: 2.4.0
+    dev: false
+
+  /jotai/1.12.1_b3xcogysrnnucjcgiv6yqpnizi:
     resolution: {integrity: sha512-t6gsYM1WkQHMOazaZYLykCA+fh9KPDGrA+tDYzDeV0268QsCqmX6S4lO46uswgt1LGUeG0EDFGuMd9ac8cWNTA==}
     engines: {node: '>=12.20.0'}
     peerDependencies:
@@ -4455,6 +4469,7 @@ packages:
         optional: true
     dependencies:
       '@babel/core': 7.20.7
+      jotai-optics: 0.2.0_xfb66toi3ivbhggj3zk3oxwdkq
       react: 18.2.0
     dev: false
 
@@ -5078,6 +5093,10 @@ packages:
       lru-cache: 6.0.0
       object-hash: 2.2.0
       oidc-token-hash: 5.0.1
+    dev: false
+
+  /optics-ts/2.4.0:
+    resolution: {integrity: sha512-BIYgnqOTEf+WiXuxuBFXeoCtyIDOwnUwCMybdQh8qdHyWXunwVVt7iD9XwNq8SCd5vUo9vqgYxF5ati/6inIuQ==}
     dev: false
 
   /optionator/0.9.1:

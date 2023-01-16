@@ -19,6 +19,7 @@ import {
 } from 'components/query-wrapper'
 import PaginationNav from 'components/pagination-nav'
 import DivAnimate from 'components/div-animate'
+import Modal from 'components/modal'
 import FormWrapper from 'components/form-wrapper'
 import TextAreaInput from 'components/textarea-input'
 import {Button} from 'components/button'
@@ -36,6 +37,7 @@ const PER_PAGE = 9
 
 export default function ArticlePage() {
 	const [page, setPage] = React.useState(1)
+	const [isOpen, setIsOpen] = React.useState(false)
 
 	const {error, refetch, data, hasNextPage, fetchNextPage, isError, isLoading} =
 		trpc.article.fetchAll.useInfiniteQuery(
@@ -46,6 +48,30 @@ export default function ArticlePage() {
 				getNextPageParam: (lastPage) => lastPage.nextCursor,
 			}
 		)
+
+	const methods = useForm<ArticleCreateType>({
+		mode: 'onTouched',
+		resolver: zodResolver(articleCreateSchema),
+	})
+
+	const {mutate: create, isLoading: isCreateLoading} =
+		trpc.article.create.useMutation({
+			onError: (error) => {
+				let message = error.message
+				if (error.data?.code === 'UNAUTHORIZED') {
+					message = 'You have to logged in to create article.'
+				}
+				alert(message)
+			},
+			onSuccess: () => {
+				refetch()
+				methods.reset()
+			},
+		})
+
+	const onValidSubmit: SubmitHandler<ArticleCreateType> = (data) => {
+		create(data)
+	}
 
 	const device = useDeviceDetect()
 
@@ -113,7 +139,28 @@ export default function ArticlePage() {
 					)}
 				</DivAnimate>
 
-				<CreateArticleForm refetchList={refetch} />
+				<Modal isOpen={isOpen} setIsOpen={setIsOpen}>
+					<div className='border-6 container max-w-screen-md space-y-2 rounded-lg border-light-bg/40 bg-gradient-to-br from-brand-700 via-brand-800 to-brand-900 py-6 px-8'>
+						<SectionSeparator>Create new</SectionSeparator>
+						<div className=''>
+							<FormWrapper
+								methods={methods}
+								onValidSubmit={onValidSubmit}
+								className='flex flex-col gap-4'
+							>
+								<TextAreaInput<ArticleCreateType> name='title' rows={2} />
+								<TextAreaInput<ArticleCreateType> name='content' rows={8} />
+								<Button
+									type='submit'
+									variant='outlined'
+									isLoading={isCreateLoading}
+								>
+									Create <PencilIcon className='h-4 w-4' />
+								</Button>
+							</FormWrapper>
+						</div>
+					</div>
+				</Modal>
 			</main>
 		</>
 	)
@@ -169,56 +216,6 @@ const Card = ({
 				{content}
 			</p>
 		</Link>
-	)
-}
-
-const CreateArticleForm = ({refetchList}: {refetchList: () => void}) => {
-	const methods = useForm<ArticleCreateType>({
-		mode: 'onTouched',
-		resolver: zodResolver(articleCreateSchema),
-	})
-
-	const {mutate, isLoading} = trpc.article.create.useMutation({
-		onError: (error) => {
-			let message = error.message
-			if (error.data?.code === 'UNAUTHORIZED') {
-				message = 'You have to logged in to create article.'
-			}
-			alert(message)
-		},
-		onSuccess: () => {
-			refetchList()
-			methods.reset()
-		},
-	})
-
-	const onValidSubmit: SubmitHandler<ArticleCreateType> = (data) => {
-		mutate(data)
-	}
-
-	return (
-		<div className='space-y-2'>
-			<SectionSeparator>Create new</SectionSeparator>
-			<div className='mx-auto lg:w-3/4 '>
-				<FormWrapper
-					methods={methods}
-					onValidSubmit={onValidSubmit}
-					className='flex flex-col gap-4'
-				>
-					<TextAreaInput<ArticleCreateType>
-						name='title'
-						inputClassName='h-[5.4em] md:h-[4em] lg:h-[2.5em]'
-					/>
-					<TextAreaInput<ArticleCreateType>
-						name='content'
-						inputClassName='h-[16em] md:h-[12.8em] lg:h-[10em]'
-					/>
-					<Button type='submit' variant='outlined' isLoading={isLoading}>
-						Create <PencilIcon className='h-4 w-4' />
-					</Button>
-				</FormWrapper>
-			</div>
-		</div>
 	)
 }
 

@@ -72,7 +72,7 @@ const AppDetailsPage = ({
 				imageUrl={`https://${process.env.NEXT_PUBLIC_VERCEL_URL}/images/articles.jpg`}
 			/>
 			<main
-				className='container mx-auto max-w-screen-lg px-6 pt-6'
+				className='container mx-auto max-w-screen-lg px-6 pt-8'
 				ref={toggleAnimation}
 			>
 				<div className=''>

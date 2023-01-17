@@ -46,7 +46,7 @@ type Props<T> = {
 	children: (item: T) => JSX.Element
 }
 
-const DataPaginated = <T,>({
+const DataInfiniteWrapper = <T,>({
 	name,
 	hasNextPage,
 	fetchNextPage,
@@ -246,4 +246,4 @@ const PageButton: React.FC<ButtonProps> = ({isActive, onClick, label}) => {
 	)
 }
 
-export default DataPaginated
+export default DataInfiniteWrapper

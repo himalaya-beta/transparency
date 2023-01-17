@@ -19,7 +19,7 @@ import {
 	ErrorPlaceholder,
 	EmptyPlaceholder,
 } from 'components/query-wrapper'
-import DataPaginated from 'components/pagination-nav'
+import DataInfiniteWrapper from 'components/query-infinite-wrapper'
 import Modal from 'components/modal'
 import {Button, IconButton} from 'components/button'
 import {TriangleSymbol} from 'components/ornaments'
@@ -160,7 +160,7 @@ export default function SideBar() {
 					) : data.pages[0]?.items.length === 0 ? (
 						<EmptyPlaceholder label='app policy' />
 					) : (
-						<DataPaginated
+						<DataInfiniteWrapper
 							name='policy'
 							className='grid grid-cols-4 gap-y-4 gap-x-6'
 							{...paginationProps}
@@ -176,7 +176,7 @@ export default function SideBar() {
 									removeFromComparison={removeFromComparison}
 								/>
 							)}
-						</DataPaginated>
+						</DataInfiniteWrapper>
 					)}
 				</DivAnimate>
 

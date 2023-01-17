@@ -17,7 +17,7 @@ import {
 	ErrorPlaceholder,
 	LoadingPlaceholder,
 } from 'components/query-wrapper'
-import DataPaginated from 'components/pagination-nav'
+import DataInfiniteWrapper from 'components/query-infinite-wrapper'
 import Modal from 'components/modal'
 import FormWrapper from 'components/form-wrapper'
 import TextAreaInput from 'components/textarea-input'
@@ -90,7 +90,7 @@ export default function ArticlePage() {
 					) : data.pages[0]?.items.length === 0 ? (
 						<EmptyPlaceholder label='app policy' />
 					) : (
-						<DataPaginated
+						<DataInfiniteWrapper
 							name='community'
 							className='grid grid-cols-6 gap-4'
 							{...paginationProps}
@@ -102,7 +102,7 @@ export default function ArticlePage() {
 									{...item}
 								/>
 							)}
-						</DataPaginated>
+						</DataInfiniteWrapper>
 					)}
 				</DivAnimate>
 

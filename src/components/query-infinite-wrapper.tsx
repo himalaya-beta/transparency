@@ -1,7 +1,7 @@
 import React from 'react'
 import {create} from 'zustand'
 import {shallow} from 'zustand/shallow'
-import {produce} from 'immer'
+import produce from 'immer'
 import {useAutoAnimate} from '@formkit/auto-animate/react'
 
 import {
@@ -30,20 +30,15 @@ const isArrayIdentic = (a: string[], b: string[]) => {
 	}
 }
 
+const pagesAvailable = ['policy', 'community'] as const
+type PagesAvailable = typeof pagesAvailable[number]
 type PaginationObject = {
 	keys: Array<string>
 	pages: Array<number>
 	pageActive: number
 }
-const initialParams = {
-	keys: [],
-	pages: [1],
-	pageActive: 1,
-}
-const pagesAvailable = ['policy', 'community'] as const
-type PagesAvailable = typeof pagesAvailable[number]
-
 type initialValues = Record<PagesAvailable, Array<PaginationObject>> & {
+	initParams: (name: PagesAvailable, keys: Array<string>) => void
 	addPage: (name: PagesAvailable, keys: Array<string>) => void
 	setPageActive: (
 		name: PagesAvailable,
@@ -53,19 +48,25 @@ type initialValues = Record<PagesAvailable, Array<PaginationObject>> & {
 }
 
 const usePagination = create<initialValues>()((set) => ({
-	policy: [initialParams],
-	community: [initialParams],
+	policy: [],
+	community: [],
+	// TODO: Use immer middleware
+	initParams: (name, keys) =>
+		set(
+			produce((state) => {
+				state[name].push({keys, pages: [1], pageActive: 1})
+			})
+		),
 	addPage: (name, keys) =>
 		set((state) => {
 			const idx = state[name].findIndex((item) =>
 				isArrayIdentic(item.keys, keys)
 			)
+			if (idx === -1) return {}
 
 			const updated = produce(state[name], (draft) => {
-				const pages = draft[idx]?.pages
-				if (pages) {
-					pages.push(pages.length + 1)
-				}
+				// eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+				draft[idx]!.pages.push(draft[idx]!.pages.length + 1)
 			})
 
 			return {[name]: updated}
@@ -75,12 +76,11 @@ const usePagination = create<initialValues>()((set) => ({
 			const idx = state[name].findIndex((item) =>
 				isArrayIdentic(item.keys, keys)
 			)
+			if (idx === -1) return {}
 
 			const updated = produce(state[name], (draft) => {
-				const current = draft[idx]
-				if (current) {
-					current.pageActive = pageActive
-				}
+				// eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+				draft[idx]!.pageActive = pageActive
 			})
 
 			return {[name]: updated}
@@ -116,11 +116,11 @@ const DataInfiniteWrapper = <T,>({
 	const device = useDeviceDetect()
 
 	// -------------------------------- STORE -------------------------------- //
+	const initParams = usePagination((state) => state.initParams)
 	const addPage = usePagination((state) => state.addPage)
 	const setPage = usePagination((state) => state.setPageActive)
 	const {pages, pageActive} = usePagination((state) => {
 		const current = state[name].find((item) => isArrayIdentic(item.keys, keys))
-		// TODO: update store if it's not exist
 		return {
 			pages: current?.pages ?? [1],
 			pageActive: current?.pageActive ?? 1,
@@ -128,7 +128,15 @@ const DataInfiniteWrapper = <T,>({
 	}, shallow)
 	const pageLast = pages.length
 
-	const setPageActive = (page: number) => setPage(name, keys, page)
+	const refStoreInit = React.useRef(false)
+	React.useEffect(() => {
+		if (refStoreInit.current) {
+			initParams(name, keys)
+		} else {
+			setPage(name, keys, 1)
+			refStoreInit.current = true
+		}
+	}, [keys, name, initParams, setPage])
 
 	// ----------------------------- Prefetching ----------------------------- //
 	const refInit = React.useRef(false)
@@ -168,7 +176,7 @@ const DataInfiniteWrapper = <T,>({
 					{pageActive !== pageLast && (
 						<div className='flex justify-center'>
 							<button
-								onClick={() => setPageActive(pageActive + 1)}
+								onClick={() => setPage(name, keys, pageActive + 1)}
 								className='rounded-lg bg-white/20 px-4 py-2'
 							>
 								Load more ..
@@ -179,7 +187,7 @@ const DataInfiniteWrapper = <T,>({
 			) : (
 				<div className='mx-auto flex h-16 w-fit items-center gap-2 transition-all'>
 					<button
-						onClick={() => void setPageActive(pageActive - 1)}
+						onClick={() => setPage(name, keys, pageActive - 1)}
 						disabled={pageActive === 1}
 						className='p-2 text-white transition-transform hover:scale-150 disabled:transform-none disabled:text-gray-500'
 					>
@@ -196,7 +204,7 @@ const DataInfiniteWrapper = <T,>({
 							const label = i
 							const key = `page_button_${i}`
 
-							const onClick = () => void setPageActive(i)
+							const onClick = () => setPage(name, keys, i)
 
 							return (
 								<React.Fragment key={key}>
@@ -270,7 +278,7 @@ const DataInfiniteWrapper = <T,>({
 					</div>
 
 					<button
-						onClick={() => void setPageActive(pageActive + 1)}
+						onClick={() => setPage(name, keys, pageActive + 1)}
 						disabled={!hasNextPage && pageActive === pageLast}
 						className='p-2 text-white transition-transform hover:scale-125 disabled:transform-none disabled:text-gray-500'
 					>

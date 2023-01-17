@@ -154,6 +154,7 @@ export default function SideBar() {
 					) : (
 						<DataInfiniteWrapper
 							name='policy'
+							keys={[searchQuery]}
 							className='grid grid-cols-4 gap-y-4 gap-x-6'
 							{...{fetchNextPage, hasNextPage, data}}
 						>

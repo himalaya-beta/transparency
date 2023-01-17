@@ -48,10 +48,7 @@ export default function SideBar() {
 	const device = useDeviceDetect()
 
 	// ---------------------------- Search & List ---------------------------- //
-	const [searchQuery, setSearchQuery] = useDebounceState<string | undefined>(
-		undefined,
-		350
-	)
+	const [searchQuery, setSearchQuery] = useDebounceState<string>('', 350)
 	const {hasNextPage, fetchNextPage, data, isLoading, isError, error, refetch} =
 		trpc.app.search.useInfiniteQuery(
 			{query: searchQuery, dataPerPage: PER_PAGE},
@@ -61,11 +58,6 @@ export default function SideBar() {
 				getNextPageParam: (lastPage) => lastPage.nextCursor,
 			}
 		)
-	const paginationProps = {fetchNextPage, hasNextPage, data}
-
-	const onChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-		setSearchQuery(e.target.value === '' ? undefined : e.target.value)
-	}
 
 	// ------------------------------ Comparison ----------------------------- //
 	const [isModalOpen, setIsModalOpen] = React.useState(false)
@@ -100,7 +92,7 @@ export default function SideBar() {
 						<DivAnimate className='col-span-full flex gap-2  md:col-span-2'>
 							<input
 								className='h-10 flex-1 rounded rounded-tl-lg rounded-br-2xl bg-gradient-to-br from-white via-brand-100 to-brand-300 py-2 px-3 placeholder:font-body placeholder:text-sm placeholder:italic'
-								onChange={onChange}
+								onChange={(e) => void setSearchQuery(e.target.value)}
 								placeholder='name, company, keyword...'
 							/>
 						</DivAnimate>
@@ -163,7 +155,7 @@ export default function SideBar() {
 						<DataInfiniteWrapper
 							name='policy'
 							className='grid grid-cols-4 gap-y-4 gap-x-6'
-							{...paginationProps}
+							{...{fetchNextPage, hasNextPage, data}}
 						>
 							{(item) => (
 								<Card

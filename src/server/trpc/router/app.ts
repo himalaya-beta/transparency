@@ -22,21 +22,21 @@ export const appRouter = router({
 	search: publicProcedure
 		.input(
 			z.object({
-				query: z.string().optional(),
+				query: z.string(),
 				dataPerPage: z.number().optional(),
 				cursor: z.string().optional(),
 			})
 		)
-
 		.query(({ctx, input}) => {
+			const search = input.query === '' ? undefined : input.query
 			const perPage = input.dataPerPage ?? DEFAULT_PER_PAGE
 
 			return ctx.prisma.app
 				.findMany({
 					where: {
-						name: {search: input.query},
-						company: {search: input.query},
-						about: {search: input.query},
+						name: {search},
+						company: {search},
+						about: {search},
 					},
 					take: perPage + 1,
 					orderBy: {

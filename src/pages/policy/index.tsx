@@ -4,6 +4,7 @@ import React from 'react'
 import Image from 'next/image'
 import Link from 'next/link'
 import dayjs from 'dayjs'
+import {useAutoAnimate} from '@formkit/auto-animate/react'
 
 import {trpc} from 'utils/trpc'
 import {slugify} from 'utils/literal'
@@ -13,14 +14,14 @@ import useDeviceDetect from 'utils/hooks/use-device-detect'
 import NavbarLayout from 'layouts/navbar'
 import MetaHead from 'components/meta-head'
 import DivAnimate from 'components/div-animate'
-import PaginationNav from 'components/pagination-nav'
-import Modal from 'components/modal'
-import {Button, IconButton} from 'components/button'
 import {
 	LoadingPlaceholder,
 	ErrorPlaceholder,
 	EmptyPlaceholder,
 } from 'components/query-wrapper'
+import DataPaginated from 'components/pagination-nav'
+import Modal from 'components/modal'
+import {Button, IconButton} from 'components/button'
 import {TriangleSymbol} from 'components/ornaments'
 import {
 	CheckIcon,
@@ -31,10 +32,9 @@ import {
 	XMarkIcon,
 } from '@heroicons/react/24/outline'
 
+import {type CriteriaComparisonType} from 'types/criteria'
+import {type ArrayElement} from 'types/general'
 import {type AppType} from 'types/app'
-import {useAutoAnimate} from '@formkit/auto-animate/react'
-import {CriteriaComparisonType} from 'types/criteria'
-import {ArrayElement} from 'types/general'
 
 const PER_PAGE = 8
 
@@ -45,47 +45,46 @@ function removeNameDesc(str: string) {
 }
 
 export default function SideBar() {
-	const [page, setPage] = React.useState(1)
+	const device = useDeviceDetect()
+
+	// ---------------------------- Search & List ---------------------------- //
 	const [searchQuery, setSearchQuery] = useDebounceState<string | undefined>(
 		undefined,
 		350
 	)
-
-	const appQuery = trpc.app.search.useInfiniteQuery(
-		{query: searchQuery, dataPerPage: PER_PAGE},
-		{
-			staleTime: 60_000,
-			refetchOnWindowFocus: false,
-			getNextPageParam: (lastPage) => lastPage.nextCursor,
-		}
-	)
 	const {hasNextPage, fetchNextPage, data, isLoading, isError, error, refetch} =
-		appQuery
+		trpc.app.search.useInfiniteQuery(
+			{query: searchQuery, dataPerPage: PER_PAGE},
+			{
+				staleTime: 60_000,
+				refetchOnWindowFocus: false,
+				getNextPageParam: (lastPage) => lastPage.nextCursor,
+			}
+		)
+	const paginationProps = {fetchNextPage, hasNextPage, data}
 
 	const onChange = (e: React.ChangeEvent<HTMLInputElement>) => {
 		setSearchQuery(e.target.value === '' ? undefined : e.target.value)
 	}
 
-	const device = useDeviceDetect()
-
-	const [appsToCompare, setAppsToCompare] = React.useState<Array<IdName>>([])
-	const appIds = appsToCompare.map((item) => item.id)
-
-	const addToComparison = (app: IdName) =>
-		setAppsToCompare([...appsToCompare, app])
-	const removeFromComparison = (app: IdName) =>
-		setAppsToCompare([...appsToCompare].filter((item) => item.id !== app.id))
+	// ------------------------------ Comparison ----------------------------- //
+	const [isModalOpen, setIsModalOpen] = React.useState(false)
+	const [appsSelected, setAppsSelected] = React.useState<Array<IdName>>([])
+	const appIds = appsSelected.map((item) => item.id)
 
 	const {
-		refetch: compareApps,
+		refetch: fetchComparison,
 		isFetching: isComparisonLoading,
 		data: comparisonData,
 	} = trpc.criteria.compareApps.useQuery(
 		{appIds},
-		{enabled: false, onSuccess: () => setIsOpen(true)}
+		{enabled: false, onSuccess: () => setIsModalOpen(true)}
 	)
 
-	const [isOpen, setIsOpen] = React.useState(false)
+	const addToComparison = (app: IdName) =>
+		setAppsSelected([...appsSelected, app])
+	const removeFromComparison = (app: IdName) =>
+		setAppsSelected([...appsSelected].filter((item) => item.id !== app.id))
 
 	return (
 		<>
@@ -106,20 +105,20 @@ export default function SideBar() {
 							/>
 						</DivAnimate>
 
-						{appsToCompare.length > 1 && (
+						{appsSelected.length > 1 && (
 							<div className='col-span-full row-start-3 flex items-end gap-2 md:col-start-4 md:row-span-2 md:flex-col'>
 								<Button
 									variant='filled'
 									className='rounded rounded-tl-lg rounded-br-2xl bg-gradient-to-r from-brand-400  to-brand-600 px-3 py-1.5 md:block'
 									isLoading={isComparisonLoading}
-									onClick={() => compareApps()}
+									onClick={() => fetchComparison()}
 								>
 									Compare
 									<ScaleIcon className='w-6 text-inherit' />
 								</Button>
 								<button
 									className='group h-8 rounded-br-2xl rounded-tl-lg border-b border-r border-brand-600 bg-gradient-to-br from-transparent via-transparent to-brand-600 pb-1 pl-4 pr-3 hover:cursor-pointer hover:to-brand-200/75 hover:font-bold'
-									onClick={() => setAppsToCompare([])}
+									onClick={() => setAppsSelected([])}
 								>
 									<span className='group-hover pr-2 text-light-head'>
 										Clear all
@@ -129,11 +128,11 @@ export default function SideBar() {
 							</div>
 						)}
 
-						{appsToCompare.length > 0 && (
+						{appsSelected.length > 0 && (
 							<div className='col-span-3 flex h-8 items-center justify-between'>
 								<DivAnimate className='flex gap-2'>
 									<p className='mb-px whitespace-nowrap'>Selected apps:</p>
-									{appsToCompare.map((app) => {
+									{appsSelected.map((app) => {
 										return (
 											<button
 												key={app.id}
@@ -161,55 +160,37 @@ export default function SideBar() {
 					) : data.pages[0]?.items.length === 0 ? (
 						<EmptyPlaceholder label='app policy' />
 					) : (
-						<div className='space-y-4 md:space-y-6'>
-							<DivAnimate className='grid grid-cols-4 gap-y-4 gap-x-6'>
-								{data.pages.map(({items}, i) => {
-									if (i + 1 !== page && !device.isPhone) return
-									return items.map((item) => (
-										<Card
-											key={item.id}
-											className='col-span-full md:col-span-2'
-											app={item}
-											disabled={appIds.length === (device.isPhone ? 2 : 3)}
-											checked={appIds.includes(item.id)}
-											addToComparison={addToComparison}
-											removeFromComparison={removeFromComparison}
-										/>
-									))
-								})}
-							</DivAnimate>
-
-							{device.isPhone && hasNextPage && (
-								<div className='flex justify-center'>
-									<button
-										onClick={() => fetchNextPage()}
-										className='rounded-lg bg-white/20 px-4 py-2'
-									>
-										Load more ..
-									</button>
-								</div>
-							)}
-							{!device.isPhone && (
-								<PaginationNav
-									name='community'
-									{...{setPage, hasNextPage, fetchNextPage}}
+						<DataPaginated
+							name='policy'
+							className='grid grid-cols-4 gap-y-4 gap-x-6'
+							{...paginationProps}
+						>
+							{(item) => (
+								<Card
+									key={item.id}
+									className='col-span-full md:col-span-2'
+									app={item}
+									disabled={appIds.length === (device.isPhone ? 2 : 3)}
+									checked={appIds.includes(item.id)}
+									addToComparison={addToComparison}
+									removeFromComparison={removeFromComparison}
 								/>
 							)}
-						</div>
+						</DataPaginated>
 					)}
 				</DivAnimate>
 
-				<Modal isOpen={isOpen} setIsOpen={setIsOpen}>
+				<Modal isOpen={isModalOpen} setIsOpen={setIsModalOpen}>
 					<ul className='relative max-w-screen-2xl rounded-lg bg-gradient-to-br from-brand-700 via-brand-900 to-dark-bg py-6 pl-4 pr-4 md:pl-2'>
 						<div className='absolute right-0 top-0 h-full w-[calc((100%-12px)*0.66)] rounded bg-dark-bg/10 md:w-[calc((100%-30px)*0.75)]' />
 						<div className='absolute right-0 top-0 z-20'>
-							<IconButton onClick={() => setIsOpen(false)}>
+							<IconButton onClick={() => setIsModalOpen(false)}>
 								<XMarkIcon className='w-6 md:w-8' />
 							</IconButton>
 						</div>
 						<div className='relative grid grid-cols-3 md:grid-cols-4 md:pl-8'>
 							<div />
-							{appsToCompare.map((app) => {
+							{appsSelected.map((app) => {
 								return (
 									<div
 										key={app.id}

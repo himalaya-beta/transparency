@@ -8,17 +8,16 @@ import {zodResolver} from '@hookform/resolvers/zod'
 
 import {trpc} from 'utils/trpc'
 import {slugify, truncate} from 'utils/literal'
-import useDeviceDetect from 'utils/hooks/use-device-detect'
 
 import NavbarLayout from 'layouts/navbar'
 import MetaHead from 'components/meta-head'
+import DivAnimate from 'components/div-animate'
 import {
 	EmptyPlaceholder,
 	ErrorPlaceholder,
 	LoadingPlaceholder,
 } from 'components/query-wrapper'
-import PaginationNav from 'components/pagination-nav'
-import DivAnimate from 'components/div-animate'
+import DataPaginated from 'components/pagination-nav'
 import Modal from 'components/modal'
 import FormWrapper from 'components/form-wrapper'
 import TextAreaInput from 'components/textarea-input'
@@ -36,7 +35,6 @@ import {
 const PER_PAGE = 9
 
 export default function ArticlePage() {
-	const [page, setPage] = React.useState(1)
 	const [isOpen, setIsOpen] = React.useState(false)
 
 	const {error, refetch, data, hasNextPage, fetchNextPage, isError, isLoading} =
@@ -48,6 +46,7 @@ export default function ArticlePage() {
 				getNextPageParam: (lastPage) => lastPage.nextCursor,
 			}
 		)
+	const paginationProps = {data, hasNextPage, fetchNextPage}
 
 	const methods = useForm<ArticleCreateType>({
 		mode: 'onTouched',
@@ -73,8 +72,6 @@ export default function ArticlePage() {
 		create(data)
 	}
 
-	const device = useDeviceDetect()
-
 	return (
 		<>
 			<MetaHead
@@ -93,37 +90,19 @@ export default function ArticlePage() {
 					) : data.pages[0]?.items.length === 0 ? (
 						<EmptyPlaceholder label='app policy' />
 					) : (
-						<div className='space-y-4 md:space-y-6'>
-							<DivAnimate className='grid grid-cols-6 gap-4'>
-								{data.pages.map(({items}, i) => {
-									if (i + 1 !== page && !device.isPhone) return
-									return items.map((item) => (
-										<Card
-											key={item.id}
-											className='col-span-full md:col-span-3 lg:col-span-2'
-											{...item}
-										/>
-									))
-								})}
-							</DivAnimate>
-
-							{device.isPhone && hasNextPage && (
-								<div className='flex justify-center'>
-									<button
-										onClick={() => fetchNextPage()}
-										className='rounded-lg bg-white/20 px-4 py-2'
-									>
-										Load more ..
-									</button>
-								</div>
-							)}
-							{!device.isPhone && (
-								<PaginationNav
-									name='community'
-									{...{setPage, hasNextPage, fetchNextPage}}
+						<DataPaginated
+							name='community'
+							className='grid grid-cols-6 gap-4'
+							{...paginationProps}
+						>
+							{(item) => (
+								<Card
+									key={item.id}
+									className='col-span-full md:col-span-3 lg:col-span-2'
+									{...item}
 								/>
 							)}
-						</div>
+						</DataPaginated>
 					)}
 				</DivAnimate>
 

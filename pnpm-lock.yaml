@@ -35,6 +35,7 @@ specifiers:
   eslint-plugin-prettier: ^4.2.1
   eslint-plugin-unicorn: ^45.0.2
   husky: ^8.0.2
+  immer: ^9.0.18
   jotai: ^1.12.1
   jotai-optics: ^0.2.0
   next: 13.1.1
@@ -57,6 +58,7 @@ specifiers:
   typescript: ^4.9.4
   typescript-plugin-css-modules: ^4.1.1
   zod: ^3.20.2
+  zustand: ^4.3.2
 
 dependencies:
   '@formkit/auto-animate': 1.0.0-beta.5
@@ -74,6 +76,7 @@ dependencies:
   '@trpc/server': 10.7.0
   cuid: 2.1.8
   dayjs: 1.11.7
+  immer: 9.0.18
   jotai: 1.12.1_b3xcogysrnnucjcgiv6yqpnizi
   jotai-optics: 0.2.0_xfb66toi3ivbhggj3zk3oxwdkq
   next: 13.1.1_fuzycnceajikl2b5me3wqzks2m
@@ -87,6 +90,7 @@ dependencies:
   react-parallax-tilt: 1.7.75_biqbaboplfbrettd7655fr4n2y
   superjson: 1.12.1
   zod: 3.20.2
+  zustand: 4.3.2_immer@9.0.18+react@18.2.0
 
 devDependencies:
   '@commitlint/cli': 17.3.0
@@ -4204,6 +4208,10 @@ packages:
     dev: true
     optional: true
 
+  /immer/9.0.18:
+    resolution: {integrity: sha512-eAPNpsj7Ax1q6Y/3lm2PmlwRcFzpON7HSNQ3ru5WQH1/PSpnyed/HpNOELl2CxLKoj4r+bAHgdyKqW5gc2Se1A==}
+    dev: false
+
   /immutable/4.1.0:
     resolution: {integrity: sha512-oNkuqVTA8jqG1Q6c+UglTOD1xhC1BtjKI7XkCXRkZHrN5m18/XsnUp8Q89GkQO/z+0WjonSvl0FLhDYftp46nQ==}
 
@@ -6747,4 +6755,21 @@ packages:
 
   /zod/3.20.2:
     resolution: {integrity: sha512-1MzNQdAvO+54H+EaK5YpyEy0T+Ejo/7YLHS93G3RnYWh5gaotGHwGeN/ZO687qEDU2y4CdStQYXVHIgrUl5UVQ==}
+    dev: false
+
+  /zustand/4.3.2_immer@9.0.18+react@18.2.0:
+    resolution: {integrity: sha512-rd4haDmlwMTVWVqwvgy00ny8rtti/klRoZjFbL/MAcDnmD5qSw/RZc+Vddstdv90M5Lv6RPgWvm1Hivyn0QgJw==}
+    engines: {node: '>=12.7.0'}
+    peerDependencies:
+      immer: '>=9.0'
+      react: '>=16.8'
+    peerDependenciesMeta:
+      immer:
+        optional: true
+      react:
+        optional: true
+    dependencies:
+      immer: 9.0.18
+      react: 18.2.0
+      use-sync-external-store: 1.2.0_react@18.2.0
     dev: false

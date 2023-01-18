@@ -4,7 +4,7 @@ export const SectionSeparator = ({
 	children,
 	className,
 }: {
-	children: string
+	children: React.ReactNode
 	className?: string
 }) => {
 	return (
@@ -13,7 +13,7 @@ export const SectionSeparator = ({
 		>
 			<div className='h-[1px] w-auto grow rounded-full bg-brand-500/50' />
 			<TriangleSymbol />
-			<p className='w-fit text-lg'>{children}</p>
+			{children}
 			<TriangleSymbol className='rotate-180' />
 			<div className='h-[1px] w-auto grow rounded-full bg-brand-500/50' />
 		</div>

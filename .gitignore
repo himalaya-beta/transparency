@@ -11,6 +11,8 @@
 # database
 /prisma/db.sqlite
 /prisma/db.sqlite-journal
+# planetscale use prisma db push
+/prisma/migrations
 
 # next.js
 /.next/
@@ -44,5 +46,6 @@ yarn-error.log*
 # sass watch output
 /css
 
-# not sure
+# database
 database
+pscale_dump*

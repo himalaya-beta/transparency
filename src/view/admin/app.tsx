@@ -8,7 +8,11 @@ import {zodResolver} from '@hookform/resolvers/zod'
 import {trpc} from 'utils/trpc'
 
 import DivAnimate from 'components/div-animate'
-import QueryWrapper from 'components/query-wrapper'
+import QueryWrapper, {
+	EmptyPlaceholder,
+	ErrorPlaceholder,
+	LoadingPlaceholder,
+} from 'components/query-wrapper'
 import FormWrapper from 'components/form-wrapper'
 import TextAreaInput from 'components/textarea-input'
 import {Button, IconButton} from 'components/button'
@@ -27,6 +31,8 @@ import {criteriaUpdateSchema} from 'types/criteria'
 import {appCreateSchema, type AppType} from 'types/app'
 import {type AppCriteria} from 'server/trpc/router/app-criteria'
 import {type SubmitHandler} from 'react-hook-form'
+import {useDebounceState} from 'utils/hooks/use-debounce'
+import DataInfiniteWrapper from 'components/query-infinite-wrapper'
 
 const criteriaSchema = criteriaUpdateSchema
 	.pick({id: true, type: true, parentId: true})
@@ -53,6 +59,8 @@ const criteriasSchema = z.object({
 type CriteriaType = z.infer<typeof criteriaSchema>
 
 export default function AppSection() {
+	const [searchQuery, setSearchQuery] = useDebounceState('', 350)
+
 	//	-----------------------   SCHEMA & TYPES   --------------------------- //
 	const formSchema = appCreateSchema.merge(criteriasSchema)
 	type FormType = z.infer<typeof formSchema>
@@ -75,7 +83,14 @@ export default function AppSection() {
 
 	// ------------------------ QUERIES, MUTATIONS --------------------------- //
 	const appSearchQ = trpc.useContext().app.search
-	const appQ = trpc.app.fetchAll.useQuery()
+	const {isLoading, isError, error, data, refetch, hasNextPage, fetchNextPage} =
+		trpc.app.search.useInfiniteQuery(
+			{query: searchQuery, includeCriteria: true},
+			{
+				staleTime: 60_000,
+				getNextPageParam: (lastPage) => lastPage.nextCursor,
+			}
+		)
 	const criteriaQ = trpc.criteria.fetchRoot.useQuery(
 		{noParent: false},
 		{
@@ -239,27 +254,44 @@ export default function AppSection() {
 					</FormWrapper>
 				</>
 			) : (
-				<>
-					<h1 className='mb-4 text-2xl'>
-						App policy
-						<IconButton
-							className='ml-2 align-bottom'
-							onClick={() => setIsCreate(true)}
-						>
-							<PlusIcon className='h-6 w-6 text-brand-300 ' />
-						</IconButton>
-					</h1>
+				<div className='space-y-4'>
+					<div className='space-y-2'>
+						<h1 className='text-2xl'>
+							App policy
+							<IconButton
+								className='ml-2 align-bottom'
+								onClick={() => setIsCreate(true)}
+							>
+								<PlusIcon className='h-6 w-6 text-brand-300 ' />
+							</IconButton>
+						</h1>
 
-					<QueryWrapper {...appQ}>
-						{(data) => (
-							<div className='space-y-1'>
-								{data.map((app) => (
-									<AppItem key={app.id} appData={app} />
-								))}
-							</div>
+						<input
+							className='h-10 w-1/2 rounded rounded-tl-lg rounded-br-2xl bg-gradient-to-br from-white via-brand-100 to-brand-300 py-2 px-3 placeholder:font-body placeholder:text-sm placeholder:italic'
+							onChange={(e) => void setSearchQuery(e.target.value)}
+							placeholder='name, company, keyword...'
+						/>
+					</div>
+
+					<DivAnimate className='mx-auto max-w-screen-lg'>
+						{isLoading ? (
+							<LoadingPlaceholder label='app policies' />
+						) : isError ? (
+							<ErrorPlaceholder error={error} refetch={refetch} />
+						) : data.pages[0]?.items.length === 0 ? (
+							<EmptyPlaceholder label='app policy' />
+						) : (
+							<DataInfiniteWrapper
+								name='admin_app'
+								keys={[searchQuery]}
+								className='space-y-1'
+								{...{fetchNextPage, hasNextPage, data}}
+							>
+								{(item) => <AppItem key={item.id} appData={item} />}
+							</DataInfiniteWrapper>
 						)}
-					</QueryWrapper>
-				</>
+					</DivAnimate>
+				</div>
 			)}
 		</DivAnimate>
 	)

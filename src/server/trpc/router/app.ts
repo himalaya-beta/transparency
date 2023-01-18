@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-non-null-assertion */
 /* eslint-disable unicorn/no-useless-undefined */
 import {z} from 'zod'
 import {publicProcedure, router, adminProcedure} from '../trpc'
@@ -22,22 +23,24 @@ export const appRouter = router({
 	search: publicProcedure
 		.input(
 			z.object({
-				query: z.string().optional(),
+				query: z.string(),
 				dataPerPage: z.number().optional(),
+				includeCriteria: z.boolean().optional(),
 				cursor: z.string().optional(),
 			})
 		)
-
 		.query(({ctx, input}) => {
+			const search = input.query === '' ? undefined : input.query
 			const perPage = input.dataPerPage ?? DEFAULT_PER_PAGE
 
 			return ctx.prisma.app
 				.findMany({
 					where: {
-						name: {search: input.query},
-						company: {search: input.query},
-						about: {search: input.query},
+						name: {search},
+						company: {search},
+						about: {search},
 					},
+					include: {AppCriteria: !!input.includeCriteria},
 					take: perPage + 1,
 					orderBy: {
 						updatedAt: 'desc',
@@ -48,7 +51,6 @@ export const appRouter = router({
 					let nextCursor: string | undefined = undefined
 
 					if (data.length > perPage) {
-						// eslint-disable-next-line @typescript-eslint/no-non-null-assertion
 						const lastItem = data.pop()!
 						nextCursor = lastItem.id
 					}

@@ -1,6 +1,6 @@
 import React from 'react'
 import {useRouter} from 'next/router'
-import {useSession} from 'next-auth/react'
+// import {useSession} from 'next-auth/react'
 import {useForm} from 'react-hook-form'
 import {zodResolver} from '@hookform/resolvers/zod'
 import {useAutoAnimate} from '@formkit/auto-animate/react'
@@ -17,7 +17,7 @@ import TextAreaInput from 'components/textarea-input'
 import {Button} from 'components/button'
 import {
 	PencilSquareIcon,
-	TrashIcon,
+	// TrashIcon,
 	XMarkIcon,
 } from '@heroicons/react/24/outline'
 
@@ -73,14 +73,14 @@ const ArticleDetailsPage = ({
 
 	const query = trpc.useContext().article.fetchAll
 
-	const {mutate: deleteArticle, isLoading: isDeleteLoading} =
-		trpc.article.delete.useMutation({
-			onError: (err) => alert(err.message),
-			onSuccess: () => {
-				query.invalidate()
-				router.push('/community')
-			},
-		})
+	// const {mutate: deleteArticle, isLoading: isDeleteLoading} =
+	// 	trpc.article.delete.useMutation({
+	// 		onError: (err) => alert(err.message),
+	// 		onSuccess: () => {
+	// 			query.invalidate()
+	// 			router.push('/community')
+	// 		},
+	// 	})
 
 	const {mutate: updateArticle, isLoading: isUpdateLoading} =
 		trpc.article.update.useMutation({
@@ -114,7 +114,7 @@ const ArticleDetailsPage = ({
 
 	const [toggleAnimation] = useAutoAnimate<HTMLDivElement>()
 
-	const {status, data} = useSession()
+	// const {status, data} = useSession()
 
 	return (
 		<>
@@ -124,7 +124,7 @@ const ArticleDetailsPage = ({
 				imageUrl={`https://${process.env.NEXT_PUBLIC_VERCEL_URL}/images/articles.jpg`}
 			/>
 			<main
-				className='container mx-auto max-w-screen-md space-y-8 px-6 pt-6'
+				className='container mx-auto max-w-screen-md space-y-8 px-6 pt-8'
 				ref={toggleAnimation}
 			>
 				{isEdit ? (
@@ -163,7 +163,7 @@ const ArticleDetailsPage = ({
 							</p>
 						</div>
 						<p className='whitespace-pre-wrap md:text-lg'>{article.content}</p>
-						{status === 'authenticated' &&
+						{/* {status === 'authenticated' &&
 							(data.user.role === 'ADMIN' ||
 								data.user.id === article.authorId) && (
 								<div className='flex gap-4'>
@@ -183,7 +183,7 @@ const ArticleDetailsPage = ({
 										Update <PencilSquareIcon className='h-4 w-4' />
 									</Button>
 								</div>
-							)}
+							)} */}
 					</>
 				)}
 			</main>

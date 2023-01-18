@@ -7,23 +7,26 @@ import {useForm} from 'react-hook-form'
 import {zodResolver} from '@hookform/resolvers/zod'
 
 import {trpc} from 'utils/trpc'
-import {slugify} from 'utils/literal'
-import useDeviceDetect from 'utils/hooks/use-device-detect'
+import {slugify, truncate} from 'utils/literal'
+import {useDebounceState} from 'utils/hooks/use-debounce'
 
 import NavbarLayout from 'layouts/navbar'
 import MetaHead from 'components/meta-head'
+import DivAnimate from 'components/div-animate'
 import {
 	EmptyPlaceholder,
 	ErrorPlaceholder,
 	LoadingPlaceholder,
 } from 'components/query-wrapper'
-import PaginationNav from 'components/pagination-nav'
-import DivAnimate from 'components/div-animate'
+import DataInfiniteWrapper from 'components/query-infinite-wrapper'
+import Modal from 'components/modal'
 import FormWrapper from 'components/form-wrapper'
 import TextAreaInput from 'components/textarea-input'
 import {Button} from 'components/button'
+// import {IconButton} from 'components/button'
 import {SectionSeparator, TriangleSymbol} from 'components/ornaments'
 import {PencilIcon} from '@heroicons/react/24/solid'
+// import {PlusIcon} from '@heroicons/react/24/outline'
 
 import {type SubmitHandler} from 'react-hook-form'
 import {
@@ -31,23 +34,48 @@ import {
 	type ArticleCreateType,
 	type ArticleType,
 } from 'types/article'
+import {Dialog} from '@headlessui/react'
 
 const PER_PAGE = 9
 
 export default function ArticlePage() {
-	const [page, setPage] = React.useState(1)
+	const [isOpen, setIsOpen] = React.useState(false)
+	const [searchQuery, setSearchQuery] = useDebounceState<string>('', 350)
 
 	const {error, refetch, data, hasNextPage, fetchNextPage, isError, isLoading} =
 		trpc.article.fetchAll.useInfiniteQuery(
-			{dataPerPage: PER_PAGE},
+			{dataPerPage: PER_PAGE, query: searchQuery},
 			{
-				refetchOnWindowFocus: false,
 				staleTime: 60_000,
 				getNextPageParam: (lastPage) => lastPage.nextCursor,
 			}
 		)
+	const paginationProps = {data, hasNextPage, fetchNextPage}
 
-	const device = useDeviceDetect()
+	const methods = useForm<ArticleCreateType>({
+		mode: 'onTouched',
+		resolver: zodResolver(articleCreateSchema),
+	})
+
+	const {mutate: create, isLoading: isCreateLoading} =
+		trpc.article.create.useMutation({
+			onError: (error) => {
+				let message = error.message
+				if (error.data?.code === 'UNAUTHORIZED') {
+					message = 'You have to logged in to create article.'
+				}
+				alert(message)
+			},
+			onSuccess: () => {
+				refetch()
+				methods.reset()
+				setIsOpen(false)
+			},
+		})
+
+	const onValidSubmit: SubmitHandler<ArticleCreateType> = (data) => {
+		create(data)
+	}
 
 	return (
 		<>
@@ -57,7 +85,19 @@ export default function ArticlePage() {
 				imageUrl={`https://${process.env.NEXT_PUBLIC_VERCEL_URL}/images/articles.jpg`}
 			/>
 			<main className='container mx-auto max-w-screen-lg space-y-8 px-5 pt-8 md:px-8'>
-				<h1 className='text-2xl'>Community Blog</h1>
+				<div className='space-y-2'>
+					<div className='flex gap-2'>
+						<h1 className='text-2xl'>Community Blog</h1>
+						{/* <IconButton onClick={() => void setIsOpen(true)}>
+							<PlusIcon className='w-6 text-brand-600' />
+						</IconButton> */}
+					</div>
+					<input
+						className='h-10 w-full flex-1 rounded rounded-tl-lg rounded-br-2xl bg-gradient-to-br from-white via-brand-100 to-brand-300 py-2 px-3 placeholder:font-body placeholder:text-sm placeholder:italic md:w-2/3'
+						onChange={(e) => void setSearchQuery(e.target.value)}
+						placeholder='by title or content...'
+					/>
+				</div>
 
 				<DivAnimate>
 					{isLoading ? (
@@ -67,53 +107,50 @@ export default function ArticlePage() {
 					) : data.pages[0]?.items.length === 0 ? (
 						<EmptyPlaceholder label='app policy' />
 					) : (
-						<React.Fragment>
-							{device.isPhone ? (
-								<DivAnimate className='space-y-4'>
-									{data.pages.map(({items}) =>
-										items.map((item) => <Card key={item.id} {...item} />)
-									)}
-
-									{hasNextPage && (
-										<div className='flex justify-center'>
-											<button
-												onClick={() => fetchNextPage()}
-												className='rounded-lg bg-white/20 px-4 py-2'
-											>
-												Load more ..
-											</button>
-										</div>
-									)}
-								</DivAnimate>
-							) : (
-								<DivAnimate>
-									{data.pages.map(({items, nextCursor}, i) => {
-										if (i + 1 !== page) return
-										return (
-											<DivAnimate
-												className='grid grid-cols-6 gap-4'
-												key={`section_md_${nextCursor}`}
-											>
-												{items.map((item) => (
-													<Card
-														key={item.id}
-														{...item}
-														className='col-span-full md:col-span-3 lg:col-span-2'
-													/>
-												))}
-											</DivAnimate>
-										)
-									})}
-									<PaginationNav
-										{...{page, setPage, hasNextPage, fetchNextPage}}
-									/>
-								</DivAnimate>
+						<DataInfiniteWrapper
+							name='community'
+							className='grid grid-cols-6 gap-4'
+							{...paginationProps}
+						>
+							{(item) => (
+								<Card
+									key={item.id}
+									className='col-span-full md:col-span-3 lg:col-span-2'
+									{...item}
+								/>
 							)}
-						</React.Fragment>
+						</DataInfiniteWrapper>
 					)}
 				</DivAnimate>
 
-				<CreateArticleForm refetchList={refetch} />
+				<Modal
+					isOpen={isOpen}
+					setIsOpen={setIsOpen}
+					className='max-w-screen-md'
+				>
+					<div className='border-6 container max-w-screen-lg space-y-2 rounded-lg border-light-bg/40 bg-gradient-to-br from-brand-700 via-brand-800 to-brand-900 py-6 px-8'>
+						<SectionSeparator>
+							<Dialog.Title as='h2'>Create new</Dialog.Title>
+						</SectionSeparator>
+						<div className=''>
+							<FormWrapper
+								methods={methods}
+								onValidSubmit={onValidSubmit}
+								className='flex flex-col gap-4'
+							>
+								<TextAreaInput<ArticleCreateType> name='title' rows={2} />
+								<TextAreaInput<ArticleCreateType> name='content' rows={8} />
+								<Button
+									type='submit'
+									variant='outlined'
+									isLoading={isCreateLoading}
+								>
+									Create <PencilIcon className='h-4 w-4' />
+								</Button>
+							</FormWrapper>
+						</div>
+					</div>
+				</Modal>
 			</main>
 		</>
 	)
@@ -123,23 +160,23 @@ const Card = ({
 	id,
 	title,
 	content,
-	createdAt,
+	updatedAt,
 	author,
 	className,
 }: ArticleType & {className?: string}) => {
 	return (
 		<Link
 			href={`./community/${slugify(title, id)}`}
-			className={`hover:shadow-bg-light relative flex h-64 flex-col overflow-hidden rounded rounded-br-3xl rounded-tl-2xl border-2 border-light-head/25 bg-light-head bg-opacity-20 p-6 pb-4 duration-100 hover:bg-opacity-30 hover:shadow-lg ${className}`}
+			className={`min-h-48 relative flex h-fit max-h-64 flex-col overflow-hidden rounded rounded-br-3xl rounded-tl-2xl border border-light-head/25 bg-gradient-to-br from-light-bg/30 to-light-bg/5 p-6 shadow-lg transition-all duration-100 hover:scale-105 hover:from-light-bg/40 hover:shadow-light-bg/25 ${className}`}
 		>
 			<div className='absolute top-0 left-0'>
-				<div className='flex rounded-br-xl bg-dark-bg/30 shadow'>
+				<div className='flex rounded-br-2xl bg-dark-bg/30'>
 					<div className='flex w-16 items-center justify-center'>
 						{/* <StarIcon className='text-sm text-yellow-300' /> */}
 					</div>
 					<div className='py-0.5 px-4 text-sm text-light-head'>
 						<time className='font-body text-sm italic'>
-							{dayjs(createdAt).format('MMM D, YYYY')}
+							{dayjs(updatedAt).format('MMM D, YYYY')}
 						</time>
 					</div>
 				</div>
@@ -155,69 +192,20 @@ const Card = ({
 					</div>
 				)}
 			</div>
-			<div className='mt-1 w-full text-xl text-light-head'>
-				{author.image && <div className='float-left mr-2 h-12 w-12' />}
-				<h2 className='pt-1 pb-0.5 leading-5 line-clamp-3'>{title}</h2>
-				<div className='mt-1 flex h-1 items-center gap-2'>
+			<div className='mt-1 h-fit w-full text-xl text-light-head'>
+				<div className='float-left mr-2 h-12 w-12' />
+				<h2>{truncate(title, 55)}</h2>
+				<div className='mt-0.5 flex h-1 items-center gap-2'>
 					<div className='h-[1px] w-auto grow rounded-full bg-brand-500/50' />
 					<TriangleSymbol className='' />
 				</div>
+				<p className='float-right mr-5 text-sm italic'>by {author.name}</p>
 			</div>
 
-			<p className='pt-4 text-sm leading-5 text-light-body line-clamp-6'>
+			<p className='pt-3 text-right indent-12 leading-5 text-light-body line-clamp-5'>
 				{content}
 			</p>
 		</Link>
-	)
-}
-
-const CreateArticleForm = ({refetchList}: {refetchList: () => void}) => {
-	const methods = useForm<ArticleCreateType>({
-		mode: 'onTouched',
-		resolver: zodResolver(articleCreateSchema),
-	})
-
-	const {mutate, isLoading} = trpc.article.create.useMutation({
-		onError: (error) => {
-			let message = error.message
-			if (error.data?.code === 'UNAUTHORIZED') {
-				message = 'You have to logged in to create article.'
-			}
-			alert(message)
-		},
-		onSuccess: () => {
-			refetchList()
-			methods.reset()
-		},
-	})
-
-	const onValidSubmit: SubmitHandler<ArticleCreateType> = (data) => {
-		mutate(data)
-	}
-
-	return (
-		<div className='space-y-2'>
-			<SectionSeparator>Create new</SectionSeparator>
-			<div className='mx-auto lg:w-3/4 '>
-				<FormWrapper
-					methods={methods}
-					onValidSubmit={onValidSubmit}
-					className='flex flex-col gap-4'
-				>
-					<TextAreaInput<ArticleCreateType>
-						name='title'
-						inputClassName='h-[5.4em] md:h-[4em] lg:h-[2.5em]'
-					/>
-					<TextAreaInput<ArticleCreateType>
-						name='content'
-						inputClassName='h-[16em] md:h-[12.8em] lg:h-[10em]'
-					/>
-					<Button type='submit' variant='outlined' isLoading={isLoading}>
-						Create <PencilIcon className='h-4 w-4' />
-					</Button>
-				</FormWrapper>
-			</div>
-		</div>
 	)
 }
 

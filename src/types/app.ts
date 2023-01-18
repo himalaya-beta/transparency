@@ -15,6 +15,7 @@ export const appCreateSchema = z.object({
 	offices: z.string().nullable(),
 	about: z.string().min(80, 'Provide more meaningful description'),
 	criteria: z.array(criteriaCreateSchema).min(1),
+	versionDate: z.date(),
 })
 
 export const appUpdateSchema = appCreateSchema

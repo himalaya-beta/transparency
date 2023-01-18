@@ -2,17 +2,21 @@
 import React from 'react'
 import {useSession} from 'next-auth/react'
 import {z} from 'zod'
-import {useForm, useFieldArray, UseFormRegister} from 'react-hook-form'
+import {useForm, useFieldArray, useController} from 'react-hook-form'
 import {zodResolver} from '@hookform/resolvers/zod'
+import dayjs from 'dayjs'
 
 import {trpc} from 'utils/trpc'
+import {useDebounceState} from 'utils/hooks/use-debounce'
 
+import Datepicker from 'react-tailwindcss-datepicker'
 import DivAnimate from 'components/div-animate'
 import QueryWrapper, {
 	EmptyPlaceholder,
 	ErrorPlaceholder,
 	LoadingPlaceholder,
 } from 'components/query-wrapper'
+import DataInfiniteWrapper from 'components/query-infinite-wrapper'
 import FormWrapper from 'components/form-wrapper'
 import TextAreaInput from 'components/textarea-input'
 import {Button, IconButton} from 'components/button'
@@ -30,9 +34,11 @@ import {
 import {criteriaUpdateSchema} from 'types/criteria'
 import {appCreateSchema, type AppType} from 'types/app'
 import {type AppCriteria} from 'server/trpc/router/app-criteria'
-import {type SubmitHandler} from 'react-hook-form'
-import {useDebounceState} from 'utils/hooks/use-debounce'
-import DataInfiniteWrapper from 'components/query-infinite-wrapper'
+import {
+	type SubmitHandler,
+	type UseFormRegister,
+	type Control,
+} from 'react-hook-form'
 
 const criteriaSchema = criteriaUpdateSchema
 	.pick({id: true, type: true, parentId: true})
@@ -58,12 +64,11 @@ const criteriasSchema = z.object({
 })
 type CriteriaType = z.infer<typeof criteriaSchema>
 
+const formSchema = appCreateSchema.merge(criteriasSchema)
+type FormType = z.infer<typeof formSchema>
+
 export default function AppSection() {
 	const [searchQuery, setSearchQuery] = useDebounceState('', 350)
-
-	//	-----------------------   SCHEMA & TYPES   --------------------------- //
-	const formSchema = appCreateSchema.merge(criteriasSchema)
-	type FormType = z.infer<typeof formSchema>
 
 	// ------------------------   INITIALIZE LIB   --------------------------- //
 	const {data: auth} = useSession()
@@ -79,6 +84,7 @@ export default function AppSection() {
 		watch,
 		setValue,
 		formState: {errors},
+		control,
 	} = methods
 
 	// ------------------------ QUERIES, MUTATIONS --------------------------- //
@@ -149,7 +155,7 @@ export default function AppSection() {
 					>
 						<div className='mb-2 grid grid-cols-2 gap-x-8 gap-y-2'>
 							<TextAreaInput<FormType> name='name' label='App name' rows={1} />
-							<div />
+							<VersionDateInput control={control} />
 							<TextAreaInput<FormType>
 								name='company'
 								label='Company name'
@@ -298,10 +304,6 @@ export default function AppSection() {
 }
 
 const AppItem = ({appData: appP}: {appData: AppType}) => {
-	// ------------------------   SCHEMA & TYPES   --------------------------- //
-	const formSchema = appCreateSchema.merge(criteriasSchema)
-	type FormType = z.infer<typeof formSchema>
-
 	// ------------------------   INITIALIZE LIB   --------------------------- //
 	const methods = useForm<FormType>({
 		resolver: zodResolver(formSchema),
@@ -313,6 +315,7 @@ const AppItem = ({appData: appP}: {appData: AppType}) => {
 		register,
 		reset,
 		formState: {dirtyFields, isDirty},
+		control,
 	} = methods
 
 	// ------------------------ QUERIES, MUTATIONS --------------------------- //
@@ -472,7 +475,7 @@ const AppItem = ({appData: appP}: {appData: AppType}) => {
 									defaultValue={appP.name}
 									rows={1}
 								/>
-								<div />
+								<VersionDateInput control={control} />
 								<TextAreaInput<FormType>
 									name='company'
 									label='Company name'
@@ -641,5 +644,42 @@ const CheckInput = ({
 				/>
 			)}
 		</>
+	)
+}
+
+const VersionDateInput = ({control}: {control: Control<FormType>}) => {
+	const {
+		field,
+		formState: {errors},
+	} = useController({
+		name: 'versionDate',
+		control,
+		rules: {required: true},
+	})
+
+	const date = field.value ? dayjs(field.value).format('YYYY-MM-DD') : null
+
+	return (
+		<div>
+			<label>Version date</label>
+			<Datepicker
+				inputClassName='rounded bg-light-bg'
+				primaryColor='blue'
+				value={{
+					startDate: date,
+					endDate: date,
+				}}
+				onChange={(value) => {
+					field.onChange(dayjs(value?.startDate).toDate())
+				}}
+				useRange={false}
+				asSingle={true}
+			/>
+			<ErrorMessage
+				name='versionDate'
+				errors={errors}
+				render={(err) => <small className='text-red-500'>{err.message}</small>}
+			/>
+		</div>
 	)
 }

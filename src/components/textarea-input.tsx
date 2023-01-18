@@ -50,7 +50,7 @@ const TextAreaInput = <T,>({
 				id={slugify(name)}
 				{...register(name)}
 				{...props}
-				className={`resize-none overflow-hidden rounded bg-light-bg/80 py-2 px-4 ${
+				className={`resize-none overflow-hidden rounded bg-light-bg py-2 px-4 ${
 					inputClassName ?? ''
 				}`}
 			/>

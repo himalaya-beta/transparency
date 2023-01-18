@@ -3,7 +3,7 @@ import {create} from 'zustand'
 import {immer} from 'zustand/middleware/immer'
 import {isArrayIdentic} from 'utils/array'
 
-const pagesAvailable = ['policy', 'community'] as const
+const pagesAvailable = ['policy', 'community', 'admin_app'] as const
 export type PagesAvailable = typeof pagesAvailable[number]
 type PaginationObject = {
 	keys: Array<string>
@@ -23,6 +23,7 @@ export const usePagination = create<initialValues>()(
 	immer((set) => ({
 		policy: [],
 		community: [],
+		admin_app: [],
 		initParams: (name, keys) =>
 			set((state) => {
 				state[name].push({keys, pages: [1], pageActive: 1})

@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-non-null-assertion */
 /* eslint-disable unicorn/no-useless-undefined */
 import {z} from 'zod'
 import {publicProcedure, router, adminProcedure} from '../trpc'
@@ -24,6 +25,7 @@ export const appRouter = router({
 			z.object({
 				query: z.string(),
 				dataPerPage: z.number().optional(),
+				includeCriteria: z.boolean().optional(),
 				cursor: z.string().optional(),
 			})
 		)
@@ -38,6 +40,7 @@ export const appRouter = router({
 						company: {search},
 						about: {search},
 					},
+					include: {AppCriteria: !!input.includeCriteria},
 					take: perPage + 1,
 					orderBy: {
 						updatedAt: 'desc',
@@ -48,7 +51,6 @@ export const appRouter = router({
 					let nextCursor: string | undefined = undefined
 
 					if (data.length > perPage) {
-						// eslint-disable-next-line @typescript-eslint/no-non-null-assertion
 						const lastItem = data.pop()!
 						nextCursor = lastItem.id
 					}

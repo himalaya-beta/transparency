@@ -1,8 +1,10 @@
+/* eslint-disable @typescript-eslint/no-non-null-assertion */
 import React from 'react'
 import {create} from 'zustand'
 import {shallow} from 'zustand/shallow'
-import produce from 'immer'
 import {useAutoAnimate} from '@formkit/auto-animate/react'
+
+import {immer} from 'zustand/middleware/immer'
 
 import {
 	ChevronDoubleLeftIcon,
@@ -46,46 +48,28 @@ type initialValues = Record<PagesAvailable, Array<PaginationObject>> & {
 		pageActive: number
 	) => void
 }
-
-const usePagination = create<initialValues>()((set) => ({
-	policy: [],
-	community: [],
-	// TODO: Use immer middleware
-	initParams: (name, keys) =>
-		set(
-			produce((state) => {
+const usePagination = create<initialValues>()(
+	immer((set) => ({
+		policy: [],
+		community: [],
+		initParams: (name, keys) =>
+			set((state) => {
 				state[name].push({keys, pages: [1], pageActive: 1})
-			})
-		),
-	addPage: (name, keys) =>
-		set((state) => {
-			const idx = state[name].findIndex((item) =>
-				isArrayIdentic(item.keys, keys)
-			)
-			if (idx === -1) return {}
-
-			const updated = produce(state[name], (draft) => {
-				// eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-				draft[idx]!.pages.push(draft[idx]!.pages.length + 1)
-			})
-
-			return {[name]: updated}
-		}),
-	setPageActive: (name, keys, pageActive) =>
-		set((state) => {
-			const idx = state[name].findIndex((item) =>
-				isArrayIdentic(item.keys, keys)
-			)
-			if (idx === -1) return {}
-
-			const updated = produce(state[name], (draft) => {
-				// eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-				draft[idx]!.pageActive = pageActive
-			})
-
-			return {[name]: updated}
-		}),
-}))
+			}),
+		addPage: (name, keys) =>
+			set((state) => {
+				const object = state[name]
+				const i = object.findIndex((item) => isArrayIdentic(item.keys, keys))
+				if (i !== -1) object[i]!.pages.push(object[i]!.pages.length + 1)
+			}),
+		setPageActive: (name, keys, destination) =>
+			set((state) => {
+				const object = state[name]
+				const i = object.findIndex((item) => isArrayIdentic(item.keys, keys))
+				if (i !== -1) object[i]!.pageActive = destination
+			}),
+	}))
+)
 
 type Props<T> = {
 	name: PagesAvailable

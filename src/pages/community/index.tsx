@@ -23,8 +23,10 @@ import Modal from 'components/modal'
 import FormWrapper from 'components/form-wrapper'
 import TextAreaInput from 'components/textarea-input'
 import {Button} from 'components/button'
+// import {IconButton} from 'components/button'
 import {SectionSeparator, TriangleSymbol} from 'components/ornaments'
 import {PencilIcon} from '@heroicons/react/24/solid'
+// import {PlusIcon} from '@heroicons/react/24/outline'
 
 import {type SubmitHandler} from 'react-hook-form'
 import {
@@ -32,6 +34,7 @@ import {
 	type ArticleCreateType,
 	type ArticleType,
 } from 'types/article'
+import {Dialog} from '@headlessui/react'
 
 const PER_PAGE = 9
 
@@ -66,6 +69,7 @@ export default function ArticlePage() {
 			onSuccess: () => {
 				refetch()
 				methods.reset()
+				setIsOpen(false)
 			},
 		})
 
@@ -81,7 +85,19 @@ export default function ArticlePage() {
 				imageUrl={`https://${process.env.NEXT_PUBLIC_VERCEL_URL}/images/articles.jpg`}
 			/>
 			<main className='container mx-auto max-w-screen-lg space-y-8 px-5 pt-8 md:px-8'>
-				<h1 className='text-2xl'>Community Blog</h1>
+				<div className='space-y-2'>
+					<div className='flex gap-2'>
+						<h1 className='text-2xl'>Community Blog</h1>
+						{/* <IconButton onClick={() => void setIsOpen(true)}>
+							<PlusIcon className='w-6 text-brand-600' />
+						</IconButton> */}
+					</div>
+					<input
+						className='h-10 w-full flex-1 rounded rounded-tl-lg rounded-br-2xl bg-gradient-to-br from-white via-brand-100 to-brand-300 py-2 px-3 placeholder:font-body placeholder:text-sm placeholder:italic md:w-2/3'
+						onChange={(e) => void setSearchQuery(e.target.value)}
+						placeholder='by title or content...'
+					/>
+				</div>
 
 				<DivAnimate>
 					{isLoading ? (
@@ -151,7 +167,7 @@ const Card = ({
 	return (
 		<Link
 			href={`./community/${slugify(title, id)}`}
-			className={`min-h-48 relative flex max-h-64 flex-col overflow-hidden rounded rounded-br-3xl rounded-tl-2xl border border-light-head/25 bg-gradient-to-br from-light-bg/30 to-light-bg/5 p-6 shadow-lg transition-all duration-100 hover:scale-105 hover:from-light-bg/40 hover:shadow-light-bg/25 ${className}`}
+			className={`min-h-48 relative flex h-fit max-h-64 flex-col overflow-hidden rounded rounded-br-3xl rounded-tl-2xl border border-light-head/25 bg-gradient-to-br from-light-bg/30 to-light-bg/5 p-6 shadow-lg transition-all duration-100 hover:scale-105 hover:from-light-bg/40 hover:shadow-light-bg/25 ${className}`}
 		>
 			<div className='absolute top-0 left-0'>
 				<div className='flex rounded-br-2xl bg-dark-bg/30'>
@@ -178,7 +194,7 @@ const Card = ({
 			</div>
 			<div className='mt-1 h-fit w-full text-xl text-light-head'>
 				<div className='float-left mr-2 h-12 w-12' />
-				<h2>{truncate(title, 58)}</h2>
+				<h2>{truncate(title, 55)}</h2>
 				<div className='mt-0.5 flex h-1 items-center gap-2'>
 					<div className='h-[1px] w-auto grow rounded-full bg-brand-500/50' />
 					<TriangleSymbol className='' />

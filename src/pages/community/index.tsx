@@ -36,12 +36,12 @@ const PER_PAGE = 9
 
 export default function ArticlePage() {
 	const [isOpen, setIsOpen] = React.useState(false)
+	const [searchQuery, setSearchQuery] = useDebounceState<string>('', 350)
 
 	const {error, refetch, data, hasNextPage, fetchNextPage, isError, isLoading} =
 		trpc.article.fetchAll.useInfiniteQuery(
-			{dataPerPage: PER_PAGE},
+			{dataPerPage: PER_PAGE, query: searchQuery},
 			{
-				refetchOnWindowFocus: false,
 				staleTime: 60_000,
 				getNextPageParam: (lastPage) => lastPage.nextCursor,
 			}

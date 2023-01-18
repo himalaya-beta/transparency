@@ -106,9 +106,15 @@ export default function ArticlePage() {
 					)}
 				</DivAnimate>
 
-				<Modal isOpen={isOpen} setIsOpen={setIsOpen}>
-					<div className='border-6 container max-w-screen-md space-y-2 rounded-lg border-light-bg/40 bg-gradient-to-br from-brand-700 via-brand-800 to-brand-900 py-6 px-8'>
-						<SectionSeparator>Create new</SectionSeparator>
+				<Modal
+					isOpen={isOpen}
+					setIsOpen={setIsOpen}
+					className='max-w-screen-md'
+				>
+					<div className='border-6 container max-w-screen-lg space-y-2 rounded-lg border-light-bg/40 bg-gradient-to-br from-brand-700 via-brand-800 to-brand-900 py-6 px-8'>
+						<SectionSeparator>
+							<Dialog.Title as='h2'>Create new</Dialog.Title>
+						</SectionSeparator>
 						<div className=''>
 							<FormWrapper
 								methods={methods}

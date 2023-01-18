@@ -174,7 +174,7 @@ export default function SideBar() {
 				</DivAnimate>
 
 				<Modal isOpen={isModalOpen} setIsOpen={setIsModalOpen}>
-					<ul className='relative max-w-screen-2xl rounded-lg bg-gradient-to-br from-brand-700 via-brand-900 to-dark-bg py-6 pl-4 pr-4 md:pl-2'>
+					<ul className='relative rounded-lg bg-gradient-to-br from-brand-700 via-brand-900 to-dark-bg py-6 pl-4 pr-4 md:pl-2'>
 						<div className='absolute right-0 top-0 h-full w-[calc((100%-12px)*0.66)] rounded bg-dark-bg/10 md:w-[calc((100%-30px)*0.75)]' />
 						<div className='absolute right-0 top-0 z-20'>
 							<IconButton onClick={() => setIsModalOpen(false)}>

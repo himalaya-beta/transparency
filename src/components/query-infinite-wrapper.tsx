@@ -1,75 +1,22 @@
-/* eslint-disable @typescript-eslint/no-non-null-assertion */
 import React from 'react'
-import {create} from 'zustand'
 import {shallow} from 'zustand/shallow'
 import {useAutoAnimate} from '@formkit/auto-animate/react'
 
-import {immer} from 'zustand/middleware/immer'
+import useDeviceDetect from 'utils/hooks/use-device-detect'
+import {usePagination} from 'utils/hooks/use-store'
+import {isArrayIdentic} from 'utils/array'
 
 import {
 	ChevronDoubleLeftIcon,
 	ChevronDoubleRightIcon,
 } from '@heroicons/react/24/outline'
 
-import useDeviceDetect from 'utils/hooks/use-device-detect'
-
 import {
 	type FetchNextPageOptions,
 	type UseInfiniteQueryResult,
 	type InfiniteData,
 } from '@tanstack/react-query'
-
-const isArrayIdentic = (a: string[], b: string[]) => {
-	if (a.length === b.length) {
-		for (const [i, element] of a.entries()) {
-			if (element !== b[i]) {
-				return false
-			}
-		}
-		return true
-	} else {
-		return false
-	}
-}
-
-const pagesAvailable = ['policy', 'community'] as const
-type PagesAvailable = typeof pagesAvailable[number]
-type PaginationObject = {
-	keys: Array<string>
-	pages: Array<number>
-	pageActive: number
-}
-type initialValues = Record<PagesAvailable, Array<PaginationObject>> & {
-	initParams: (name: PagesAvailable, keys: Array<string>) => void
-	addPage: (name: PagesAvailable, keys: Array<string>) => void
-	setPageActive: (
-		name: PagesAvailable,
-		keys: Array<string>,
-		pageActive: number
-	) => void
-}
-const usePagination = create<initialValues>()(
-	immer((set) => ({
-		policy: [],
-		community: [],
-		initParams: (name, keys) =>
-			set((state) => {
-				state[name].push({keys, pages: [1], pageActive: 1})
-			}),
-		addPage: (name, keys) =>
-			set((state) => {
-				const object = state[name]
-				const i = object.findIndex((item) => isArrayIdentic(item.keys, keys))
-				if (i !== -1) object[i]!.pages.push(object[i]!.pages.length + 1)
-			}),
-		setPageActive: (name, keys, destination) =>
-			set((state) => {
-				const object = state[name]
-				const i = object.findIndex((item) => isArrayIdentic(item.keys, keys))
-				if (i !== -1) object[i]!.pageActive = destination
-			}),
-	}))
-)
+import {type PagesAvailable} from 'utils/hooks/use-store'
 
 type Props<T> = {
 	name: PagesAvailable

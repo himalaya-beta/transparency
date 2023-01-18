@@ -566,11 +566,11 @@ const AppItem = ({appData: appP}: {appData: AppType}) => {
 					</QueryWrapper>
 
 					{isDirty && isExpanded && (
-						<div className='float-right space-x-1 '>
+						<div className='float-right h-8 space-x-1'>
 							<Button
 								type='submit'
 								variant='filled'
-								className='px-2 py-1'
+								className='h-full py-0 px-2'
 								isLoading={criteriaUpdate.isLoading || appUpdate.isLoading}
 							>
 								Save
@@ -578,7 +578,7 @@ const AppItem = ({appData: appP}: {appData: AppType}) => {
 							<Button
 								type='reset'
 								variant='outlined'
-								className='px-2 py-0.5'
+								className='px-2 py-px'
 								onClick={() => reset()}
 							>
 								Cancel

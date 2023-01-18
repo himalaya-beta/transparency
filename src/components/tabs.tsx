@@ -22,7 +22,7 @@ export default function Tabs({
 											? 'border-gray-200/75 font-heading font-extrabold'
 											: 'border-transparent font-normal'
 									}
-                  whitespace-nowrap border-t-2 px-4 py-2 text-sm hover:font-semibold
+                  whitespace-nowrap border-t-2 px-4 py-2 text-sm text-light-bg hover:font-semibold
                 `}
 							onClick={() => setTabActive(tab)}
 							aria-current={tabActive === tab ? 'page' : undefined}

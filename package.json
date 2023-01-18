@@ -26,6 +26,7 @@
     "@trpc/next": "^10.7.0",
     "@trpc/react-query": "^10.7.0",
     "@trpc/server": "^10.7.0",
+    "clsx": "^1.2.1",
     "cuid": "^2.1.8",
     "dayjs": "^1.11.7",
     "immer": "^9.0.18",

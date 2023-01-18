@@ -1,7 +1,7 @@
 import React from 'react'
 import {useFormContext} from 'react-hook-form'
 import {ErrorMessage} from '@hookform/error-message'
-import {capFirstChar} from 'utils/literal'
+import {capFirstChar, slugify} from 'utils/literal'
 
 type InputProps<T> = React.TextareaHTMLAttributes<HTMLTextAreaElement> & {
 	name: keyof T
@@ -27,7 +27,9 @@ const TextAreaInput = <T,>({
 	} = useFormContext()
 
 	React.useEffect(() => {
-		const textarea = document.querySelector(`#${name}`) as HTMLTextAreaElement
+		const textarea = document.querySelector(
+			`#${slugify(name)}`
+		) as HTMLTextAreaElement
 		const resizeHeight = () => {
 			textarea.style.height = 'auto'
 			textarea.style.height = `${textarea.scrollHeight}px`
@@ -45,7 +47,7 @@ const TextAreaInput = <T,>({
 				{label ?? capFirstChar(name)}
 			</label>
 			<textarea
-				id={name}
+				id={slugify(name)}
 				{...register(name)}
 				{...props}
 				className={`resize-none overflow-hidden rounded bg-light-bg/80 py-2 px-4 ${

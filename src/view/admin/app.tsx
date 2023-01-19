@@ -42,6 +42,7 @@ import {
 	type UseFormRegister,
 	type Control,
 } from 'react-hook-form'
+import cn from 'clsx'
 
 const criteriaSchema = criteriaUpdateSchema
 	.pick({id: true, type: true, parentId: true})
@@ -302,7 +303,7 @@ export default function AppSection() {
 						<input
 							className='h-10 w-1/2 rounded rounded-tl-lg rounded-br-2xl bg-gradient-to-br from-white via-brand-100 to-brand-300 py-2 px-3 placeholder:font-body placeholder:text-sm placeholder:italic'
 							onChange={(e) => void setSearchQuery(e.target.value)}
-							placeholder='name, company, keyword...'
+							placeholder='search by name, company, or description...'
 						/>
 					</div>
 
@@ -453,17 +454,24 @@ const AppItem = ({appData: appP}: {appData: AppType}) => {
 	}
 
 	return (
-		<div className='flex rounded-lg bg-dark-bg/25 py-3 px-2'>
-			<IconButton onClick={() => setIsExpanded(!isExpanded)} className='h-fit'>
-				{isExpanded ? (
-					<ChevronUpIcon className='h-6 w-6' />
-				) : (
-					<ChevronDownIcon className='h-6 w-6' />
+		<DivAnimate className='flex flex-1 flex-col justify-start overflow-clip rounded-lg bg-dark-bg/25'>
+			<div
+				className={cn(
+					'flex items-center justify-between pl-2',
+					isExpanded && 'rounded-t-lg bg-brand-800 shadow'
 				)}
-			</IconButton>
-
-			<DivAnimate className='flex flex-1 flex-col justify-start'>
-				<div className='flex items-center justify-between'>
+			>
+				<div className='flex py-2'>
+					<IconButton
+						onClick={() => setIsExpanded(!isExpanded)}
+						className='h-fit'
+					>
+						{isExpanded ? (
+							<ChevronUpIcon className='h-6 w-6' />
+						) : (
+							<ChevronDownIcon className='h-6 w-6' />
+						)}
+					</IconButton>
 					<div
 						className='space-y-0.5 hover:cursor-pointer'
 						onClick={() => setIsExpanded(!isExpanded)}
@@ -473,161 +481,173 @@ const AppItem = ({appData: appP}: {appData: AppType}) => {
 						</h2>
 						<p className='text-xs text-light-body/75'>{appP.company}</p>
 					</div>
-					<IconButton>
-						<TrashIcon
-							className='h-6 w-6 text-red-500'
-							onClick={() => appRemove.mutate({id: appP.id})}
-						/>
-					</IconButton>
 				</div>
-
-				<FormWrapper
-					className='pr-2'
-					methods={methods}
-					onValidSubmit={onEditApp}
-				>
-					{isExpanded && (
-						<IconButton className='absolute -right-0 z-10'>
+				{isExpanded ? (
+					<div className='mr-4 flex gap-2'>
+						<IconButton className='border border-brand-700 p-1 text-red-300 hover:bg-light-bg/75 hover:text-red-500'>
+							<TrashIcon
+								className='h-6 w-6 '
+								onClick={() => appRemove.mutate({id: appP.id})}
+							/>
+						</IconButton>
+						<IconButton className='border border-brand-700 p-1 text-brand-300 hover:bg-light-bg/75 hover:text-brand-700'>
 							<EllipsisHorizontalIcon
-								className='h-6 w-6 text-brand-600'
+								className='h-6 w-6 '
 								onClick={() => setIsEdit(!isEdit)}
 							/>
 						</IconButton>
-					)}
-					<DivAnimate>
-						{isEdit && isExpanded && (
-							<div className='my-2 grid grid-cols-4 gap-x-8 gap-y-2 '>
-								<TextAreaInput<FormType>
-									name='name'
-									label='App name'
-									defaultValue={appP.name}
-									rows={1}
-									wrapperClassName='col-span-2'
-								/>
-								<VersionDateInput control={control} />
-								<TextAreaInput<FormType>
-									name='company'
-									label='Company name'
-									defaultValue={appP.company}
-									rows={1}
-									wrapperClassName='col-span-2'
-								/>
-								<TextAreaInput<FormType>
-									name='headquarter'
-									rows={1}
-									defaultValue={appP.headquarter ?? ''}
-									wrapperClassName='col-span-2'
-								/>
-								<TextAreaInput<FormType>
-									name='registeredIn'
-									label='Registered city'
-									defaultValue={appP.registeredIn ?? ''}
-									rows={1}
-									wrapperClassName='col-span-2'
-								/>
-								<TextAreaInput<FormType>
-									name='offices'
-									rows={1}
-									defaultValue={appP.offices ?? ''}
-									wrapperClassName='col-span-2'
-								/>
-								<TextAreaInput<FormType>
-									name='about'
-									defaultValue={appP.about}
-									wrapperClassName='col-span-full'
-								/>
-								<TextAreaInput<FormType>
-									name='logo'
-									defaultValue={appP.logo ?? ''}
-									autoGrow={false}
-									wrapperClassName='col-span-3'
-								/>
-								<LogoPreview src={logoF} />
-							</div>
-						)}
-					</DivAnimate>
+					</div>
+				) : (
+					appP.logo && (
+						<Image
+							className='rounded-r-xl border-l-2 border-brand-800 object-cover shadow shadow-brand-700'
+							src={`${appP.logo}=w64-h64`}
+							alt='author picture'
+							width={64}
+							height={64}
+						/>
+					)
+				)}
+			</div>
 
-					<QueryWrapper {...criteriaQ}>
-						{(data) => (
-							<div className='w-full divide-y divide-gray-500/50 '>
-								{data.map((criteria, i) => {
-									const isChecked = criteriaF[i]?.checked
-									const hasChildren = criteria.children.length > 0
-									if (criteria.parentId || !isExpanded) return
-									return (
-										<DivAnimate
-											key={`${appP.id}_${criteria.id}`}
-											className='flex flex-col items-start py-2'
-										>
-											<input
-												type='hidden'
-												{...methods.register(`criteria.${i}.id` as const)}
-											/>
-											<input
-												type='hidden'
-												{...methods.register(`criteria.${i}.parentId` as const)}
-											/>
-											<input
-												type='hidden'
-												{...methods.register(`criteria.${i}.type` as const)}
-											/>
-											<CheckInput
-												idx={i}
-												criteriaForm={criteriaF}
-												criteria={criteria}
-												register={register}
-											/>
-
-											{isChecked && hasChildren && (
-												<div className='w-full pl-6 pt-1'>
-													{criteria.children.map((item) => {
-														const idx = data.findIndex((c) => c.id === item.id)
-														return (
-															<DivAnimate
-																key={`${appP.id}_${item.id}`}
-																className='flex flex-col'
-															>
-																<CheckInput
-																	idx={idx}
-																	register={register}
-																	criteriaForm={criteriaF}
-																	criteria={item}
-																/>
-															</DivAnimate>
-														)
-													})}
-												</div>
-											)}
-										</DivAnimate>
-									)
-								})}
-							</div>
-						)}
-					</QueryWrapper>
-
-					{isDirty && isExpanded && (
-						<div className='float-right h-8 space-x-1'>
-							<Button
-								type='submit'
-								variant='filled'
-								className='h-full py-0 px-2'
-								isLoading={criteriaUpdate.isLoading || appUpdate.isLoading}
-							>
-								Save
-							</Button>
-							<Button
-								type='reset'
-								variant='outlined'
-								className='px-2 py-px'
-								onClick={() => reset()}
-							>
-								Cancel
-							</Button>
+			<FormWrapper
+				className={cn('pl-10 pr-4', isExpanded && 'pb-4')}
+				methods={methods}
+				onValidSubmit={onEditApp}
+			>
+				<DivAnimate>
+					{isEdit && isExpanded && (
+						<div className='my-2 grid grid-cols-4 gap-x-8 gap-y-2'>
+							<TextAreaInput<FormType>
+								name='name'
+								label='App name'
+								defaultValue={appP.name}
+								rows={1}
+								wrapperClassName='col-span-2'
+							/>
+							<VersionDateInput control={control} />
+							<TextAreaInput<FormType>
+								name='company'
+								label='Company name'
+								defaultValue={appP.company}
+								rows={1}
+								wrapperClassName='col-span-2'
+							/>
+							<TextAreaInput<FormType>
+								name='headquarter'
+								rows={1}
+								defaultValue={appP.headquarter ?? ''}
+								wrapperClassName='col-span-2'
+							/>
+							<TextAreaInput<FormType>
+								name='registeredIn'
+								label='Registered city'
+								defaultValue={appP.registeredIn ?? ''}
+								rows={1}
+								wrapperClassName='col-span-2'
+							/>
+							<TextAreaInput<FormType>
+								name='offices'
+								rows={1}
+								defaultValue={appP.offices ?? ''}
+								wrapperClassName='col-span-2'
+							/>
+							<TextAreaInput<FormType>
+								name='about'
+								defaultValue={appP.about}
+								wrapperClassName='col-span-full'
+							/>
+							<TextAreaInput<FormType>
+								name='logo'
+								defaultValue={appP.logo ?? ''}
+								autoGrow={false}
+								wrapperClassName='col-span-3'
+							/>
+							<LogoPreview src={logoF} />
 						</div>
 					)}
-				</FormWrapper>
-			</DivAnimate>
-		</div>
+				</DivAnimate>
+
+				<QueryWrapper {...criteriaQ}>
+					{(data) => (
+						<div className='w-full divide-y divide-gray-500/50 '>
+							{data.map((criteria, i) => {
+								const isChecked = criteriaF[i]?.checked
+								const hasChildren = criteria.children.length > 0
+								if (criteria.parentId || !isExpanded) return
+								return (
+									<DivAnimate
+										key={`${appP.id}_${criteria.id}`}
+										className='flex flex-col items-start py-2'
+									>
+										<input
+											type='hidden'
+											{...methods.register(`criteria.${i}.id` as const)}
+										/>
+										<input
+											type='hidden'
+											{...methods.register(`criteria.${i}.parentId` as const)}
+										/>
+										<input
+											type='hidden'
+											{...methods.register(`criteria.${i}.type` as const)}
+										/>
+										<CheckInput
+											idx={i}
+											criteriaForm={criteriaF}
+											criteria={criteria}
+											register={register}
+										/>
+
+										{isChecked && hasChildren && (
+											<div className='w-full pl-6 pt-1'>
+												{criteria.children.map((item) => {
+													const idx = data.findIndex((c) => c.id === item.id)
+													return (
+														<DivAnimate
+															key={`${appP.id}_${item.id}`}
+															className='flex flex-col'
+														>
+															<CheckInput
+																idx={idx}
+																register={register}
+																criteriaForm={criteriaF}
+																criteria={item}
+															/>
+														</DivAnimate>
+													)
+												})}
+											</div>
+										)}
+									</DivAnimate>
+								)
+							})}
+						</div>
+					)}
+				</QueryWrapper>
+
+				{isDirty && isExpanded && (
+					<div className='float-right h-8 space-x-1'>
+						<Button
+							type='submit'
+							variant='filled'
+							className='h-full py-0 px-2 pl-3 pr-3'
+							isLoading={criteriaUpdate.isLoading || appUpdate.isLoading}
+						>
+							Save
+						</Button>
+						<Button
+							type='reset'
+							variant='outlined'
+							className='py-px pl-3 pr-3'
+							onClick={() => reset()}
+						>
+							Cancel
+						</Button>
+					</div>
+				)}
+			</FormWrapper>
+		</DivAnimate>
 	)
 }
 

@@ -1,4 +1,5 @@
 import React from 'react'
+import Image from 'next/image'
 import {useRouter} from 'next/router'
 // import {useSession} from 'next-auth/react'
 import {useForm} from 'react-hook-form'
@@ -10,10 +11,13 @@ import {trpc} from 'utils/trpc'
 import {extractIdFromSlug, slugify} from 'utils/literal'
 
 import NavbarLayout from 'layouts/navbar'
+import {DetailsPage} from 'layouts/details'
+
 import MetaHead from 'components/meta-head'
 import FormWrapper from 'components/form-wrapper'
 import TextAreaInput from 'components/textarea-input'
 import {Button} from 'components/button'
+import {VerticalHighlighter} from 'components/ornaments'
 import {
 	PencilSquareIcon,
 	// TrashIcon,
@@ -31,8 +35,6 @@ import {
 	type ArticleUpdateType,
 	type ArticleType,
 } from 'types/article'
-import {DetailsPage} from 'layouts/details'
-import {VerticalHighlighter} from 'components/ornaments'
 
 export const getStaticProps: GetStaticProps<{
 	article: ArticleType
@@ -151,13 +153,32 @@ const ArticleDetailsPage = ({
 					</FormWrapper>
 				) : (
 					<>
-						<div className='relative'>
+						<div className='relative space-y-2'>
 							<VerticalHighlighter />
 							<h1 className='text-3xl'>{article.title}</h1>
-							<p className='italic text-opacity-75'>by {article.author.name}</p>
-							<p className='text-right text-sm italic md:text-base'>
-								{dayjs(article.updatedAt).format('D MMMM YYYY')}
-							</p>
+							<div className='flex items-end justify-between'>
+								<div className='flex items-center gap-3'>
+									{article.author.image && (
+										<div className='z-10 h-10 w-10 shadow-xl'>
+											<Image
+												className='h-full w-full rounded-l-lg border-0 border-l-0 border-brand-300 object-cover'
+												src={article.author.image}
+												alt='author picture'
+												width={48}
+												height={48}
+											/>
+										</div>
+									)}
+									<p className='rounded-lg border-r-2 border-brand-300 pr-4 italic leading-5 text-opacity-90'>
+										<span className='italic'>written by</span>
+										<br />
+										<span className='font-bold'>{article.author.name}</span>
+									</p>
+								</div>
+								<p className='text-right text-sm italic md:text-base'>
+									{dayjs(article.updatedAt).format('D MMMM YYYY')}
+								</p>
+							</div>
 						</div>
 
 						<div className='mt-6'>

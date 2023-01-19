@@ -1,18 +1,23 @@
 /* eslint-disable unicorn/no-null */
 import React from 'react'
+import Image from 'next/image'
 import {useSession} from 'next-auth/react'
 import {z} from 'zod'
-import {useForm, useFieldArray, UseFormRegister} from 'react-hook-form'
+import {useForm, useFieldArray, useController} from 'react-hook-form'
 import {zodResolver} from '@hookform/resolvers/zod'
+import dayjs from 'dayjs'
 
 import {trpc} from 'utils/trpc'
+import {useDebounceState} from 'utils/hooks/use-debounce'
 
+import Datepicker from 'react-tailwindcss-datepicker'
 import DivAnimate from 'components/div-animate'
 import QueryWrapper, {
 	EmptyPlaceholder,
 	ErrorPlaceholder,
 	LoadingPlaceholder,
 } from 'components/query-wrapper'
+import DataInfiniteWrapper from 'components/query-infinite-wrapper'
 import FormWrapper from 'components/form-wrapper'
 import TextAreaInput from 'components/textarea-input'
 import {Button, IconButton} from 'components/button'
@@ -23,16 +28,21 @@ import {
 	ChevronDownIcon,
 	ChevronUpIcon,
 	EllipsisHorizontalIcon,
+	PhotoIcon,
 	PlusIcon,
 	TrashIcon,
+	XMarkIcon,
 } from '@heroicons/react/24/outline'
 
 import {criteriaUpdateSchema} from 'types/criteria'
 import {appCreateSchema, type AppType} from 'types/app'
 import {type AppCriteria} from 'server/trpc/router/app-criteria'
-import {type SubmitHandler} from 'react-hook-form'
-import {useDebounceState} from 'utils/hooks/use-debounce'
-import DataInfiniteWrapper from 'components/query-infinite-wrapper'
+import {
+	type SubmitHandler,
+	type UseFormRegister,
+	type Control,
+} from 'react-hook-form'
+import cN from 'clsx'
 
 const criteriaSchema = criteriaUpdateSchema
 	.pick({id: true, type: true, parentId: true})
@@ -58,12 +68,11 @@ const criteriasSchema = z.object({
 })
 type CriteriaType = z.infer<typeof criteriaSchema>
 
+const formSchema = appCreateSchema.merge(criteriasSchema)
+type FormType = z.infer<typeof formSchema>
+
 export default function AppSection() {
 	const [searchQuery, setSearchQuery] = useDebounceState('', 350)
-
-	//	-----------------------   SCHEMA & TYPES   --------------------------- //
-	const formSchema = appCreateSchema.merge(criteriasSchema)
-	type FormType = z.infer<typeof formSchema>
 
 	// ------------------------   INITIALIZE LIB   --------------------------- //
 	const {data: auth} = useSession()
@@ -79,6 +88,7 @@ export default function AppSection() {
 		watch,
 		setValue,
 		formState: {errors},
+		control,
 	} = methods
 
 	// ------------------------ QUERIES, MUTATIONS --------------------------- //
@@ -116,6 +126,7 @@ export default function AppSection() {
 
 	// ------------------------  VARIABLES, HOOKS  --------------------------- //
 	const criteriaF = watch('criteria')
+	const logoF = watch('logo')
 	const [isCreate, setIsCreate] = React.useState(false)
 
 	// ------------------------   EVENT HANDLERS   --------------------------- //
@@ -147,25 +158,48 @@ export default function AppSection() {
 						onValidSubmit={onCreateApp}
 						className='flex flex-col'
 					>
-						<div className='mb-2 grid grid-cols-2 gap-x-8 gap-y-2'>
-							<TextAreaInput<FormType> name='name' label='App name' rows={1} />
-							<div />
+						<div className='mb-2 grid grid-cols-4 gap-x-8 gap-y-2'>
+							<TextAreaInput<FormType>
+								name='name'
+								label='App name'
+								rows={1}
+								wrapperClassName='col-span-2'
+							/>
+							<VersionDateInput control={control} />
 							<TextAreaInput<FormType>
 								name='company'
 								label='Company name'
 								rows={1}
+								wrapperClassName='col-span-2'
 							/>
-							<TextAreaInput<FormType> name='headquarter' rows={1} />
+							<TextAreaInput<FormType>
+								name='headquarter'
+								rows={1}
+								wrapperClassName='col-span-2'
+							/>
 							<TextAreaInput<FormType>
 								name='registeredIn'
 								label='Registered city'
 								rows={1}
-							/>
-							<TextAreaInput<FormType> name='offices' rows={1} />
-							<TextAreaInput<FormType>
-								name='about'
 								wrapperClassName='col-span-2'
 							/>
+							<TextAreaInput<FormType>
+								name='offices'
+								rows={1}
+								wrapperClassName='col-span-2'
+							/>
+							<TextAreaInput<FormType>
+								name='about'
+								wrapperClassName='col-span-full'
+							/>
+
+							<TextAreaInput<FormType>
+								name='logo'
+								wrapperClassName='col-span-3'
+								label='Logo url (copy from google play)'
+								autoGrow={false}
+							/>
+							<LogoPreview src={logoF} />
 						</div>
 
 						<fieldset className='mt-6'>
@@ -259,7 +293,7 @@ export default function AppSection() {
 						<h1 className='text-2xl'>
 							App policy
 							<IconButton
-								className='ml-2 align-bottom'
+								className='ml-2 mb-0.5 align-bottom'
 								onClick={() => setIsCreate(true)}
 							>
 								<PlusIcon className='h-6 w-6 text-brand-300 ' />
@@ -269,7 +303,7 @@ export default function AppSection() {
 						<input
 							className='h-10 w-1/2 rounded rounded-tl-lg rounded-br-2xl bg-gradient-to-br from-white via-brand-100 to-brand-300 py-2 px-3 placeholder:font-body placeholder:text-sm placeholder:italic'
 							onChange={(e) => void setSearchQuery(e.target.value)}
-							placeholder='name, company, keyword...'
+							placeholder='search by name, company, or description...'
 						/>
 					</div>
 
@@ -298,10 +332,6 @@ export default function AppSection() {
 }
 
 const AppItem = ({appData: appP}: {appData: AppType}) => {
-	// ------------------------   SCHEMA & TYPES   --------------------------- //
-	const formSchema = appCreateSchema.merge(criteriasSchema)
-	type FormType = z.infer<typeof formSchema>
-
 	// ------------------------   INITIALIZE LIB   --------------------------- //
 	const methods = useForm<FormType>({
 		resolver: zodResolver(formSchema),
@@ -313,6 +343,7 @@ const AppItem = ({appData: appP}: {appData: AppType}) => {
 		register,
 		reset,
 		formState: {dirtyFields, isDirty},
+		control,
 	} = methods
 
 	// ------------------------ QUERIES, MUTATIONS --------------------------- //
@@ -349,6 +380,7 @@ const AppItem = ({appData: appP}: {appData: AppType}) => {
 
 	// ------------------------  VARIABLES, HOOKS  --------------------------- //
 	const criteriaF = watch('criteria')
+	const logoF = watch('logo')
 	const [isExpanded, setIsExpanded] = React.useState(false)
 	const [isEdit, setIsEdit] = React.useState(false)
 
@@ -422,17 +454,24 @@ const AppItem = ({appData: appP}: {appData: AppType}) => {
 	}
 
 	return (
-		<div className='flex rounded-lg bg-dark-bg/25 py-3 px-2'>
-			<IconButton onClick={() => setIsExpanded(!isExpanded)} className='h-fit'>
-				{isExpanded ? (
-					<ChevronUpIcon className='h-6 w-6' />
-				) : (
-					<ChevronDownIcon className='h-6 w-6' />
+		<DivAnimate className='flex flex-1 flex-col justify-start overflow-clip rounded-lg bg-dark-bg/25'>
+			<div
+				className={cN(
+					'flex items-center justify-between pl-2',
+					isExpanded && 'rounded-t-lg bg-brand-800 shadow'
 				)}
-			</IconButton>
-
-			<DivAnimate className='flex flex-1 flex-col justify-start'>
-				<div className='flex items-center justify-between'>
+			>
+				<div className='flex py-2'>
+					<IconButton
+						onClick={() => setIsExpanded(!isExpanded)}
+						className='h-fit'
+					>
+						{isExpanded ? (
+							<ChevronUpIcon className='h-6 w-6' />
+						) : (
+							<ChevronDownIcon className='h-6 w-6' />
+						)}
+					</IconButton>
 					<div
 						className='space-y-0.5 hover:cursor-pointer'
 						onClick={() => setIsExpanded(!isExpanded)}
@@ -442,149 +481,183 @@ const AppItem = ({appData: appP}: {appData: AppType}) => {
 						</h2>
 						<p className='text-xs text-light-body/75'>{appP.company}</p>
 					</div>
-					<IconButton>
-						<TrashIcon
-							className='h-6 w-6 text-red-500'
-							onClick={() => appRemove.mutate({id: appP.id})}
-						/>
-					</IconButton>
 				</div>
-
-				<FormWrapper
-					className='pr-2'
-					methods={methods}
-					onValidSubmit={onEditApp}
-				>
-					{isExpanded && (
-						<IconButton className='absolute -right-0 z-10'>
+				{isExpanded ? (
+					<div className='mr-4 flex gap-2'>
+						<IconButton className='border border-brand-700 p-1 text-red-300 hover:bg-light-bg/75 hover:text-red-500'>
+							<TrashIcon
+								className='h-6 w-6 '
+								onClick={() => appRemove.mutate({id: appP.id})}
+							/>
+						</IconButton>
+						<IconButton className='border border-brand-700 p-1 text-brand-300 hover:bg-light-bg/75 hover:text-brand-700'>
 							<EllipsisHorizontalIcon
-								className='h-6 w-6 text-brand-600'
+								className='h-6 w-6 '
 								onClick={() => setIsEdit(!isEdit)}
 							/>
 						</IconButton>
+					</div>
+				) : (
+					appP.logo && (
+						<Image
+							className='rounded-r-xl border-l-2 border-brand-800 object-cover shadow shadow-brand-700'
+							src={`${appP.logo}=w64-h64`}
+							alt='author picture'
+							width={64}
+							height={64}
+						/>
+					)
+				)}
+			</div>
+
+			<FormWrapper
+				className='pl-10 pr-4'
+				methods={methods}
+				onValidSubmit={onEditApp}
+			>
+				<DivAnimate>
+					{isEdit && isExpanded && (
+						<div className='my-2 grid grid-cols-4 gap-x-8 gap-y-2'>
+							<TextAreaInput<FormType>
+								name='name'
+								label='App name'
+								defaultValue={appP.name}
+								rows={1}
+								wrapperClassName='col-span-2'
+							/>
+							<VersionDateInput control={control} />
+							<TextAreaInput<FormType>
+								name='company'
+								label='Company name'
+								defaultValue={appP.company}
+								rows={1}
+								wrapperClassName='col-span-2'
+							/>
+							<TextAreaInput<FormType>
+								name='headquarter'
+								rows={1}
+								defaultValue={appP.headquarter ?? ''}
+								wrapperClassName='col-span-2'
+							/>
+							<TextAreaInput<FormType>
+								name='registeredIn'
+								label='Registered city'
+								defaultValue={appP.registeredIn ?? ''}
+								rows={1}
+								wrapperClassName='col-span-2'
+							/>
+							<TextAreaInput<FormType>
+								name='offices'
+								rows={1}
+								defaultValue={appP.offices ?? ''}
+								wrapperClassName='col-span-2'
+							/>
+							<TextAreaInput<FormType>
+								name='about'
+								defaultValue={appP.about}
+								wrapperClassName='col-span-full'
+							/>
+							<TextAreaInput<FormType>
+								name='logo'
+								defaultValue={appP.logo ?? ''}
+								autoGrow={false}
+								wrapperClassName='col-span-3'
+							/>
+							<LogoPreview src={logoF} />
+						</div>
 					)}
-					<DivAnimate>
-						{isEdit && isExpanded && (
-							<div className='my-2 grid grid-cols-2 gap-x-8 gap-y-2 '>
-								<TextAreaInput<FormType>
-									name='name'
-									label='App name'
-									defaultValue={appP.name}
-									rows={1}
-								/>
-								<div />
-								<TextAreaInput<FormType>
-									name='company'
-									label='Company name'
-									defaultValue={appP.company}
-									rows={1}
-								/>
-								<TextAreaInput<FormType>
-									name='headquarter'
-									rows={1}
-									defaultValue={appP.headquarter ?? ''}
-								/>
-								<TextAreaInput<FormType>
-									name='registeredIn'
-									label='Registered city'
-									defaultValue={appP.registeredIn ?? ''}
-									rows={1}
-								/>
-								<TextAreaInput<FormType>
-									name='offices'
-									rows={1}
-									defaultValue={appP.offices ?? ''}
-								/>
-								<TextAreaInput<FormType>
-									name='about'
-									defaultValue={appP.about}
-									wrapperClassName='col-span-2'
-								/>
-							</div>
-						)}
-					</DivAnimate>
+				</DivAnimate>
 
-					<QueryWrapper {...criteriaQ}>
-						{(data) => (
-							<div className='w-full divide-y divide-gray-500/50 '>
-								{data.map((criteria, i) => {
-									const isChecked = criteriaF[i]?.checked
-									const hasChildren = criteria.children.length > 0
-									if (criteria.parentId || !isExpanded) return
-									return (
-										<DivAnimate
-											key={`${appP.id}_${criteria.id}`}
-											className='flex flex-col items-start py-2'
-										>
-											<input
-												type='hidden'
-												{...methods.register(`criteria.${i}.id` as const)}
-											/>
-											<input
-												type='hidden'
-												{...methods.register(`criteria.${i}.parentId` as const)}
-											/>
-											<input
-												type='hidden'
-												{...methods.register(`criteria.${i}.type` as const)}
-											/>
-											<CheckInput
-												idx={i}
-												criteriaForm={criteriaF}
-												criteria={criteria}
-												register={register}
-											/>
+				<QueryWrapper {...criteriaQ}>
+					{(data) => (
+						<div
+							className={cN(
+								'w-full divide-y divide-gray-500/50',
+								isExpanded && 'border-l border-brand-600/75',
+								isDirty && 'rounded-bl-lg border-b'
+							)}
+						>
+							{data.map((criteria, i) => {
+								const isChecked = criteriaF[i]?.checked
+								const hasChildren = criteria.children.length > 0
+								if (criteria.parentId || !isExpanded) return
+								return (
+									<DivAnimate
+										key={`${appP.id}_${criteria.id}`}
+										className='flex flex-col items-start py-2'
+									>
+										<input
+											type='hidden'
+											{...methods.register(`criteria.${i}.id` as const)}
+										/>
+										<input
+											type='hidden'
+											{...methods.register(`criteria.${i}.parentId` as const)}
+										/>
+										<input
+											type='hidden'
+											{...methods.register(`criteria.${i}.type` as const)}
+										/>
+										<CheckInput
+											idx={i}
+											criteriaForm={criteriaF}
+											criteria={criteria}
+											register={register}
+										/>
 
-											{isChecked && hasChildren && (
-												<div className='w-full pl-6 pt-1'>
-													{criteria.children.map((item) => {
-														const idx = data.findIndex((c) => c.id === item.id)
-														return (
-															<DivAnimate
-																key={`${appP.id}_${item.id}`}
-																className='flex flex-col'
-															>
+										{isChecked && hasChildren && (
+											<div className='relative ml-[33px] w-fit pt-1 pr-2'>
+												<div className='absolute -top-3 h-full w-px bg-brand-300' />
+												{criteria.children.map((item) => {
+													const idx = data.findIndex((c) => c.id === item.id)
+													return (
+														<DivAnimate
+															key={`${appP.id}_${item.id}`}
+															className='flex w-full items-center'
+														>
+															<div className='h-px w-3 bg-brand-300' />
+															<div className='flex w-full flex-col pr-2'>
 																<CheckInput
 																	idx={idx}
 																	register={register}
 																	criteriaForm={criteriaF}
 																	criteria={item}
 																/>
-															</DivAnimate>
-														)
-													})}
-												</div>
-											)}
-										</DivAnimate>
-									)
-								})}
-							</div>
-						)}
-					</QueryWrapper>
-
-					{isDirty && isExpanded && (
-						<div className='float-right space-x-1 '>
-							<Button
-								type='submit'
-								variant='filled'
-								className='px-2 py-1'
-								isLoading={criteriaUpdate.isLoading || appUpdate.isLoading}
-							>
-								Save
-							</Button>
-							<Button
-								type='reset'
-								variant='outlined'
-								className='px-2 py-0.5'
-								onClick={() => reset()}
-							>
-								Cancel
-							</Button>
+															</div>
+														</DivAnimate>
+													)
+												})}
+											</div>
+										)}
+									</DivAnimate>
+								)
+							})}
 						</div>
 					)}
-				</FormWrapper>
-			</DivAnimate>
-		</div>
+				</QueryWrapper>
+
+				{isDirty && isExpanded && (
+					<div className='float-right my-2 h-8 space-x-1'>
+						<Button
+							type='submit'
+							variant='filled'
+							className='h-full rounded-l-lg rounded-r-lg py-0 px-2 pl-3 pr-3'
+							isLoading={criteriaUpdate.isLoading || appUpdate.isLoading}
+						>
+							Save
+						</Button>
+						<Button
+							type='reset'
+							variant='outlined'
+							className='rounded-l-lg rounded-r-lg py-px pl-2 pr-2'
+							onClick={() => reset()}
+						>
+							Cancel
+						</Button>
+					</div>
+				)}
+			</FormWrapper>
+		</DivAnimate>
 	)
 }
 
@@ -609,7 +682,7 @@ const CheckInput = ({
 
 	return (
 		<>
-			<div className='flex gap-2'>
+			<div className='flex gap-2 pl-2'>
 				<div className='mt-0.5 flex h-5 items-center'>
 					<input
 						id={`criteria-${criteria.id}`}
@@ -637,9 +710,72 @@ const CheckInput = ({
 				<TextAreaInput
 					name={`criteria.${idx}.explanation`}
 					label=''
-					wrapperClassName='w-full pl-6 pt-1 pb-2'
+					wrapperClassName='w-full pl-8 pt-1 pb-2 min-w-[24rem]'
 				/>
 			)}
 		</>
+	)
+}
+
+const VersionDateInput = ({control}: {control: Control<FormType>}) => {
+	const {
+		field,
+		formState: {errors},
+	} = useController({
+		name: 'versionDate',
+		control,
+		rules: {required: true},
+	})
+
+	const date = field.value ? dayjs(field.value).format('YYYY-MM-DD') : null
+
+	return (
+		<div className='col-span-2'>
+			<label>Version date</label>
+			<Datepicker
+				inputClassName='rounded bg-light-bg'
+				primaryColor='blue'
+				value={{
+					startDate: date,
+					endDate: date,
+				}}
+				onChange={(value) => {
+					field.onChange(dayjs(value?.startDate).toDate())
+				}}
+				useRange={false}
+				asSingle={true}
+			/>
+			<ErrorMessage
+				name='versionDate'
+				errors={errors}
+				render={(err) => <small className='text-red-500'>{err.message}</small>}
+			/>
+		</div>
+	)
+}
+
+const LogoPreview = ({src}: {src: string | null}) => {
+	return (
+		<div className='mt-2 flex h-20 w-20  items-center justify-center rounded bg-gradient-to-br from-white/50 to-white/10 p-2'>
+			{src ? (
+				src.includes('googleusercontent.com') ? (
+					<Image src={src} alt='app logo' width={72} height={72} />
+				) : (
+					<div className='flex h-full w-full flex-col items-center justify-center rounded bg-light-bg py-1'>
+						<XMarkIcon className='w-12 text-brand-900' />
+						<div className='px-2'>
+							<p className='text-center text-xs text-dark-bg'>Invalid!</p>
+						</div>
+					</div>
+				)
+			) : (
+				<div className='flex h-full w-full flex-col items-center justify-center rounded bg-light-bg py-1'>
+					<PhotoIcon className='w-12 text-brand-900' />
+					<div className='px-2'>
+						<p className='text-center text-xs text-dark-bg'>Preview</p>
+					</div>
+				</div>
+			)}
+		</div>
 	)
 }

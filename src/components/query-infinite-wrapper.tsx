@@ -93,7 +93,7 @@ const DataInfiniteWrapper = <T,>({
 	}, [device.isPhone, enableAnimations])
 
 	return (
-		<div className='space-y-4 md:space-y-6'>
+		<div className='space-y-4 text-light-bg md:space-y-6'>
 			<div className={className} ref={refAnimate}>
 				{data?.pages.map(({items}, i) => {
 					if (i + 1 !== pageActive && !device.isPhone) return

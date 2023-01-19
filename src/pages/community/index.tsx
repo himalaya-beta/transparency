@@ -84,8 +84,8 @@ export default function ArticlePage() {
 				description='Place where every member share their thought'
 				imageUrl={`https://${process.env.NEXT_PUBLIC_VERCEL_URL}/images/articles.jpg`}
 			/>
-			<main className='container mx-auto max-w-screen-lg space-y-8 px-5 pt-8 md:px-8'>
-				<div className='space-y-2'>
+			<main className='container space-y-8 px-5 pt-8 md:px-8'>
+				<div className='mx-auto max-w-screen-lg space-y-2'>
 					<div className='flex gap-2'>
 						<h1 className='text-2xl'>Community Blog</h1>
 						{/* <IconButton onClick={() => void setIsOpen(true)}>
@@ -93,13 +93,13 @@ export default function ArticlePage() {
 						</IconButton> */}
 					</div>
 					<input
-						className='h-10 w-full flex-1 rounded rounded-tl-lg rounded-br-2xl bg-gradient-to-br from-white via-brand-100 to-brand-300 py-2 px-3 placeholder:font-body placeholder:text-sm placeholder:italic md:w-2/3'
+						className='h-10 w-full flex-1 rounded rounded-tl-lg rounded-br-2xl bg-gradient-to-br from-white via-brand-100 to-brand-300 py-2 px-3 placeholder:font-body placeholder:text-sm placeholder:italic md:w-1/2'
 						onChange={(e) => void setSearchQuery(e.target.value)}
-						placeholder='by title or content...'
+						placeholder='search by title or content...'
 					/>
 				</div>
 
-				<DivAnimate>
+				<DivAnimate className='mx-auto max-w-screen-lg '>
 					{isLoading ? (
 						<LoadingPlaceholder label='app policies' />
 					) : isError ? (
@@ -109,13 +109,13 @@ export default function ArticlePage() {
 					) : (
 						<DataInfiniteWrapper
 							name='community'
-							className='grid grid-cols-6 gap-4'
+							className='grid grid-cols-6 gap-y-4 gap-x-6'
 							{...paginationProps}
 						>
 							{(item) => (
 								<Card
 									key={item.id}
-									className='col-span-full md:col-span-3 lg:col-span-2'
+									className='col-span-full md:col-span-3 lg:col-span-3'
 									{...item}
 								/>
 							)}
@@ -181,7 +181,7 @@ const Card = ({
 					</div>
 				</div>
 				{author.image && (
-					<div className='h-14 w-16 rounded-br-xl bg-dark-bg/30 shadow-xl'>
+					<div className='h-16 w-16 rounded-br-xl bg-dark-bg/30 shadow-xl'>
 						<Image
 							className='h-full w-full rounded-tl-lg rounded-br-xl object-cover'
 							src={author.image}
@@ -192,9 +192,9 @@ const Card = ({
 					</div>
 				)}
 			</div>
-			<div className='mt-1 h-fit w-full text-xl text-light-head'>
+			<div className='mt-2 h-fit w-full text-xl text-light-head lg:mt-1'>
 				<div className='float-left mr-2 h-12 w-12' />
-				<h2>{truncate(title, 55)}</h2>
+				<h2>{truncate(title, 64)}</h2>
 				<div className='mt-0.5 flex h-1 items-center gap-2'>
 					<div className='h-[1px] w-auto grow rounded-full bg-brand-500/50' />
 					<TriangleSymbol className='' />
@@ -202,7 +202,7 @@ const Card = ({
 				<p className='float-right mr-5 text-sm italic'>by {author.name}</p>
 			</div>
 
-			<p className='pt-3 text-right indent-12 leading-5 text-light-body line-clamp-5'>
+			<p className='pt-3 text-right indent-12 leading-5 text-light-body line-clamp-4'>
 				{content}
 			</p>
 		</Link>

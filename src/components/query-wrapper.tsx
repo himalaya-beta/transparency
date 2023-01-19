@@ -114,7 +114,10 @@ export const ErrorPlaceholder = ({
 				)}
 				<pre className='text-xs'>{error.message}</pre>
 			</div>
-			<button onClick={() => refetch()} className='rounded border px-3 py-1'>
+			<button
+				onClick={() => refetch()}
+				className='rounded border px-3 py-1 text-light-head'
+			>
 				Retry
 			</button>
 		</div>

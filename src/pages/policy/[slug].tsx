@@ -1,16 +1,18 @@
 /* eslint-disable unicorn/no-null */
 import React from 'react'
-import {useAutoAnimate} from '@formkit/auto-animate/react'
+import Image from 'next/image'
 import dayjs from 'dayjs'
+import {useAutoAnimate} from '@formkit/auto-animate/react'
 
 import {prisma} from 'server/db/client'
 import {trpc} from 'utils/trpc'
 import {extractIdFromSlug, slugify} from 'utils/literal'
 
 import NavbarLayout from 'layouts/navbar'
+import {DetailsPage} from 'layouts/details'
 import MetaHead from 'components/meta-head'
 import QueryWrapper from 'components/query-wrapper'
-import {TriangleSymbol} from 'components/ornaments'
+import {TriangleSymbol, VerticalHighlighter} from 'components/ornaments'
 import {CheckIcon, MinusIcon} from '@heroicons/react/24/outline'
 
 import {
@@ -57,8 +59,6 @@ export const getStaticPaths: GetStaticPaths = async () => {
 const AppDetailsPage = ({
 	app,
 }: InferGetStaticPropsType<typeof getStaticProps>) => {
-	const [toggleAnimation] = useAutoAnimate<HTMLDivElement>()
-
 	const criteriaQ = trpc.criteria.fetchByApp.useQuery(
 		{appId: app.id},
 		{refetchOnWindowFocus: false}
@@ -71,28 +71,39 @@ const AppDetailsPage = ({
 				description={app.about}
 				imageUrl={`https://${process.env.NEXT_PUBLIC_VERCEL_URL}/images/articles.jpg`}
 			/>
-			<main
-				className='container mx-auto max-w-screen-lg px-6 pt-8'
-				ref={toggleAnimation}
-			>
-				<div className=''>
-					<h1 className='text-3xl'>{app.name}</h1>
-					<div className='flex justify-between text-opacity-75 child:italic'>
-						<p>
-							{app.company} - {app.headquarter}
+			<DetailsPage>
+				<div className='flex justify-between gap-2'>
+					<div className='relative'>
+						<VerticalHighlighter />
+						<h1 className='text-3xl'>{app.name}</h1>
+						<p className='italic text-opacity-75'>
+							{app.company}
+							{app.headquarter && ' - ' + app.headquarter}
+						</p>
+						<p className='mt-4 max-w-screen-sm leading-5 md:pr-8 md:text-lg md:leading-normal'>
+							{app.about}
 						</p>
 					</div>
-					<p className='mt-4 max-w-screen-sm leading-5 md:pr-8 md:text-lg md:leading-normal'>
-						{app.about}
-					</p>
+					{app.logo && (
+						<Image
+							className='-mr-[25px] h-28 w-28 rounded-l-xl border-2 border-r-0 border-white/25 object-cover shadow-lg '
+							src={`${app.logo}=w112-h112`}
+							alt='author picture'
+							width={112}
+							height={112}
+						/>
+					)}
 				</div>
 
 				<QueryWrapper {...criteriaQ}>
 					{(data) => (
-						<ul className='relative'>
+						<ul className='relative mt-2'>
 							<div className='relative flex w-full flex-row-reverse pt-3 md:py-2'>
 								<p className='text-sm md:text-base'>
-									Updated: {dayjs(app.updatedAt).format('D MMMM YYYY')}
+									<span className='italic'>policy published at </span>
+									<span className='font-bold'>
+										{dayjs(app.versionDate).format('D MMMM YYYY')}
+									</span>
 								</p>
 							</div>
 							<div className='absolute right-0 h-full w-1/2 rounded bg-dark-bg/10 md:w-[37.5%]'></div>
@@ -102,7 +113,7 @@ const AppDetailsPage = ({
 						</ul>
 					)}
 				</QueryWrapper>
-			</main>
+			</DetailsPage>
 		</>
 	)
 }
@@ -139,7 +150,7 @@ const CriteriaList = ({criteria, sub}: CriteriaLisProps) => {
 				<TriangleSymbol
 					onClick={onExpand}
 					className={`
-						-ml-6 w-4 transition-transform hover:cursor-pointer md:ml-0 md:w-6
+						-ml-6 w-4 transition-transform hover:cursor-pointer md:-ml-3 md:w-6
 						${hasChildren ? 'visible' : 'invisible'}
 						${isExpanded ? 'mt-5 -rotate-90 md:mt-4' : '-rotate-180 md:mt-0.5'}
 					`}

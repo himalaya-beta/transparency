@@ -87,13 +87,13 @@ export default function SideBar() {
 			/>
 			<main className='container mx-auto space-y-8 px-5 pt-8 md:px-8'>
 				<div className='mx-auto max-w-screen-lg space-y-2'>
-					<h1 className='text-2xl'>Search for app policy</h1>
+					<h1 className='text-2xl'>App policies</h1>
 					<DivAnimate className='grid grid-cols-4 gap-x-4 gap-y-2'>
 						<DivAnimate className='col-span-full flex gap-2  md:col-span-2'>
 							<input
 								className='h-10 flex-1 rounded rounded-tl-lg rounded-br-2xl bg-gradient-to-br from-white via-brand-100 to-brand-300 py-2 px-3 placeholder:font-body placeholder:text-sm placeholder:italic'
 								onChange={(e) => void setSearchQuery(e.target.value)}
-								placeholder='name, company, keyword...'
+								placeholder='search by name, company, or description...'
 							/>
 						</DivAnimate>
 
@@ -101,7 +101,7 @@ export default function SideBar() {
 							<div className='col-span-full row-start-3 flex items-end gap-2 md:col-start-4 md:row-span-2 md:flex-col'>
 								<Button
 									variant='filled'
-									className='rounded rounded-tl-lg rounded-br-2xl bg-gradient-to-r from-brand-400  to-brand-600 px-3 py-1.5 md:block'
+									className='rounded rounded-br-3xl rounded-bl-md rounded-tl-2xl rounded-tr-md bg-gradient-to-r from-brand-400  to-brand-600 pr-3 pl-5 pt-2 pb-2 md:block'
 									isLoading={isComparisonLoading}
 									onClick={() => fetchComparison()}
 								>
@@ -109,7 +109,7 @@ export default function SideBar() {
 									<ScaleIcon className='w-6 text-inherit' />
 								</Button>
 								<button
-									className='group h-8 rounded-br-2xl rounded-tl-lg border-b border-r border-brand-600 bg-gradient-to-br from-transparent via-transparent to-brand-600 pb-1 pl-4 pr-3 hover:cursor-pointer hover:to-brand-200/75 hover:font-bold'
+									className='group h-8 rounded-br-3xl border-b border-r border-brand-600 bg-gradient-to-br from-transparent via-transparent to-brand-600 pb-1 pl-4 pr-3 hover:cursor-pointer hover:to-brand-200/75 hover:font-bold'
 									onClick={() => setAppsSelected([])}
 								>
 									<span className='group-hover pr-2 text-light-head'>
@@ -227,8 +227,6 @@ const Card = ({
 	addToComparison: (id: IdName) => void
 	removeFromComparison: (id: IdName) => void
 }) => {
-	const logo = ''
-
 	const onChange = (e: React.ChangeEvent<HTMLInputElement>) => {
 		if (e.currentTarget.checked) {
 			addToComparison(app)
@@ -249,18 +247,18 @@ const Card = ({
 					</div>
 					<div className='py-0.5 px-4 text-sm text-light-head'>
 						<time className='font-body text-sm italic'>
-							{dayjs(app.updatedAt).format('MMM D, YYYY')}
+							{dayjs(app.versionDate).format('MMM D, YYYY')}
 						</time>
 					</div>
 				</div>
-				<div className='flex h-14 w-16 items-center justify-center rounded-br-xl bg-light-bg/50 shadow-xl'>
-					{logo ? (
+				<div className='flex h-16 w-16 items-center justify-center rounded-br-xl bg-light-bg/50 shadow-xl'>
+					{app.logo ? (
 						<Image
-							className='h-full w-full rounded-tl-lg rounded-br-xl object-cover'
-							src={logo}
+							className='rounded-br-xl object-cover'
+							src={`${app.logo}=w64-h64`}
 							alt='author picture'
-							width={72}
-							height={72}
+							width={64}
+							height={64}
 						/>
 					) : (
 						<PuzzlePieceIcon className='-mt-0.5 -ml-0.5 h-9 w-9 text-gray-700' />

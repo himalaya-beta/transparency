@@ -193,7 +193,7 @@ function AuthButton({className}: {className?: string}) {
 						onClick={() => signIn()}
 					>
 						<LoginIcon className='h-full w-full rotate-180 text-brand-100 md:ml-0.5' />
-						<span className='mx-1 hidden md:block'>Signin</span>
+						<span className='mx-1 hidden text-light-head md:block'>Signin</span>
 					</button>
 				</div>
 			)}

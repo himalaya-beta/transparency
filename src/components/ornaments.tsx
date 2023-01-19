@@ -30,3 +30,7 @@ export const TriangleSymbol = ({
 		</span>
 	)
 }
+
+export const VerticalHighlighter = () => {
+	return <div className='absolute -left-6 h-full w-1 rounded-r bg-brand-300' />
+}

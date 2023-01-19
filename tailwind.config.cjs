@@ -7,7 +7,10 @@ const colors = require('tailwindcss/colors')
 // import plugin from 'tailwindcss/plugin'
 
 module.exports = {
-  content: ['./src/**/*.{js,ts,jsx,tsx}'],
+  content: [
+    './src/**/*.{js,ts,jsx,tsx}',
+    './node_modules/react-tailwindcss-datepicker/dist/index.esm.js',
+  ],
   theme: {
     extend: {
       screens: {

@@ -227,8 +227,6 @@ const Card = ({
 	addToComparison: (id: IdName) => void
 	removeFromComparison: (id: IdName) => void
 }) => {
-	const logo = ''
-
 	const onChange = (e: React.ChangeEvent<HTMLInputElement>) => {
 		if (e.currentTarget.checked) {
 			addToComparison(app)
@@ -253,14 +251,14 @@ const Card = ({
 						</time>
 					</div>
 				</div>
-				<div className='flex h-14 w-16 items-center justify-center rounded-br-xl bg-light-bg/50 shadow-xl'>
-					{logo ? (
+				<div className='flex h-16 w-16 items-center justify-center rounded-br-xl bg-light-bg/50 shadow-xl'>
+					{app.logo ? (
 						<Image
-							className='h-full w-full rounded-tl-lg rounded-br-xl object-cover'
-							src={logo}
+							className='rounded-br-xl object-cover'
+							src={`${app.logo}=w64-h64`}
 							alt='author picture'
-							width={72}
-							height={72}
+							width={64}
+							height={64}
 						/>
 					) : (
 						<PuzzlePieceIcon className='-mt-0.5 -ml-0.5 h-9 w-9 text-gray-700' />

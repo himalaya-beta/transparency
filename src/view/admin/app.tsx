@@ -1,5 +1,6 @@
 /* eslint-disable unicorn/no-null */
 import React from 'react'
+import Image from 'next/image'
 import {useSession} from 'next-auth/react'
 import {z} from 'zod'
 import {useForm, useFieldArray, useController} from 'react-hook-form'
@@ -27,8 +28,10 @@ import {
 	ChevronDownIcon,
 	ChevronUpIcon,
 	EllipsisHorizontalIcon,
+	PhotoIcon,
 	PlusIcon,
 	TrashIcon,
+	XMarkIcon,
 } from '@heroicons/react/24/outline'
 
 import {criteriaUpdateSchema} from 'types/criteria'
@@ -122,6 +125,7 @@ export default function AppSection() {
 
 	// ------------------------  VARIABLES, HOOKS  --------------------------- //
 	const criteriaF = watch('criteria')
+	const logoF = watch('logo')
 	const [isCreate, setIsCreate] = React.useState(false)
 
 	// ------------------------   EVENT HANDLERS   --------------------------- //
@@ -153,25 +157,48 @@ export default function AppSection() {
 						onValidSubmit={onCreateApp}
 						className='flex flex-col'
 					>
-						<div className='mb-2 grid grid-cols-2 gap-x-8 gap-y-2'>
-							<TextAreaInput<FormType> name='name' label='App name' rows={1} />
+						<div className='mb-2 grid grid-cols-4 gap-x-8 gap-y-2'>
+							<TextAreaInput<FormType>
+								name='name'
+								label='App name'
+								rows={1}
+								wrapperClassName='col-span-2'
+							/>
 							<VersionDateInput control={control} />
 							<TextAreaInput<FormType>
 								name='company'
 								label='Company name'
 								rows={1}
+								wrapperClassName='col-span-2'
 							/>
-							<TextAreaInput<FormType> name='headquarter' rows={1} />
+							<TextAreaInput<FormType>
+								name='headquarter'
+								rows={1}
+								wrapperClassName='col-span-2'
+							/>
 							<TextAreaInput<FormType>
 								name='registeredIn'
 								label='Registered city'
 								rows={1}
-							/>
-							<TextAreaInput<FormType> name='offices' rows={1} />
-							<TextAreaInput<FormType>
-								name='about'
 								wrapperClassName='col-span-2'
 							/>
+							<TextAreaInput<FormType>
+								name='offices'
+								rows={1}
+								wrapperClassName='col-span-2'
+							/>
+							<TextAreaInput<FormType>
+								name='about'
+								wrapperClassName='col-span-full'
+							/>
+
+							<TextAreaInput<FormType>
+								name='logo'
+								wrapperClassName='col-span-3'
+								label='Logo url (copy from google play)'
+								autoGrow={false}
+							/>
+							<LogoPreview src={logoF} />
 						</div>
 
 						<fieldset className='mt-6'>
@@ -352,6 +379,7 @@ const AppItem = ({appData: appP}: {appData: AppType}) => {
 
 	// ------------------------  VARIABLES, HOOKS  --------------------------- //
 	const criteriaF = watch('criteria')
+	const logoF = watch('logo')
 	const [isExpanded, setIsExpanded] = React.useState(false)
 	const [isEdit, setIsEdit] = React.useState(false)
 
@@ -468,12 +496,13 @@ const AppItem = ({appData: appP}: {appData: AppType}) => {
 					)}
 					<DivAnimate>
 						{isEdit && isExpanded && (
-							<div className='my-2 grid grid-cols-2 gap-x-8 gap-y-2 '>
+							<div className='my-2 grid grid-cols-4 gap-x-8 gap-y-2 '>
 								<TextAreaInput<FormType>
 									name='name'
 									label='App name'
 									defaultValue={appP.name}
 									rows={1}
+									wrapperClassName='col-span-2'
 								/>
 								<VersionDateInput control={control} />
 								<TextAreaInput<FormType>
@@ -481,28 +510,39 @@ const AppItem = ({appData: appP}: {appData: AppType}) => {
 									label='Company name'
 									defaultValue={appP.company}
 									rows={1}
+									wrapperClassName='col-span-2'
 								/>
 								<TextAreaInput<FormType>
 									name='headquarter'
 									rows={1}
 									defaultValue={appP.headquarter ?? ''}
+									wrapperClassName='col-span-2'
 								/>
 								<TextAreaInput<FormType>
 									name='registeredIn'
 									label='Registered city'
 									defaultValue={appP.registeredIn ?? ''}
 									rows={1}
+									wrapperClassName='col-span-2'
 								/>
 								<TextAreaInput<FormType>
 									name='offices'
 									rows={1}
 									defaultValue={appP.offices ?? ''}
+									wrapperClassName='col-span-2'
 								/>
 								<TextAreaInput<FormType>
 									name='about'
 									defaultValue={appP.about}
-									wrapperClassName='col-span-2'
+									wrapperClassName='col-span-full'
 								/>
+								<TextAreaInput<FormType>
+									name='logo'
+									defaultValue={appP.logo ?? ''}
+									autoGrow={false}
+									wrapperClassName='col-span-3'
+								/>
+								<LogoPreview src={logoF} />
 							</div>
 						)}
 					</DivAnimate>
@@ -660,7 +700,7 @@ const VersionDateInput = ({control}: {control: Control<FormType>}) => {
 	const date = field.value ? dayjs(field.value).format('YYYY-MM-DD') : null
 
 	return (
-		<div>
+		<div className='col-span-2'>
 			<label>Version date</label>
 			<Datepicker
 				inputClassName='rounded bg-light-bg'
@@ -680,6 +720,32 @@ const VersionDateInput = ({control}: {control: Control<FormType>}) => {
 				errors={errors}
 				render={(err) => <small className='text-red-500'>{err.message}</small>}
 			/>
+		</div>
+	)
+}
+
+const LogoPreview = ({src}: {src: string | null}) => {
+	return (
+		<div className='mt-2 flex h-20 w-20  items-center justify-center rounded bg-gradient-to-br from-white/50 to-white/10 p-2'>
+			{src ? (
+				src.includes('googleusercontent.com') ? (
+					<Image src={src} alt='app logo' width={72} height={72} />
+				) : (
+					<div className='flex h-full w-full flex-col items-center justify-center rounded bg-light-bg py-1'>
+						<XMarkIcon className='w-12 text-brand-900' />
+						<div className='px-2'>
+							<p className='text-center text-xs text-dark-bg'>Invalid!</p>
+						</div>
+					</div>
+				)
+			) : (
+				<div className='flex h-full w-full flex-col items-center justify-center rounded bg-light-bg py-1'>
+					<PhotoIcon className='w-12 text-brand-900' />
+					<div className='px-2'>
+						<p className='text-center text-xs text-dark-bg'>Preview</p>
+					</div>
+				</div>
+			)}
 		</div>
 	)
 }

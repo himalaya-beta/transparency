@@ -16,6 +16,13 @@ export const appCreateSchema = z.object({
 	about: z.string().min(80, 'Provide more meaningful description'),
 	criteria: z.array(criteriaCreateSchema).min(1),
 	versionDate: z.date(),
+	logo: z
+		.string()
+		.refine(
+			(val) => (Boolean(val) ? val.includes('googleusercontent.com') : true),
+			'Invalid logo url. Only accept from google play.'
+		)
+		.nullable(),
 })
 
 export const appUpdateSchema = appCreateSchema

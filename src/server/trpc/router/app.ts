@@ -68,6 +68,7 @@ export const appRouter = router({
 			ctx.prisma.app.create({
 				data: {
 					...input,
+					logo: input.logo ? input.logo.split('=')[0] : input.logo,
 					AppCriteria: {
 						createMany: {
 							data: criteria,
@@ -80,7 +81,13 @@ export const appRouter = router({
 		.input(appUpdateSchema)
 		.mutation(({ctx, input: {id, ...input}}) =>
 			ctx.prisma.app
-				.update({where: {id}, data: input})
+				.update({
+					where: {id},
+					data: {
+						...input,
+						logo: input.logo ? input.logo.split('=')[0] : input.logo,
+					},
+				})
 				.then(async (updated) => {
 					await revalidate('policy', slugify(updated.name, updated.id))
 					return updated

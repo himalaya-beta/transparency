@@ -1,9 +1,9 @@
 import React from 'react'
+import Image from 'next/image'
 import {useRouter} from 'next/router'
 // import {useSession} from 'next-auth/react'
 import {useForm} from 'react-hook-form'
 import {zodResolver} from '@hookform/resolvers/zod'
-import {useAutoAnimate} from '@formkit/auto-animate/react'
 import dayjs from 'dayjs'
 
 import {prisma} from 'server/db/client'
@@ -11,10 +11,13 @@ import {trpc} from 'utils/trpc'
 import {extractIdFromSlug, slugify} from 'utils/literal'
 
 import NavbarLayout from 'layouts/navbar'
+import {DetailsPage} from 'layouts/details'
+
 import MetaHead from 'components/meta-head'
 import FormWrapper from 'components/form-wrapper'
 import TextAreaInput from 'components/textarea-input'
 import {Button} from 'components/button'
+import {VerticalHighlighter} from 'components/ornaments'
 import {
 	PencilSquareIcon,
 	// TrashIcon,
@@ -112,8 +115,6 @@ const ArticleDetailsPage = ({
 		setIsEdit(false)
 	}
 
-	const [toggleAnimation] = useAutoAnimate<HTMLDivElement>()
-
 	// const {status, data} = useSession()
 
 	return (
@@ -123,10 +124,7 @@ const ArticleDetailsPage = ({
 				description={article.content}
 				imageUrl={`https://${process.env.NEXT_PUBLIC_VERCEL_URL}/images/articles.jpg`}
 			/>
-			<main
-				className='container mx-auto max-w-screen-md space-y-8 px-6 pt-8'
-				ref={toggleAnimation}
-			>
+			<DetailsPage>
 				{isEdit ? (
 					<FormWrapper
 						methods={methods}
@@ -155,14 +153,39 @@ const ArticleDetailsPage = ({
 					</FormWrapper>
 				) : (
 					<>
-						<div>
+						<div className='relative space-y-2'>
+							<VerticalHighlighter />
 							<h1 className='text-3xl'>{article.title}</h1>
-							<p className='italic'>by {article.author.name}</p>
-							<p className='float-right -mt-2 text-sm italic md:text-base'>
-								{dayjs(article.updatedAt).format('D MMMM YYYY')}
+							<div className='flex items-end justify-between'>
+								<div className='flex items-center gap-3'>
+									{article.author.image && (
+										<div className='z-10 h-10 w-10 shadow-xl'>
+											<Image
+												className='h-full w-full rounded-l-lg border-0 border-l-0 border-brand-300 object-cover'
+												src={article.author.image}
+												alt='author picture'
+												width={48}
+												height={48}
+											/>
+										</div>
+									)}
+									<p className='rounded-lg border-r-2 border-brand-300 pr-4 italic leading-5 text-opacity-90'>
+										<span className='italic'>written by</span>
+										<br />
+										<span className='font-bold'>{article.author.name}</span>
+									</p>
+								</div>
+								<p className='text-right text-sm italic md:text-base'>
+									{dayjs(article.updatedAt).format('D MMMM YYYY')}
+								</p>
+							</div>
+						</div>
+
+						<div className='mt-6'>
+							<p className='whitespace-pre-wrap md:text-lg'>
+								{article.content}
 							</p>
 						</div>
-						<p className='whitespace-pre-wrap md:text-lg'>{article.content}</p>
 						{/* {status === 'authenticated' &&
 							(data.user.role === 'ADMIN' ||
 								data.user.id === article.authorId) && (
@@ -186,7 +209,7 @@ const ArticleDetailsPage = ({
 							)} */}
 					</>
 				)}
-			</main>
+			</DetailsPage>
 		</>
 	)
 }

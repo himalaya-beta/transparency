@@ -32,6 +32,7 @@ import {
 } from 'types/criteria'
 import ListBox from 'components/list-box'
 import {z} from 'zod'
+import cN from 'clsx'
 
 const typeListOptionsSchema = z.object({
 	id: z.enum(['TRUE_FALSE', 'EXPLANATION']),
@@ -74,7 +75,7 @@ const CriteriaSection = () => {
 			<h1 className='text-2xl'>
 				Policy criteria
 				<IconButton
-					className='ml-2 align-bottom'
+					className='ml-2 mb-0.5 align-bottom'
 					onClick={() => createMethods.setFocus('value')}
 				>
 					<PlusIcon className='h-6 w-6 text-brand-300' />
@@ -243,11 +244,22 @@ const CriteriaCard = ({
 	}
 
 	return (
-		<DivAnimate className='rounded-lg bg-dark-bg/25 p-2 pt-2'>
+		<DivAnimate className='rounded-lg bg-dark-bg/25'>
 			{edit === criteria.id ? (
-				<EditForm key='main_criteria' className='pr-0 md:py-2 md:pl-2' />
+				<EditForm
+					key='main_criteria'
+					className={cN(
+						'rounded-t-lg bg-brand-800 pr-0 shadow md:p-3',
+						!haveChildren && 'rounded-b-lg'
+					)}
+				/>
 			) : (
-				<div className='flex items-start'>
+				<div
+					className={cN(
+						'flex items-center justify-between p-2',
+						isExpanded && 'rounded-t-lg bg-brand-800 shadow'
+					)}
+				>
 					{haveChildren ? (
 						<IconButton onClick={onExpand}>
 							{isExpanded ? (
@@ -276,13 +288,13 @@ const CriteriaCard = ({
 						</h2>
 						<div className='item-center flex'>
 							<button onClick={() => onClickAdd(criteria)}>
-								<PlusIcon className='h-8 w-8 rounded-l-lg bg-brand-100/50 p-1 text-brand-800 transition-colors duration-200 hover:bg-brand-200 active:bg-brand-300 md:h-10 md:w-10 md:p-2' />
+								<PlusIcon className='h-8 w-8 rounded-l-lg bg-brand-100/75 p-1 text-brand-800 transition-colors duration-200 hover:bg-brand-200 active:bg-brand-300 md:h-10 md:w-10 md:p-2' />
 							</button>
 							<button onClick={() => onClickEdit({...criteria})}>
-								<PencilIcon className='h-8 w-8 border-l-[1px] border-r-[1px] border-brand-100/25 bg-brand-100/50 p-1 text-blue-700 transition-colors duration-200 hover:bg-brand-200 active:bg-brand-300 md:h-10 md:w-10 md:p-2' />
+								<PencilIcon className='h-8 w-8 border-l border-r border-brand-100 bg-brand-100/75 p-1 text-blue-700 transition-colors duration-200 hover:bg-brand-200 active:bg-brand-300 md:h-10 md:w-10 md:p-2' />
 							</button>
 							<button onClick={() => remove({id: criteria.id})}>
-								<TrashIcon className='h-8 w-8 rounded-r-lg bg-brand-100/50 p-1 text-red-700 transition-colors duration-200 hover:bg-brand-200 active:bg-brand-300 md:h-10 md:w-10 md:p-2' />
+								<TrashIcon className='h-8 w-8 rounded-r-lg bg-brand-100/75 p-1 text-red-700 transition-colors duration-200 hover:bg-brand-200 active:bg-brand-300 md:h-10 md:w-10 md:p-2' />
 							</button>
 						</div>
 					</div>
@@ -293,8 +305,8 @@ const CriteriaCard = ({
 				{haveChildren && isExpanded && (
 					<DivAnimate
 						className={`
-							mt-2 divide-y-[1px] divide-brand-600 divide-opacity-50 rounded-t-md bg-dark-bg/25 md:ml-8 
-							${add ? '' : 'rounded-b-md'} 
+							divide-y-[1px] divide-brand-600 divide-opacity-50 border-l border-brand-600 md:ml-8 
+							${add ? '' : 'rounded-b-mds'} 
 						`}
 					>
 						{criteria.children.map((child) => {
@@ -302,11 +314,11 @@ const CriteriaCard = ({
 								<DivAnimate className='' key={child.id}>
 									{edit === child.id ? (
 										<EditForm
-											className='p-2 md:py-3 md:pl-4'
+											className='p-2 md:pr-3 md:pl-4'
 											key={`sub_criteria_${child.id}`}
 										/>
 									) : (
-										<div className='flex items-center justify-between p-2 pl-3 md:pl-4'>
+										<div className='flex items-center justify-between gap-2 p-2 pl-3 md:pl-4'>
 											<h3 className='font-normal'>
 												{child.value}
 												<span className='ml-2 space-x-0.5'>
@@ -317,10 +329,10 @@ const CriteriaCard = ({
 											</h3>
 											<div className='item-center flex gap-4'>
 												<button onClick={() => onClickEdit(child)}>
-													<PencilIconSolid className='h-6 w-6 p-0.5 text-blue-500 text-opacity-50 transition-colors duration-200 hover:text-opacity-100 active:text-blue-400' />
+													<PencilIconSolid className='h-6 w-6 p-0.5 text-blue-400  transition-colors duration-200 hover:text-blue-600 active:text-blue-400' />
 												</button>
 												<button onClick={() => remove({id: child.id})}>
-													<TrashIconSolid className='h-6 w-6 p-0.5 text-red-500 text-opacity-50 transition-colors duration-200 hover:text-opacity-100  active:text-red-400' />
+													<TrashIconSolid className='h-6 w-6 p-0.5 text-red-400  transition-colors duration-200 hover:text-red-600 active:text-red-400' />
 												</button>
 											</div>
 										</div>
@@ -336,8 +348,12 @@ const CriteriaCard = ({
 						methods={createMethods}
 						onValidSubmit={onCreate}
 						className={`
-							flex flex-col gap-2 rounded-b-md md:ml-8 md:flex-row md:pb-3   
-							${haveChildren ? 'bg-dark-bg/25 p-2 md:pl-4' : 'pt-4'}
+							flex flex-col gap-2 rounded-b-md md:ml-8 md:flex-row md:pb-3
+							${
+								haveChildren
+									? 'border-l border-t border-brand-600 p-2 md:pt-3 md:pl-4'
+									: 'p-2 pt-3'
+							}
 						`}
 					>
 						<TextAreaInput<CriteriaUpdateType>

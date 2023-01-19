@@ -22,6 +22,7 @@ model Article {
     author    User     @relation(fields: [authorId], references: [id])
 
     @@index([authorId])
+    @@fulltext([title, content])
 }
 
 model Criteria {

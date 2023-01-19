@@ -19,14 +19,20 @@ export const articleRouter = router({
 	fetchAll: publicProcedure
 		.input(
 			z.object({
+				query: z.string(),
 				dataPerPage: z.number(),
 				cursor: z.string().optional(),
 			})
 		)
 		.query(({ctx, input}) => {
+			const search = input.query === '' ? undefined : input.query
 			const perPage = input?.dataPerPage ?? PER_PAGE
 			return ctx.prisma.article
 				.findMany({
+					where: {
+						title: {search},
+						content: {search},
+					},
 					take: perPage + 1,
 					...(input?.cursor && {
 						cursor: {id: input.cursor},

@@ -21,6 +21,7 @@ import {
 import {type AppType} from 'types/app'
 import {type CriteriaAppType} from 'types/criteria'
 import {type ArrayElement} from 'types/general'
+import {DetailsPage} from 'layouts/details'
 
 export const getStaticProps: GetStaticProps<{
 	app: AppType
@@ -57,8 +58,6 @@ export const getStaticPaths: GetStaticPaths = async () => {
 const AppDetailsPage = ({
 	app,
 }: InferGetStaticPropsType<typeof getStaticProps>) => {
-	const [toggleAnimation] = useAutoAnimate<HTMLDivElement>()
-
 	const criteriaQ = trpc.criteria.fetchByApp.useQuery(
 		{appId: app.id},
 		{refetchOnWindowFocus: false}
@@ -71,17 +70,14 @@ const AppDetailsPage = ({
 				description={app.about}
 				imageUrl={`https://${process.env.NEXT_PUBLIC_VERCEL_URL}/images/articles.jpg`}
 			/>
-			<main
-				className='container mx-auto max-w-screen-lg px-6 pt-8'
-				ref={toggleAnimation}
-			>
+			<DetailsPage>
 				<div className=''>
+					<div className='h-full w-12 bg-red-500' />
 					<h1 className='text-3xl'>{app.name}</h1>
-					<div className='flex justify-between text-opacity-75 child:italic'>
-						<p>
-							{app.company} - {app.headquarter}
-						</p>
-					</div>
+					<p className='italic text-opacity-75'>
+						{app.company}
+						{app.headquarter && ' - ' + app.headquarter}
+					</p>
 					<p className='mt-4 max-w-screen-sm leading-5 md:pr-8 md:text-lg md:leading-normal'>
 						{app.about}
 					</p>
@@ -102,7 +98,7 @@ const AppDetailsPage = ({
 						</ul>
 					)}
 				</QueryWrapper>
-			</main>
+			</DetailsPage>
 		</>
 	)
 }

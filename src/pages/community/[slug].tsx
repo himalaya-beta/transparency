@@ -3,7 +3,6 @@ import {useRouter} from 'next/router'
 // import {useSession} from 'next-auth/react'
 import {useForm} from 'react-hook-form'
 import {zodResolver} from '@hookform/resolvers/zod'
-import {useAutoAnimate} from '@formkit/auto-animate/react'
 import dayjs from 'dayjs'
 
 import {prisma} from 'server/db/client'
@@ -32,6 +31,7 @@ import {
 	type ArticleUpdateType,
 	type ArticleType,
 } from 'types/article'
+import {DetailsPage} from 'layouts/details'
 
 export const getStaticProps: GetStaticProps<{
 	article: ArticleType
@@ -112,8 +112,6 @@ const ArticleDetailsPage = ({
 		setIsEdit(false)
 	}
 
-	const [toggleAnimation] = useAutoAnimate<HTMLDivElement>()
-
 	// const {status, data} = useSession()
 
 	return (
@@ -123,10 +121,7 @@ const ArticleDetailsPage = ({
 				description={article.content}
 				imageUrl={`https://${process.env.NEXT_PUBLIC_VERCEL_URL}/images/articles.jpg`}
 			/>
-			<main
-				className='container mx-auto max-w-screen-md space-y-8 px-6 pt-8'
-				ref={toggleAnimation}
-			>
+			<DetailsPage>
 				{isEdit ? (
 					<FormWrapper
 						methods={methods}
@@ -155,14 +150,20 @@ const ArticleDetailsPage = ({
 					</FormWrapper>
 				) : (
 					<>
-						<div>
+						<div className=''>
+							<div className='h-full w-12 bg-red-500' />
 							<h1 className='text-3xl'>{article.title}</h1>
-							<p className='italic'>by {article.author.name}</p>
-							<p className='float-right -mt-2 text-sm italic md:text-base'>
+							<p className='italic text-opacity-75'>by {article.author.name}</p>
+							<p className='text-right text-sm italic md:text-base'>
 								{dayjs(article.updatedAt).format('D MMMM YYYY')}
 							</p>
 						</div>
-						<p className='whitespace-pre-wrap md:text-lg'>{article.content}</p>
+
+						<div className='mt-6'>
+							<p className='whitespace-pre-wrap md:text-lg'>
+								{article.content}
+							</p>
+						</div>
 						{/* {status === 'authenticated' &&
 							(data.user.role === 'ADMIN' ||
 								data.user.id === article.authorId) && (
@@ -186,7 +187,7 @@ const ArticleDetailsPage = ({
 							)} */}
 					</>
 				)}
-			</main>
+			</DetailsPage>
 		</>
 	)
 }

@@ -101,7 +101,7 @@ export default function SideBar() {
 							<div className='col-span-full row-start-3 flex items-end gap-2 md:col-start-4 md:row-span-2 md:flex-col'>
 								<Button
 									variant='filled'
-									className='rounded rounded-tl-lg rounded-br-2xl bg-gradient-to-r from-brand-400  to-brand-600 px-3 py-1.5 md:block'
+									className='rounded rounded-tl-lg rounded-br-2xl bg-gradient-to-r from-brand-400  to-brand-600 pr-3 pt-2 pb-2 md:block'
 									isLoading={isComparisonLoading}
 									onClick={() => fetchComparison()}
 								>

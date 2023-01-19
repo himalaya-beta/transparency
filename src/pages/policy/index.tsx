@@ -87,13 +87,13 @@ export default function SideBar() {
 			/>
 			<main className='container mx-auto space-y-8 px-5 pt-8 md:px-8'>
 				<div className='mx-auto max-w-screen-lg space-y-2'>
-					<h1 className='text-2xl'>Search for app policy</h1>
+					<h1 className='text-2xl'>App policies</h1>
 					<DivAnimate className='grid grid-cols-4 gap-x-4 gap-y-2'>
 						<DivAnimate className='col-span-full flex gap-2  md:col-span-2'>
 							<input
 								className='h-10 flex-1 rounded rounded-tl-lg rounded-br-2xl bg-gradient-to-br from-white via-brand-100 to-brand-300 py-2 px-3 placeholder:font-body placeholder:text-sm placeholder:italic'
 								onChange={(e) => void setSearchQuery(e.target.value)}
-								placeholder='name, company, keyword...'
+								placeholder='search by name, company, or description...'
 							/>
 						</DivAnimate>
 

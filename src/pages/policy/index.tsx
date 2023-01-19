@@ -101,7 +101,7 @@ export default function SideBar() {
 							<div className='col-span-full row-start-3 flex items-end gap-2 md:col-start-4 md:row-span-2 md:flex-col'>
 								<Button
 									variant='filled'
-									className='rounded rounded-tl-lg rounded-br-2xl bg-gradient-to-r from-brand-400  to-brand-600 pr-3 pt-2 pb-2 md:block'
+									className='rounded rounded-br-3xl rounded-bl-md rounded-tl-2xl rounded-tr-md bg-gradient-to-r from-brand-400  to-brand-600 pr-3 pl-5 pt-2 pb-2 md:block'
 									isLoading={isComparisonLoading}
 									onClick={() => fetchComparison()}
 								>
@@ -109,7 +109,7 @@ export default function SideBar() {
 									<ScaleIcon className='w-6 text-inherit' />
 								</Button>
 								<button
-									className='group h-8 rounded-br-2xl rounded-tl-lg border-b border-r border-brand-600 bg-gradient-to-br from-transparent via-transparent to-brand-600 pb-1 pl-4 pr-3 hover:cursor-pointer hover:to-brand-200/75 hover:font-bold'
+									className='group h-8 rounded-br-3xl border-b border-r border-brand-600 bg-gradient-to-br from-transparent via-transparent to-brand-600 pb-1 pl-4 pr-3 hover:cursor-pointer hover:to-brand-200/75 hover:font-bold'
 									onClick={() => setAppsSelected([])}
 								>
 									<span className='group-hover pr-2 text-light-head'>

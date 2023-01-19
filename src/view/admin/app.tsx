@@ -42,7 +42,7 @@ import {
 	type UseFormRegister,
 	type Control,
 } from 'react-hook-form'
-import cn from 'clsx'
+import cN from 'clsx'
 
 const criteriaSchema = criteriaUpdateSchema
 	.pick({id: true, type: true, parentId: true})
@@ -293,7 +293,7 @@ export default function AppSection() {
 						<h1 className='text-2xl'>
 							App policy
 							<IconButton
-								className='ml-2 align-bottom'
+								className='ml-2 mb-0.5 align-bottom'
 								onClick={() => setIsCreate(true)}
 							>
 								<PlusIcon className='h-6 w-6 text-brand-300 ' />
@@ -456,7 +456,7 @@ const AppItem = ({appData: appP}: {appData: AppType}) => {
 	return (
 		<DivAnimate className='flex flex-1 flex-col justify-start overflow-clip rounded-lg bg-dark-bg/25'>
 			<div
-				className={cn(
+				className={cN(
 					'flex items-center justify-between pl-2',
 					isExpanded && 'rounded-t-lg bg-brand-800 shadow'
 				)}
@@ -511,7 +511,7 @@ const AppItem = ({appData: appP}: {appData: AppType}) => {
 			</div>
 
 			<FormWrapper
-				className={cn('pl-10 pr-4', isExpanded && 'pb-4')}
+				className='pl-10 pr-4'
 				methods={methods}
 				onValidSubmit={onEditApp}
 			>
@@ -570,7 +570,13 @@ const AppItem = ({appData: appP}: {appData: AppType}) => {
 
 				<QueryWrapper {...criteriaQ}>
 					{(data) => (
-						<div className='w-full divide-y divide-gray-500/50 '>
+						<div
+							className={cN(
+								'w-full divide-y divide-gray-500/50',
+								isExpanded && 'border-l border-brand-600/75',
+								isDirty && 'rounded-bl-lg border-b'
+							)}
+						>
 							{data.map((criteria, i) => {
 								const isChecked = criteriaF[i]?.checked
 								const hasChildren = criteria.children.length > 0
@@ -600,20 +606,24 @@ const AppItem = ({appData: appP}: {appData: AppType}) => {
 										/>
 
 										{isChecked && hasChildren && (
-											<div className='w-full pl-6 pt-1'>
+											<div className='relative ml-[33px] w-fit pt-1 pr-2'>
+												<div className='absolute -top-3 h-full w-px bg-brand-300' />
 												{criteria.children.map((item) => {
 													const idx = data.findIndex((c) => c.id === item.id)
 													return (
 														<DivAnimate
 															key={`${appP.id}_${item.id}`}
-															className='flex flex-col'
+															className='flex w-full items-center'
 														>
-															<CheckInput
-																idx={idx}
-																register={register}
-																criteriaForm={criteriaF}
-																criteria={item}
-															/>
+															<div className='h-px w-3 bg-brand-300' />
+															<div className='flex w-full flex-col pr-2'>
+																<CheckInput
+																	idx={idx}
+																	register={register}
+																	criteriaForm={criteriaF}
+																	criteria={item}
+																/>
+															</div>
 														</DivAnimate>
 													)
 												})}
@@ -627,11 +637,11 @@ const AppItem = ({appData: appP}: {appData: AppType}) => {
 				</QueryWrapper>
 
 				{isDirty && isExpanded && (
-					<div className='float-right h-8 space-x-1'>
+					<div className='float-right my-2 h-8 space-x-1'>
 						<Button
 							type='submit'
 							variant='filled'
-							className='h-full py-0 px-2 pl-3 pr-3'
+							className='h-full rounded-l-lg rounded-r-lg py-0 px-2 pl-3 pr-3'
 							isLoading={criteriaUpdate.isLoading || appUpdate.isLoading}
 						>
 							Save
@@ -639,7 +649,7 @@ const AppItem = ({appData: appP}: {appData: AppType}) => {
 						<Button
 							type='reset'
 							variant='outlined'
-							className='py-px pl-3 pr-3'
+							className='rounded-l-lg rounded-r-lg py-px pl-2 pr-2'
 							onClick={() => reset()}
 						>
 							Cancel
@@ -672,7 +682,7 @@ const CheckInput = ({
 
 	return (
 		<>
-			<div className='flex gap-2'>
+			<div className='flex gap-2 pl-2'>
 				<div className='mt-0.5 flex h-5 items-center'>
 					<input
 						id={`criteria-${criteria.id}`}
@@ -700,7 +710,7 @@ const CheckInput = ({
 				<TextAreaInput
 					name={`criteria.${idx}.explanation`}
 					label=''
-					wrapperClassName='w-full pl-6 pt-1 pb-2'
+					wrapperClassName='w-full pl-8 pt-1 pb-2 min-w-[24rem]'
 				/>
 			)}
 		</>

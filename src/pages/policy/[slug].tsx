@@ -88,7 +88,10 @@ const AppDetailsPage = ({
 						<ul className='relative'>
 							<div className='relative flex w-full flex-row-reverse pt-3 md:py-2'>
 								<p className='text-sm md:text-base'>
-									Updated: {dayjs(app.updatedAt).format('D MMMM YYYY')}
+									policy published at{' '}
+									<span className='font-bold'>
+										{dayjs(app.versionDate).format('D MMMM YYYY')}
+									</span>
 								</p>
 							</div>
 							<div className='absolute right-0 h-full w-1/2 rounded bg-dark-bg/10 md:w-[37.5%]'></div>

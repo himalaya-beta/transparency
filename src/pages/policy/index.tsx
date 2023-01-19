@@ -247,7 +247,7 @@ const Card = ({
 					</div>
 					<div className='py-0.5 px-4 text-sm text-light-head'>
 						<time className='font-body text-sm italic'>
-							{dayjs(app.updatedAt).format('MMM D, YYYY')}
+							{dayjs(app.versionDate).format('MMM D, YYYY')}
 						</time>
 					</div>
 				</div>

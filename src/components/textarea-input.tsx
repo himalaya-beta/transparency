@@ -2,6 +2,7 @@ import React from 'react'
 import {useFormContext} from 'react-hook-form'
 import {ErrorMessage} from '@hookform/error-message'
 import {capFirstChar, slugify} from 'utils/literal'
+import cN from 'clsx'
 
 type InputProps<T> = React.TextareaHTMLAttributes<HTMLTextAreaElement> & {
 	name: keyof T
@@ -10,6 +11,7 @@ type InputProps<T> = React.TextareaHTMLAttributes<HTMLTextAreaElement> & {
 	labelClassName?: string
 	inputClassName?: string
 	errorClassName?: string
+	autoGrow?: boolean
 }
 
 const TextAreaInput = <T,>({
@@ -19,6 +21,7 @@ const TextAreaInput = <T,>({
 	labelClassName,
 	inputClassName,
 	errorClassName,
+	autoGrow = true,
 	...props
 }: InputProps<T>) => {
 	const {
@@ -35,11 +38,13 @@ const TextAreaInput = <T,>({
 			textarea.style.height = `${textarea.scrollHeight}px`
 		}
 
-		textarea.addEventListener('input', resizeHeight)
+		if (autoGrow) {
+			textarea.addEventListener('input', resizeHeight)
+		}
 		return () => {
 			textarea.removeEventListener('input', resizeHeight)
 		}
-	}, [name])
+	}, [autoGrow, name])
 
 	return (
 		<div className={`flex flex-col ${wrapperClassName ?? ''}`}>
@@ -50,9 +55,11 @@ const TextAreaInput = <T,>({
 				id={slugify(name)}
 				{...register(name)}
 				{...props}
-				className={`resize-none overflow-hidden rounded bg-light-bg py-2 px-4 ${
-					inputClassName ?? ''
-				}`}
+				className={cN(
+					'resize-none rounded bg-light-bg py-2 px-4 text-black',
+					autoGrow && 'overflow-hidden',
+					inputClassName
+				)}
 			/>
 			<ErrorMessage
 				name={name}

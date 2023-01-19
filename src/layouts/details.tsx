@@ -12,7 +12,7 @@ export const DetailsPage = ({
 		<main className='container mx-auto max-w-screen-lg md:px-6'>
 			<DivAnimate
 				className={cN(
-					'rounded-b-lg border border-white/25 bg-dark-bg/25 px-6 py-8 shadow-lg shadow-brand-900',
+					'rounded-b-xl border border-white/25 bg-dark-bg/25 px-6 py-8 shadow-lg shadow-brand-900',
 					className
 				)}
 			>

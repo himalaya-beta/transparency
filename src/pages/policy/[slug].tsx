@@ -10,7 +10,7 @@ import {extractIdFromSlug, slugify} from 'utils/literal'
 import NavbarLayout from 'layouts/navbar'
 import MetaHead from 'components/meta-head'
 import QueryWrapper from 'components/query-wrapper'
-import {TriangleSymbol} from 'components/ornaments'
+import {TriangleSymbol, VerticalHighlighter} from 'components/ornaments'
 import {CheckIcon, MinusIcon} from '@heroicons/react/24/outline'
 
 import {
@@ -71,8 +71,8 @@ const AppDetailsPage = ({
 				imageUrl={`https://${process.env.NEXT_PUBLIC_VERCEL_URL}/images/articles.jpg`}
 			/>
 			<DetailsPage>
-				<div className=''>
-					<div className='h-full w-12 bg-red-500' />
+				<div className='relative'>
+					<VerticalHighlighter />
 					<h1 className='text-3xl'>{app.name}</h1>
 					<p className='italic text-opacity-75'>
 						{app.company}

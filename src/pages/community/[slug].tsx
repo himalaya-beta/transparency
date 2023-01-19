@@ -32,6 +32,7 @@ import {
 	type ArticleType,
 } from 'types/article'
 import {DetailsPage} from 'layouts/details'
+import {VerticalHighlighter} from 'components/ornaments'
 
 export const getStaticProps: GetStaticProps<{
 	article: ArticleType
@@ -150,8 +151,8 @@ const ArticleDetailsPage = ({
 					</FormWrapper>
 				) : (
 					<>
-						<div className=''>
-							<div className='h-full w-12 bg-red-500' />
+						<div className='relative'>
+							<VerticalHighlighter />
 							<h1 className='text-3xl'>{article.title}</h1>
 							<p className='italic text-opacity-75'>by {article.author.name}</p>
 							<p className='text-right text-sm italic md:text-base'>

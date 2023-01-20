@@ -41,6 +41,7 @@ import {type SubmitHandler} from 'react-hook-form'
 const MyArticlePage: NextPageWithLayout = () => {
 	const router = useRouter()
 	const {data: auth, status} = useSession()
+	const invalidate = trpc.useContext().article.fetchAll.invalidate
 
 	const [isCreate, setIsCreate] = React.useState(false)
 	const [edit, setEdit] = React.useState<
@@ -66,7 +67,7 @@ const MyArticlePage: NextPageWithLayout = () => {
 		trpc.article.create.useMutation({
 			onError: (error) => alert(error.message),
 			onSuccess: () => {
-				refetch()
+				invalidate()
 				methods.reset()
 				setIsCreate(false)
 			},
@@ -75,7 +76,7 @@ const MyArticlePage: NextPageWithLayout = () => {
 		trpc.article.update.useMutation({
 			onError: (error) => alert(error.message),
 			onSuccess: () => {
-				refetch()
+				invalidate()
 				methods.reset()
 				setEdit(undefined)
 			},
@@ -83,7 +84,7 @@ const MyArticlePage: NextPageWithLayout = () => {
 	const {mutate: remove, isLoading: isRemoving} =
 		trpc.article.delete.useMutation({
 			onError: (err) => alert(err.message),
-			onSuccess: () => refetch(),
+			onSuccess: () => invalidate(),
 		})
 
 	const onValidSubmit: SubmitHandler<ArticleCreateType> = (data) => {

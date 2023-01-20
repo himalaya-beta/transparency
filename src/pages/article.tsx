@@ -1,6 +1,7 @@
 /* eslint-disable unicorn/no-useless-undefined */
 import React from 'react'
 import Head from 'next/head'
+import Link from 'next/link'
 import {useRouter} from 'next/router'
 import {useSession} from 'next-auth/react'
 import {useForm} from 'react-hook-form'
@@ -8,7 +9,7 @@ import {zodResolver} from '@hookform/resolvers/zod'
 
 import {trpc} from 'utils/trpc'
 import {useDebounceState} from 'utils/hooks/use-debounce'
-import {truncate} from 'utils/literal'
+import {slugify, truncate} from 'utils/literal'
 
 import NavbarLayout from 'layouts/navbar'
 import {
@@ -28,6 +29,7 @@ import {
 	TrashIcon,
 	ArrowPathIcon,
 	XMarkIcon,
+	ArrowTopRightOnSquareIcon,
 } from '@heroicons/react/24/outline'
 
 import {type NextPageWithLayout} from './_app'
@@ -139,10 +141,15 @@ const MyArticlePage: NextPageWithLayout = () => {
 							{({id, title, content, authorId}) => (
 								<div
 									key={id}
-									className='flex items-center justify-between gap-8 rounded-lg rounded-t-lg bg-dark-bg/25 py-2 pl-4 pr-3 shadow'
+									className='flex items-center justify-between gap-2 rounded-lg rounded-t-lg bg-dark-bg/25 from-brand-900 to-brand-800 py-3 pl-5 pr-4 shadow transition-all hover:scale-105 hover:bg-gradient-to-br hover:shadow-lg'
 								>
 									<div className='flex flex-col'>
-										<h2 className='text-lg'>{truncate(title, 60)}</h2>
+										<Link href={`/community/${slugify(title, id)}`}>
+											<h2 className='group text-lg hover:cursor-pointer hover:underline'>
+												{truncate(title, 60)}
+												<ArrowTopRightOnSquareIcon className='ml-1 hidden w-5 group-hover:inline ' />
+											</h2>
+										</Link>
 										<p className='text-sm'>{truncate(content, 80)}</p>
 									</div>
 

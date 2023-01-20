@@ -6,9 +6,9 @@ export const articleCreateSchema = z.object({
 		.string()
 		.max(160, 'Title is too long')
 		.refine((input) => input.trim().split(' ').length > 1, {
-			message: 'Describe title more clearly',
+			message: 'Describe title more clearly.',
 		}),
-	content: z.string().min(200, 'Description is not long enough'),
+	content: z.string().min(200, 'Too short. Create more informative article.'),
 })
 
 export const articleUpdateSchema = articleCreateSchema.extend({

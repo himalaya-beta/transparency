@@ -23,6 +23,7 @@ import {
 
 import {capFirstChar} from 'utils/literal'
 import {Menu, Transition} from '@headlessui/react'
+import clsx from 'clsx'
 
 export default function NavbarLayout({children}: {children: React.ReactNode}) {
 	const {data} = useSession()
@@ -130,6 +131,7 @@ export default function NavbarLayout({children}: {children: React.ReactNode}) {
 function AuthButton({className}: {className?: string}) {
 	const {status, data} = useSession()
 	const router = useRouter()
+	const myArticleActive = router.pathname === '/article'
 
 	return (
 		<div className={className}>
@@ -182,11 +184,21 @@ function AuthButton({className}: {className?: string}) {
 							<div className='rounded-b-lg bg-gradient-to-br from-white via-white to-brand-200 px-1 py-1 md:py-3 md:px-2'>
 								<Menu.Item>
 									<button
+										disabled={myArticleActive}
 										onClick={() => router.push('/article')}
-										className='group flex w-full gap-4 rounded from-brand-500 to-brand-700 py-2 pl-3 hover:bg-gradient-to-br md:gap-5'
+										className='group flex w-full gap-4 rounded from-brand-500 to-brand-700 py-2 pl-3 enabled:hover:bg-gradient-to-br md:gap-5'
 									>
-										<ArticleOutlineIcon className='w-6 text-brand-600 group-hover:text-brand-50' />
-										<span className='group-hover:text-light-head'>
+										{myArticleActive ? (
+											<ArticleSolidIcon className='w-6 text-brand-600 enabled:group-hover:text-brand-50' />
+										) : (
+											<ArticleOutlineIcon className='w-6 text-brand-600 group-hover:text-brand-50' />
+										)}
+										<span
+											className={clsx(
+												'group-enabled:group-hover:text-light-head',
+												myArticleActive && 'font-bold text-brand-900 underline'
+											)}
+										>
 											My Articles
 										</span>
 									</button>

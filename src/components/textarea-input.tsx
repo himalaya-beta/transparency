@@ -35,6 +35,7 @@ const TextAreaInput = <T,>({
 		) as HTMLTextAreaElement
 		const resizeHeight = () => {
 			textarea.style.height = 'auto'
+			textarea.style.overflow = 'hidden'
 			textarea.style.height = `${textarea.scrollHeight}px`
 		}
 
@@ -57,7 +58,6 @@ const TextAreaInput = <T,>({
 				{...props}
 				className={cN(
 					'resize-none rounded bg-light-bg py-2 px-4 text-black',
-					autoGrow && 'overflow-hidden',
 					inputClassName
 				)}
 			/>

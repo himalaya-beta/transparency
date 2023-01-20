@@ -129,6 +129,7 @@ export default function NavbarLayout({children}: {children: React.ReactNode}) {
 
 function AuthButton({className}: {className?: string}) {
 	const {status, data} = useSession()
+	const router = useRouter()
 
 	return (
 		<div className={className}>
@@ -179,14 +180,17 @@ function AuthButton({className}: {className?: string}) {
 								</div>
 							</div>
 							<div className='rounded-b-lg bg-gradient-to-br from-white via-white to-brand-200 px-1 py-1 md:py-3 md:px-2'>
-								{/* <Menu.Item>
-									<button className='group flex w-full gap-4 rounded from-brand-500 to-brand-700 py-2 pl-3 hover:bg-gradient-to-br md:gap-5'>
+								<Menu.Item>
+									<button
+										onClick={() => router.push('/article')}
+										className='group flex w-full gap-4 rounded from-brand-500 to-brand-700 py-2 pl-3 hover:bg-gradient-to-br md:gap-5'
+									>
 										<ArticleOutlineIcon className='w-6 text-brand-600 group-hover:text-brand-50' />
 										<span className='group-hover:text-light-head'>
 											My Articles
 										</span>
 									</button>
-								</Menu.Item> */}
+								</Menu.Item>
 								<Menu.Item>
 									<button
 										className='group flex w-full gap-4 rounded from-brand-500 to-brand-700 py-2 pl-3 hover:bg-gradient-to-br md:gap-5'

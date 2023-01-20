@@ -244,7 +244,13 @@ const CriteriaCard = ({
 	}
 
 	return (
-		<DivAnimate className='rounded-lg bg-dark-bg/25'>
+		<DivAnimate
+			className={cN(
+				'rounded-lg bg-dark-bg/25 transition-transform',
+				!isExpanded &&
+					'from-brand-900 to-brand-800 hover:scale-105 hover:bg-gradient-to-br hover:shadow-lg'
+			)}
+		>
 			{edit === criteria.id ? (
 				<EditForm
 					key='main_criteria'
@@ -271,12 +277,12 @@ const CriteriaCard = ({
 					) : (
 						<div className='inline-block h-full w-8' />
 					)}
-					<div className='flex flex-1 items-center justify-between gap-2'>
+					<div className='flex flex-1 items-center justify-between gap-2 '>
 						<h2
-							className={`
-								leading-5 md:text-lg md:leading-normal
-								${haveChildren ? 'hover:cursor-pointer' : ''} 
-							`}
+							className={cN(
+								'leading-5 md:text-lg md:leading-normal',
+								haveChildren && 'hover:cursor-pointer'
+							)}
 							onClick={onExpand}
 						>
 							<span className='mr-2'>{criteria.value}</span>
@@ -311,15 +317,15 @@ const CriteriaCard = ({
 					>
 						{criteria.children.map((child) => {
 							return (
-								<DivAnimate className='' key={child.id}>
+								<DivAnimate className='group' key={child.id}>
 									{edit === child.id ? (
 										<EditForm
 											className='p-2 md:pr-3 md:pl-4'
 											key={`sub_criteria_${child.id}`}
 										/>
 									) : (
-										<div className='flex items-center justify-between gap-2 p-2 pl-3 md:pl-4'>
-											<h3 className='font-normal'>
+										<div className='flex items-center justify-between gap-2 from-brand-700 p-2 pl-3 group-hover:bg-gradient-to-r md:pl-4'>
+											<h3 className='origin-left font-normal group-hover:font-bold'>
 												{child.value}
 												<span className='ml-2 space-x-0.5'>
 													{child.type === 'EXPLANATION' && (

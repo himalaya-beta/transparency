@@ -68,6 +68,7 @@ module.exports = {
   plugins: [
     require('@tailwindcss/line-clamp'),
     require('@tailwindcss/forms'),
+    require('@tailwindcss/typography'),
 
     plugin(function ({addUtilities, addVariant, matchUtilities, theme}) {
       addVariant('child', '& > *')

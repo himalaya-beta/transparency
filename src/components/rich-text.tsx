@@ -20,7 +20,7 @@ import QuoteLeftIcon from './svg/quote-left'
 // import CodeSimpleIcon from './svg/code-simple'
 // import SquareCodeIcon from './svg/square-code'
 import ArrowToDottedLineIcon from './svg/arrows-to-dotted-line'
-import TextSlashIcon from './svg/text-slash'
+import EraserIcon from './svg/eraser'
 import ArrowRotateLeftIcon from './svg/arrow-rotate-left'
 import ArrowRotateRightIcon from './svg/arrow-rotate-right'
 
@@ -70,8 +70,8 @@ const EditorMenu = ({editor}: {editor: Editor | null}) => {
 	const underlineActive = editor.isActive('underline')
 
 	return (
-		<div className='absolute top-0 z-10 flex w-full gap-4 rounded-t bg-gray-100 py-1 px-4 shadow '>
-			<div className='prose-blockquote:text-italic space-x-1'>
+		<div className='absolute top-0 z-10 flex w-full items-center gap-4 rounded-t bg-gray-100 py-1 px-4 shadow '>
+			<div className='prose-blockquote:text-italic flex items-center gap-1'>
 				<button
 					onClick={() => editor.chain().focus().toggleBold().run()}
 					disabled={!editor.can().chain().focus().toggleBold().run()}
@@ -144,11 +144,23 @@ const EditorMenu = ({editor}: {editor: Editor | null}) => {
 						)}
 					/>
 				</button>
+
+				<SubDivider />
+
+				<button
+					onClick={() => editor.chain().focus().unsetAllMarks().run()}
+					className='rounded-lg border-2 border-white p-1'
+				>
+					<EraserIcon
+						primaryClassName='fill-red-700'
+						secondaryClassName='fill-red-400'
+					/>
+				</button>
 			</div>
 
-			<div className='h-8 w-0.5 bg-gray-600' />
+			<Divider />
 
-			<div className='space-x-1'>
+			<div className='flex items-center gap-1'>
 				<button
 					onClick={() => editor.chain().focus().toggleHeading({level: 1}).run()}
 					className='rounded-lg border-2 border-white p-1'
@@ -212,11 +224,7 @@ const EditorMenu = ({editor}: {editor: Editor | null}) => {
 						secondaryClassName='fill-gray-400'
 					/>
 				</button>
-			</div>
-
-			<div className='h-8 w-0.5 bg-gray-600' />
-
-			<div className='space-x-1'>
+				<SubDivider />
 				<button
 					onClick={() => editor.chain().focus().toggleBulletList().run()}
 					className='rounded-lg border-2 border-white p-1'
@@ -272,28 +280,29 @@ const EditorMenu = ({editor}: {editor: Editor | null}) => {
 						primaryClassName='fill-gray-400'
 					/>
 				</button>
-			</div>
-
-			<div className='h-8 w-0.5 bg-gray-600' />
-
-			<div className='space-x-1'>
+				<SubDivider />
 				<button
-					onClick={() => editor.chain().focus().unsetAllMarks().run()}
+					onClick={() => editor.chain().focus().clearNodes().run()}
 					className='rounded-lg border-2 border-white p-1'
 				>
-					<TextSlashIcon
-						primaryClassName='fill-gray-700'
-						secondaryClassName='fill-gray-400'
+					<EraserIcon
+						primaryClassName='fill-red-700'
+						secondaryClassName='fill-red-400'
 					/>
 				</button>
+			</div>
+
+			<Divider />
+
+			<div className='space-x-1'>
 				<button
 					onClick={() => editor.chain().focus().undo().run()}
 					disabled={!editor.can().chain().focus().undo().run()}
 					className='group rounded-lg border-2 border-white p-1 disabled:border-transparent'
 				>
 					<ArrowRotateLeftIcon
-						primaryClassName='fill-gray-700 group-disabled:opacity-25'
-						secondaryClassName='fill-gray-400 group-disabled:opacity-25'
+						primaryClassName='fill-blue-700 group-disabled:opacity-25'
+						secondaryClassName='fill-blue-400 group-disabled:opacity-25'
 					/>
 				</button>
 				<button
@@ -302,8 +311,8 @@ const EditorMenu = ({editor}: {editor: Editor | null}) => {
 					className=' group rounded-lg border-2 border-white p-1 disabled:border-transparent'
 				>
 					<ArrowRotateRightIcon
-						primaryClassName='fill-gray-700 group-disabled:opacity-25'
-						secondaryClassName='fill-gray-400 group-disabled:opacity-25'
+						primaryClassName='fill-blue-700 group-disabled:opacity-25'
+						secondaryClassName='fill-blue-500 group-disabled:opacity-25'
 					/>
 				</button>
 			</div>
@@ -312,13 +321,17 @@ const EditorMenu = ({editor}: {editor: Editor | null}) => {
 			<button onClick={() => editor.chain().focus().setHardBreak().run()}>
 				hard break
 			</button> 
-			
-			<button onClick={() => editor.chain().focus().clearNodes().run()}>
-				clear nodes
-			</button>
 			*/}
 		</div>
 	)
 }
+
+const SubDivider = () => (
+	<div className='mx-1 h-1 w-1 rounded-full bg-gray-300' />
+)
+
+const Divider = () => (
+	<div className='mx-1 h-8 w-0.5 rounded-full bg-gray-600 py-1' />
+)
 
 export default RichTextEditor

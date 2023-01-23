@@ -33,7 +33,7 @@ const RichTextEditor = () => {
 					'prose-headings:font-head prose-p:font-body prose-headings:text-black prose-p:text-black prose-h1:text-5xl prose-h2:text-4xl prose-h3:text-3xl prose-h4:text-2xl prose-h5:text-xl prose-h6:text-lg',
 					'prose-ol:list-decimal prose-ul:list-disc prose-li:pl-2 prose-li:ml-6',
 					'prose-blockquote:italic prose-blockquote:border-l-4 prose-blockquote:ml-4 prose-blockquote:my-2 prose-blockquote:pl-4 prose-blockquote:py-1 ',
-					'bg-white rounded py-3 px-4 outline-gray-500 pt-12 outline-offset-2 min-h-[16rem]'
+					'bg-white rounded-b py-3 px-4 outline-gray-500 outline-offset-2 min-h-[16rem]'
 				),
 			},
 		},
@@ -70,8 +70,8 @@ const EditorMenu = ({editor}: {editor: Editor | null}) => {
 	const underlineActive = editor.isActive('underline')
 
 	return (
-		<div className='absolute top-0 z-10 flex w-full items-center gap-4 rounded-t bg-gray-100 py-1 px-4 shadow '>
-			<div className='prose-blockquote:text-italic flex items-center gap-1'>
+		<div className='sticky top-0 z-10 flex w-full flex-wrap items-center gap-x-4 gap-y-2 rounded-t bg-gray-100 py-2 px-4 shadow '>
+			<div className='flex items-center gap-1'>
 				<button
 					onClick={() => editor.chain().focus().toggleBold().run()}
 					disabled={!editor.can().chain().focus().toggleBold().run()}
@@ -294,7 +294,7 @@ const EditorMenu = ({editor}: {editor: Editor | null}) => {
 
 			<Divider />
 
-			<div className='space-x-1'>
+			<div className='flex space-x-1'>
 				<button
 					onClick={() => editor.chain().focus().undo().run()}
 					disabled={!editor.can().chain().focus().undo().run()}

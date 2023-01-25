@@ -5,6 +5,8 @@ import cN from 'clsx'
 import {FieldName, useController} from 'react-hook-form'
 import {ErrorMessage} from '@hookform/error-message'
 
+import {capFirstChar} from 'utils/literal'
+
 import {LoadingPlaceholder} from './query-wrapper'
 import BoldIcon from 'components/svg/bold'
 import ItalicIcon from './svg/italic'
@@ -48,6 +50,7 @@ type Props<T extends FieldValues> = {
 const RichTextEditor = <T extends FieldValues>({
 	name,
 	control,
+	label,
 	containerClassName,
 	editorClassName,
 	menuClassName,
@@ -78,7 +81,7 @@ const RichTextEditor = <T extends FieldValues>({
 
 	return (
 		<div>
-			<label>Content</label>
+			<label>{label ?? capFirstChar(name)}</label>
 			<div className={containerClassName}>
 				<EditorMenu editor={editor} className={menuClassName} />
 				<EditorContent editor={editor} />

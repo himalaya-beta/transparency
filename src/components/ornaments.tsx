@@ -1,4 +1,5 @@
 import React from 'react'
+import clsx from 'clsx'
 
 export const SectionSeparator = ({
 	children,
@@ -31,6 +32,6 @@ export const TriangleSymbol = ({
 	)
 }
 
-export const VerticalHighlighter = () => {
-	return <div className='absolute -left-6 h-full w-1 rounded-r bg-brand-300' />
+export const VerticalHighlighter = ({className}: {className?: string}) => {
+	return <div className={clsx('absolute h-full w-1 bg-brand-300', className)} />
 }

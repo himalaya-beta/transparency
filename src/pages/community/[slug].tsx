@@ -61,41 +61,36 @@ const ArticleDetailsPage: NextPageWithLayout<
 				// description={article.content}
 				imageUrl={`https://${process.env.NEXT_PUBLIC_VERCEL_URL}/images/articles.jpg`}
 			/>
-			<DetailsPage>
-				<div className='relative space-y-2'>
-					<VerticalHighlighter />
-					<h1 className='text-3xl'>{article.title}</h1>
-					<div className='flex items-end justify-between'>
-						<div className='flex items-center gap-3'>
-							{article.author.image && (
-								<div className='z-10 h-10 w-10 shadow-xl'>
-									<Image
-										className='h-full w-full rounded-l-lg border-0 border-l-0 border-brand-300 object-cover'
-										src={article.author.image}
-										alt='author picture'
-										width={48}
-										height={48}
-									/>
-								</div>
-							)}
-							<p className='rounded-lg border-r-2 border-brand-300 pr-4 italic leading-5 text-opacity-90'>
-								<span className='italic'>written by</span>
-								<br />
-								<span className='font-bold'>{article.author.name}</span>
-							</p>
-						</div>
-						<p className='text-right text-sm italic md:text-base'>
-							{dayjs(article.updatedAt).format('D MMMM YYYY')}
+			<DetailsPage className='md:px-12'>
+				<div className='relative py-2 lg:mt-2'>
+					<VerticalHighlighter className='-left-6 top-1 rounded-r md:-left-12' />
+					<h1 className='text-2xl md:text-3xl lg:text-4xl'>{article.title}</h1>
+					<div className='mt-4 flex items-center gap-3'>
+						{article.author.image && (
+							<div className='z-10 h-10 w-10 shadow-xl'>
+								<Image
+									className='h-full w-full rounded-l-lg border-0 border-l-0 border-brand-300 object-cover'
+									src={article.author.image}
+									alt='author picture'
+									width={48}
+									height={48}
+								/>
+							</div>
+						)}
+						<p className='rounded-lg border-r-2 border-brand-300 pr-4 italic leading-5 text-opacity-90'>
+							<span className='italic'>
+								{dayjs(article.updatedAt).format('D MMMM YYYY')}
+							</span>
+							<br />
+							<span className='font-bold'>by {article.author.name}</span>
 						</p>
 					</div>
 				</div>
 
-				<div className='mt-6'>
-					<article
-						className='prose prose-invert w-full max-w-none prose-blockquote:border-brand-300 prose-hr:border-brand-600 md:prose-lg lg:prose-lg'
-						dangerouslySetInnerHTML={{__html: article.content}}
-					/>
-				</div>
+				<article
+					className='prose prose-invert mt-6 w-full max-w-none prose-blockquote:border-brand-300 prose-hr:border-brand-600 md:mt-8 md:prose-lg lg:mt-12 lg:prose-lg'
+					dangerouslySetInnerHTML={{__html: article.content}}
+				/>
 			</DetailsPage>
 		</>
 	)

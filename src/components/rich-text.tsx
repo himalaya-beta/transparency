@@ -2,7 +2,10 @@ import {Editor, EditorContent, useEditor} from '@tiptap/react'
 import StarterKit from '@tiptap/starter-kit'
 import Underline from '@tiptap/extension-underline'
 import cN from 'clsx'
+import {FieldName, useController} from 'react-hook-form'
+import {ErrorMessage} from '@hookform/error-message'
 
+import {LoadingPlaceholder} from './query-wrapper'
 import BoldIcon from 'components/svg/bold'
 import ItalicIcon from './svg/italic'
 import StrikeThroughIcon from './svg/strikethrough'
@@ -24,17 +27,41 @@ import EraserIcon from './svg/eraser'
 import ArrowRotateLeftIcon from './svg/arrow-rotate-left'
 import ArrowRotateRightIcon from './svg/arrow-rotate-right'
 
-const RichTextEditor = ({
-	containerClassName,
-	editorClassName,
-	menuClassName,
-}: {
+import {
+	type Control,
+	type FieldErrorsImpl,
+	type FieldValues,
+	type Path,
+	type DeepRequired,
+} from 'react-hook-form'
+import {type FieldValuesFromFieldErrors} from '@hookform/error-message'
+
+type Props<T extends FieldValues> = {
+	name: Path<T>
+	control: Control<T>
+	label?: string
 	containerClassName?: string
 	editorClassName?: string
 	menuClassName?: string
-}) => {
+}
+
+const RichTextEditor = <T extends FieldValues>({
+	name,
+	control,
+	containerClassName,
+	editorClassName,
+	menuClassName,
+}: Props<T>) => {
+	const {
+		field: {onChange, onBlur, value},
+		formState: {errors},
+	} = useController({name, control})
+
 	const editor = useEditor({
 		extensions: [StarterKit, Underline],
+		onCreate: ({editor}) => editor.commands.setContent(value),
+		onUpdate: ({editor}) => onChange(editor.getHTML()),
+		onBlur: () => onBlur(),
 		editorProps: {
 			attributes: {
 				class: cN(
@@ -46,13 +73,29 @@ const RichTextEditor = ({
 				),
 			},
 		},
-		content: ``,
+		content: undefined,
 	})
 
 	return (
-		<div className={containerClassName}>
-			<EditorMenu editor={editor} className={menuClassName} />
-			<EditorContent editor={editor} />
+		<div>
+			<label>Content</label>
+			<div className={containerClassName}>
+				<EditorMenu editor={editor} className={menuClassName} />
+				<EditorContent editor={editor} />
+			</div>
+			<ErrorMessage
+				name={
+					name as unknown as FieldName<
+						FieldValuesFromFieldErrors<
+							Partial<FieldErrorsImpl<DeepRequired<T>>>
+						>
+					>
+				}
+				errors={errors}
+				render={({message}) => (
+					<small className='mt-0.5 font-medium text-red-500'>{message}</small>
+				)}
+			/>
 		</div>
 	)
 }
@@ -64,7 +107,7 @@ const EditorMenu = ({
 	editor: Editor | null
 	className?: string
 }) => {
-	if (!editor) return <></>
+	if (!editor) return <LoadingPlaceholder label='editor' />
 
 	const boldActive = editor.isActive('bold')
 	const italicActive = editor.isActive('italic')
@@ -80,6 +123,7 @@ const EditorMenu = ({
 		>
 			<div className='flex items-center gap-1'>
 				<button
+					type='button'
 					onClick={() => editor.chain().focus().toggleBold().run()}
 					disabled={!editor.can().chain().focus().toggleBold().run()}
 					className={cN(
@@ -96,6 +140,7 @@ const EditorMenu = ({
 					/>
 				</button>
 				<button
+					type='button'
 					onClick={() => editor.chain().focus().toggleItalic().run()}
 					disabled={!editor.can().chain().focus().toggleItalic().run()}
 					className={cN(
@@ -112,6 +157,7 @@ const EditorMenu = ({
 					/>
 				</button>
 				<button
+					type='button'
 					onClick={() => editor.chain().focus().toggleStrike().run()}
 					disabled={!editor.can().chain().focus().toggleStrike().run()}
 					className={cN(
@@ -132,6 +178,7 @@ const EditorMenu = ({
 					/>
 				</button>
 				<button
+					type='button'
 					onClick={() => editor.chain().focus().toggleUnderline().run()}
 					disabled={!editor.can().chain().focus().toggleUnderline().run()}
 					className={cN(
@@ -155,6 +202,7 @@ const EditorMenu = ({
 				<SubDivider />
 
 				<button
+					type='button'
 					onClick={() => editor.chain().focus().unsetAllMarks().run()}
 					className='rounded-lg border-2 border-white p-1'
 				>
@@ -169,6 +217,7 @@ const EditorMenu = ({
 
 			<div className='flex items-center gap-1'>
 				<button
+					type='button'
 					onClick={() => editor.chain().focus().toggleHeading({level: 1}).run()}
 					className='rounded-lg border-2 border-white p-1'
 				>
@@ -178,6 +227,7 @@ const EditorMenu = ({
 					/>
 				</button>
 				<button
+					type='button'
 					onClick={() => editor.chain().focus().toggleHeading({level: 2}).run()}
 					className='rounded-lg border-2 border-white p-1'
 				>
@@ -187,6 +237,7 @@ const EditorMenu = ({
 					/>
 				</button>
 				<button
+					type='button'
 					onClick={() => editor.chain().focus().toggleHeading({level: 3}).run()}
 					className='rounded-lg border-2 border-white p-1'
 				>
@@ -196,6 +247,7 @@ const EditorMenu = ({
 					/>
 				</button>
 				<button
+					type='button'
 					onClick={() => editor.chain().focus().toggleHeading({level: 4}).run()}
 					className='rounded-lg border-2 border-white p-1'
 				>
@@ -205,6 +257,7 @@ const EditorMenu = ({
 					/>
 				</button>
 				<button
+					type='button'
 					onClick={() => editor.chain().focus().toggleHeading({level: 5}).run()}
 					className='rounded-lg border-2 border-white p-1'
 				>
@@ -214,6 +267,7 @@ const EditorMenu = ({
 					/>
 				</button>
 				<button
+					type='button'
 					onClick={() => editor.chain().focus().toggleHeading({level: 6}).run()}
 					className='rounded-lg border-2 border-white p-1'
 				>
@@ -223,6 +277,7 @@ const EditorMenu = ({
 					/>
 				</button>
 				<button
+					type='button'
 					onClick={() => editor.chain().focus().setParagraph().run()}
 					className='rounded-lg border-2 border-white p-1'
 				>
@@ -233,6 +288,7 @@ const EditorMenu = ({
 				</button>
 				<SubDivider />
 				<button
+					type='button'
 					onClick={() => editor.chain().focus().toggleBulletList().run()}
 					className='rounded-lg border-2 border-white p-1'
 				>
@@ -242,6 +298,7 @@ const EditorMenu = ({
 					/>
 				</button>
 				<button
+					type='button'
 					onClick={() => editor.chain().focus().toggleOrderedList().run()}
 					className='rounded-lg border-2 border-white p-1'
 				>
@@ -251,6 +308,7 @@ const EditorMenu = ({
 					/>
 				</button>
 				<button
+					type='button'
 					onClick={() => editor.chain().focus().toggleBlockquote().run()}
 					className='rounded-lg border-2 border-white p-1'
 				>
@@ -259,7 +317,7 @@ const EditorMenu = ({
 						secondaryClassName='fill-gray-400'
 					/>
 				</button>
-				{/* <button
+				{/* <button type='button'
 					onClick={() => editor.chain().focus().toggleCode().run()}
 					disabled={!editor.can().chain().focus().toggleCode().run()}
 					className='group rounded-lg border-2 border-white p-1 disabled:border-transparent'
@@ -269,7 +327,7 @@ const EditorMenu = ({
 						secondaryClassName='fill-gray-400 group-disabled:opacity-25'
 					/>
 				</button>
-				<button
+				<button type='button'
 					onClick={() => editor.chain().focus().toggleCodeBlock().run()}
 					className='rounded-lg border-2 border-white p-1'
 				>
@@ -279,6 +337,7 @@ const EditorMenu = ({
 					/>
 				</button> */}
 				<button
+					type='button'
 					onClick={() => editor.chain().focus().setHorizontalRule().run()}
 					className='rounded-lg border-2 border-white p-1'
 				>
@@ -289,6 +348,7 @@ const EditorMenu = ({
 				</button>
 				<SubDivider />
 				<button
+					type='button'
 					onClick={() => editor.chain().focus().clearNodes().run()}
 					className='rounded-lg border-2 border-white p-1'
 				>
@@ -303,6 +363,7 @@ const EditorMenu = ({
 
 			<div className='flex space-x-1'>
 				<button
+					type='button'
 					onClick={() => editor.chain().focus().undo().run()}
 					disabled={!editor.can().chain().focus().undo().run()}
 					className='group rounded-lg border-2 border-white p-1 disabled:border-transparent'
@@ -313,6 +374,7 @@ const EditorMenu = ({
 					/>
 				</button>
 				<button
+					type='button'
 					onClick={() => editor.chain().focus().redo().run()}
 					disabled={!editor.can().chain().focus().redo().run()}
 					className=' group rounded-lg border-2 border-white p-1 disabled:border-transparent'
@@ -325,7 +387,7 @@ const EditorMenu = ({
 			</div>
 
 			{/*
-			<button onClick={() => editor.chain().focus().setHardBreak().run()}>
+			<button type='button' onClick={() => editor.chain().focus().setHardBreak().run()}>
 				hard break
 			</button> 
 			*/}

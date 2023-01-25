@@ -68,10 +68,8 @@ const RichTextEditor = <T extends FieldValues>({
 		editorProps: {
 			attributes: {
 				class: cN(
-					'prose-headings:font-head prose-p:font-body prose-headings:text-black prose-p:text-black prose-h1:text-5xl prose-h2:text-4xl prose-h3:text-3xl prose-h4:text-2xl prose-h5:text-xl prose-h6:text-lg',
-					'prose-ol:list-decimal prose-ul:list-disc prose-li:pl-2 prose-li:ml-6',
-					'prose-blockquote:italic prose-blockquote:border-l-4 prose-blockquote:ml-4 prose-blockquote:my-2 prose-blockquote:pl-4 prose-blockquote:py-1 ',
-					'bg-white py-3 px-4 outline-gray-500 outline-offset-2 min-h-[16rem]',
+					'prose md:prose-md lg:prose-lg prose-slate prose-p:text-black prose-headings:text-black',
+					'max-w-none bg-white p-4 outline-gray-500 outline-offset-2 min-h-[16rem]',
 					editorClassName
 				),
 			},

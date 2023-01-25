@@ -140,10 +140,7 @@ export const TextAreaInputNew = <T extends FieldValues>({
 				id={name}
 				{...register(name)}
 				{...props}
-				className={cN(
-					'resize-none overflow-hidden rounded bg-light-bg/80 py-2 px-4',
-					inputClassName
-				)}
+				className={cN('resize-none rounded bg-white py-2 px-4', inputClassName)}
 			/>
 			<ErrorMessage
 				name={name as FieldName<FieldValuesFromFieldErrors<Errors<T>>>}

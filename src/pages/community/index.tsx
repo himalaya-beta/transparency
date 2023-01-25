@@ -89,7 +89,7 @@ export default function ArticlePage() {
 const Card = ({
 	id,
 	title,
-	content,
+	// content,
 	updatedAt,
 	author,
 	className,
@@ -132,9 +132,9 @@ const Card = ({
 				<p className='float-right mr-5 text-sm italic'>by {author.name}</p>
 			</div>
 
-			<p className='pt-3 text-right indent-12 leading-5 text-light-body line-clamp-4'>
+			{/* <p className='pt-3 text-right indent-12 leading-5 text-light-body line-clamp-4'>
 				{content}
-			</p>
+			</p> */}
 		</Link>
 	)
 }

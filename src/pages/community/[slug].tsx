@@ -57,7 +57,8 @@ const ArticleDetailsPage: NextPageWithLayout<
 		<>
 			<MetaHead
 				title={article.title}
-				description={article.content}
+				description={''}
+				// description={article.content}
 				imageUrl={`https://${process.env.NEXT_PUBLIC_VERCEL_URL}/images/articles.jpg`}
 			/>
 			<DetailsPage>
@@ -90,7 +91,10 @@ const ArticleDetailsPage: NextPageWithLayout<
 				</div>
 
 				<div className='mt-6'>
-					<p className='whitespace-pre-wrap md:text-lg'>{article.content}</p>
+					<article
+						className='prose prose-invert w-full max-w-none prose-blockquote:border-brand-300 prose-hr:border-brand-600 md:prose-lg lg:prose-lg'
+						dangerouslySetInnerHTML={{__html: article.content}}
+					/>
 				</div>
 			</DetailsPage>
 		</>

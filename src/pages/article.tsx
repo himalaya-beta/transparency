@@ -20,8 +20,8 @@ import {
 import DataInfiniteWrapper from 'components/query-infinite-wrapper'
 import DivAnimate from 'components/div-animate'
 import Modal from 'components/modal'
-import FormWrapper from 'components/form-wrapper'
-import TextAreaInput from 'components/textarea-input'
+import {TextAreaInputNew} from 'components/textarea-input'
+import RichTextEditor from 'components/rich-text'
 import {Button, IconButton} from 'components/button'
 import {
 	PlusIcon,
@@ -60,8 +60,14 @@ const MyArticlePage: NextPageWithLayout = () => {
 			}
 		)
 
-	const methods = useForm<ArticleCreateType>({
-		mode: 'onTouched',
+	const {
+		register,
+		control,
+		formState: {errors},
+		handleSubmit,
+		reset,
+		setValue,
+	} = useForm<ArticleCreateType>({
 		resolver: zodResolver(articleCreateSchema),
 	})
 
@@ -70,7 +76,7 @@ const MyArticlePage: NextPageWithLayout = () => {
 			onError: (error) => alert(error.message),
 			onSuccess: () => {
 				invalidate()
-				methods.reset()
+				reset()
 				setIsCreate(false)
 			},
 		})
@@ -79,7 +85,7 @@ const MyArticlePage: NextPageWithLayout = () => {
 			onError: (error) => alert(error.message),
 			onSuccess: () => {
 				invalidate()
-				methods.reset()
+				reset()
 				setEdit(undefined)
 			},
 		})
@@ -150,14 +156,14 @@ const MyArticlePage: NextPageWithLayout = () => {
 												<ArrowTopRightOnSquareIcon className='ml-1 hidden w-5 group-hover:inline ' />
 											</h2>
 										</Link>
-										<p className='text-sm'>{truncate(content, 80)}</p>
+										{/* <pre className='text-sm'>{truncate(content, 80)}</pre> */}
 									</div>
 
 									<div className='item-center flex divide-x-2 '>
 										<button
 											onClick={() => {
-												methods.setValue('title', title)
-												methods.setValue('content', content)
+												setValue('title', title)
+												setValue('content', content)
 
 												setEdit({id, authorId, title, content})
 											}}
@@ -185,49 +191,56 @@ const MyArticlePage: NextPageWithLayout = () => {
 				<Modal
 					isOpen={isCreate || !!edit}
 					setIsOpen={setIsCreate}
-					className='max-w-screen-md'
+					className='max-w-screen-lg'
 				>
-					<div className='border-6 container max-w-screen-lg space-y-2 rounded-lg border-light-bg/40 bg-gradient-to-br from-brand-700 via-brand-800 to-brand-900 py-6 px-8'>
-						<div className=''>
-							<FormWrapper
-								methods={methods}
-								onValidSubmit={onValidSubmit}
-								className='flex flex-col gap-4'
+					<form
+						onSubmit={handleSubmit(onValidSubmit)}
+						className='flex flex-col gap-4 rounded-lg bg-gradient-to-br from-brand-700 via-brand-800 to-brand-900 p-6'
+					>
+						<TextAreaInputNew
+							name='title'
+							rows={1}
+							register={register}
+							errors={errors}
+							inputClassName='bg-white'
+						/>
+						<RichTextEditor
+							control={control}
+							name='content'
+							containerClassName='max-h-[70vh] overflow-y-auto rounded'
+							menuClassName='sticky top-0 z-10'
+							editorClassName='w-full'
+						/>
+						<div className='flex gap-2'>
+							<Button
+								type='submit'
+								variant='filled'
+								isLoading={isCreating || isUpdating}
 							>
-								<TextAreaInput<ArticleCreateType> name='title' rows={2} />
-								<TextAreaInput<ArticleCreateType> name='content' rows={8} />
-								<div className='flex gap-2'>
-									<Button
-										type='submit'
-										variant='filled'
-										isLoading={isCreating || isUpdating}
-									>
-										{isCreate ? (
-											<>
-												Publish <PencilIcon className='w-5' />
-											</>
-										) : (
-											<>
-												Update <PencilIcon className='w-5' />
-											</>
-										)}
-									</Button>
-									<Button
-										type='reset'
-										variant='outlined'
-										onClick={() => {
-											setIsCreate(false)
-											setEdit(undefined)
-											methods.reset()
-										}}
-										isLoading={isCreating || isUpdating}
-									>
-										Cancel <XMarkIcon className='w-5' />
-									</Button>
-								</div>
-							</FormWrapper>
+								{isCreate ? (
+									<>
+										Publish <PencilIcon className='w-5' />
+									</>
+								) : (
+									<>
+										Update <PencilIcon className='w-5' />
+									</>
+								)}
+							</Button>
+							<Button
+								type='reset'
+								variant='outlined'
+								onClick={() => {
+									setIsCreate(false)
+									setEdit(undefined)
+									reset()
+								}}
+								isLoading={isCreating || isUpdating}
+							>
+								Cancel <XMarkIcon className='w-5' />
+							</Button>
 						</div>
-					</div>
+					</form>
 				</Modal>
 			</main>
 		</>

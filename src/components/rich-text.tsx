@@ -24,7 +24,15 @@ import EraserIcon from './svg/eraser'
 import ArrowRotateLeftIcon from './svg/arrow-rotate-left'
 import ArrowRotateRightIcon from './svg/arrow-rotate-right'
 
-const RichTextEditor = () => {
+const RichTextEditor = ({
+	containerClassName,
+	editorClassName,
+	menuClassName,
+}: {
+	containerClassName?: string
+	editorClassName?: string
+	menuClassName?: string
+}) => {
 	const editor = useEditor({
 		extensions: [StarterKit, Underline],
 		editorProps: {
@@ -33,35 +41,29 @@ const RichTextEditor = () => {
 					'prose-headings:font-head prose-p:font-body prose-headings:text-black prose-p:text-black prose-h1:text-5xl prose-h2:text-4xl prose-h3:text-3xl prose-h4:text-2xl prose-h5:text-xl prose-h6:text-lg',
 					'prose-ol:list-decimal prose-ul:list-disc prose-li:pl-2 prose-li:ml-6',
 					'prose-blockquote:italic prose-blockquote:border-l-4 prose-blockquote:ml-4 prose-blockquote:my-2 prose-blockquote:pl-4 prose-blockquote:py-1 ',
-					'bg-white rounded-b py-3 px-4 outline-gray-500 outline-offset-2 min-h-[16rem]'
+					'bg-white py-3 px-4 outline-gray-500 outline-offset-2 min-h-[16rem]',
+					editorClassName
 				),
 			},
 		},
-		content: `
-			<p>lorem ipsum dolor amit</p>
-			<ul>
-				<li>Konde</li>
-				<li>Mande</li>
-			</ul>
-			<ol>
-				<li>Konde</li>
-				<li>Mande</li>
-			</ol>
-			<p>lorem ipsum dolor amit</p>
-
-			<blockquote>Konde is the most unreasonable tech</blockquote>
-		`,
+		content: ``,
 	})
 
 	return (
-		<div className='relative'>
-			<EditorMenu editor={editor} />
+		<div className={containerClassName}>
+			<EditorMenu editor={editor} className={menuClassName} />
 			<EditorContent editor={editor} />
 		</div>
 	)
 }
 
-const EditorMenu = ({editor}: {editor: Editor | null}) => {
+const EditorMenu = ({
+	editor,
+	className,
+}: {
+	editor: Editor | null
+	className?: string
+}) => {
 	if (!editor) return <></>
 
 	const boldActive = editor.isActive('bold')
@@ -70,7 +72,12 @@ const EditorMenu = ({editor}: {editor: Editor | null}) => {
 	const underlineActive = editor.isActive('underline')
 
 	return (
-		<div className='sticky top-0 z-10 flex w-full flex-wrap items-center gap-x-4 gap-y-2 rounded-t bg-gray-100 py-2 px-4 shadow '>
+		<div
+			className={cN(
+				'flex w-full flex-wrap items-center gap-x-4 gap-y-2 bg-gray-100 py-2 px-4 shadow',
+				className
+			)}
+		>
 			<div className='flex items-center gap-1'>
 				<button
 					onClick={() => editor.chain().focus().toggleBold().run()}

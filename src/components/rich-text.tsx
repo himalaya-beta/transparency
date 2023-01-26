@@ -1,9 +1,11 @@
+import React from 'react'
 import {Editor, EditorContent, useEditor} from '@tiptap/react'
 import StarterKit from '@tiptap/starter-kit'
 import Underline from '@tiptap/extension-underline'
-import cN from 'clsx'
+import Link from '@tiptap/extension-link'
 import {FieldName, useController} from 'react-hook-form'
 import {ErrorMessage} from '@hookform/error-message'
+import cN from 'clsx'
 
 import {capFirstChar} from 'utils/literal'
 
@@ -37,6 +39,7 @@ import {
 	type DeepRequired,
 } from 'react-hook-form'
 import {type FieldValuesFromFieldErrors} from '@hookform/error-message'
+import LinkIcon from './svg/link'
 
 type Props<T extends FieldValues> = {
 	name: Path<T>
@@ -61,7 +64,7 @@ const RichTextEditor = <T extends FieldValues>({
 	} = useController({name, control})
 
 	const editor = useEditor({
-		extensions: [StarterKit, Underline],
+		extensions: [StarterKit, Underline, Link.configure({openOnClick: false})],
 		onCreate: ({editor}) => editor.commands.setContent(value),
 		onUpdate: ({editor}) => onChange(editor.getHTML()),
 		onBlur: () => onBlur(),
@@ -108,12 +111,38 @@ const EditorMenu = ({
 	editor: Editor | null
 	className?: string
 }) => {
+	const setLink = React.useCallback(() => {
+		if (!editor) return
+
+		const prevUrl = editor.getAttributes('link').href
+		let prompt = 'Paste the URL'
+		if (prevUrl) {
+			prompt = 'Change the URL (set empty to remove link)'
+		}
+		const url = window.prompt(prompt, prevUrl)
+
+		// cancelled
+		if (url === null) {
+			return
+		}
+
+		// empty
+		if (url === '') {
+			editor.chain().focus().extendMarkRange('link').unsetLink().run()
+			return
+		}
+
+		// update link
+		editor.chain().focus().extendMarkRange('link').setLink({href: url}).run()
+	}, [editor])
+
 	if (!editor) return <LoadingPlaceholder label='editor' />
 
 	const boldActive = editor.isActive('bold')
 	const italicActive = editor.isActive('italic')
 	const strikeActive = editor.isActive('strike')
 	const underlineActive = editor.isActive('underline')
+	const linkActive = editor.isActive('link')
 
 	return (
 		<div
@@ -196,6 +225,26 @@ const EditorMenu = ({
 						secondaryClassName={cN(
 							'group-disabled:opacity-25',
 							underlineActive ? 'fill-white' : 'fill-gray-400'
+						)}
+					/>
+				</button>
+				<button
+					type='button'
+					onClick={setLink}
+					className={cN(
+						'group rounded-lg border-2 p-1 disabled:border-transparent',
+						linkActive && 'bg-gray-400',
+						!linkActive && 'border-white'
+					)}
+				>
+					<LinkIcon
+						primaryClassName={cN(
+							'group-disabled:opacity-25',
+							linkActive ? 'fill-gray-900' : 'fill-gray-700'
+						)}
+						secondaryClassName={cN(
+							'group-disabled:opacity-25',
+							linkActive ? 'fill-white' : 'fill-gray-400'
 						)}
 					/>
 				</button>

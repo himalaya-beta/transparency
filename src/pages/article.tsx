@@ -199,10 +199,9 @@ const MyArticlePage: NextPageWithLayout = () => {
 					>
 						<TextAreaInputNew
 							name='title'
-							rows={1}
 							register={register}
 							errors={errors}
-							inputClassName='bg-white'
+							inputClassName='bg-white text-2xl md:text-3xl lg:text-4xl font-bold font-heading'
 						/>
 						<RichTextEditor
 							control={control}

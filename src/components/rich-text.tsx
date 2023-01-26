@@ -20,12 +20,12 @@ import StrikeThroughIcon from './svg/strikethrough'
 import UnderlineIcon from './svg/underline'
 import LinkIcon from './svg/link'
 import HeadingIcon from './svg/heading'
-import H1Icon from './svg/h1'
+// import H1Icon from './svg/h1'
 import H2Icon from './svg/h2'
 import H3Icon from './svg/h3'
 import H4Icon from './svg/h4'
-import H5Icon from './svg/h5'
-import H6Icon from './svg/h6'
+// import H5Icon from './svg/h5'
+// import H6Icon from './svg/h6'
 import AlignLeftIcon from './svg/align-left'
 import AlignCenterIcon from './svg/align-center'
 import AlignRightIcon from './svg/align-right'
@@ -188,12 +188,12 @@ const EditorMenu = ({
 	const blockquoteActive = editor.isActive('blockquote')
 
 	const headingList: Array<Item> = [
-		{
-			id: 'h1',
-			Icon: H1Icon,
-			isActive: editor.isActive('heading', {level: 1}),
-			onClick: () => editor.chain().focus().toggleHeading({level: 1}).run(),
-		},
+		// {
+		// 	id: 'h1',
+		// 	Icon: H1Icon,
+		// 	isActive: editor.isActive('heading', {level: 1}),
+		// 	onClick: () => editor.chain().focus().toggleHeading({level: 1}).run(),
+		// },
 		{
 			id: 'h2',
 			Icon: H2Icon,
@@ -212,18 +212,18 @@ const EditorMenu = ({
 			isActive: editor.isActive('heading', {level: 4}),
 			onClick: () => editor.chain().focus().toggleHeading({level: 4}).run(),
 		},
-		{
-			id: 'h5',
-			Icon: H5Icon,
-			isActive: editor.isActive('heading', {level: 5}),
-			onClick: () => editor.chain().focus().toggleHeading({level: 5}).run(),
-		},
-		{
-			id: 'h6',
-			Icon: H6Icon,
-			isActive: editor.isActive('heading', {level: 6}),
-			onClick: () => editor.chain().focus().toggleHeading({level: 6}).run(),
-		},
+		// {
+		// 	id: 'h5',
+		// 	Icon: H5Icon,
+		// 	isActive: editor.isActive('heading', {level: 5}),
+		// 	onClick: () => editor.chain().focus().toggleHeading({level: 5}).run(),
+		// },
+		// {
+		// 	id: 'h6',
+		// 	Icon: H6Icon,
+		// 	isActive: editor.isActive('heading', {level: 6}),
+		// 	onClick: () => editor.chain().focus().toggleHeading({level: 6}).run(),
+		// },
 	]
 
 	const alignList: Array<Item> = [

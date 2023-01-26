@@ -178,10 +178,20 @@ const EditorMenu = ({
 	const strikeActive = editor.isActive('strike')
 	const underlineActive = editor.isActive('underline')
 	const linkActive = editor.isActive('link')
+	const h1Active = editor.isActive('heading', {level: 1})
+	const h2Active = editor.isActive('heading', {level: 2})
+	const h3Active = editor.isActive('heading', {level: 3})
+	const h4Active = editor.isActive('heading', {level: 4})
+	const h5Active = editor.isActive('heading', {level: 5})
+	const h6Active = editor.isActive('heading', {level: 6})
+	const paragraphActive = editor.isActive('paragraph')
 	const alignLeftActive = editor.isActive({textAlign: 'left'})
 	const alignCenterActive = editor.isActive({textAlign: 'center'})
 	const alignRightActive = editor.isActive({textAlign: 'right'})
 	const alignJustifyActive = editor.isActive({textAlign: 'justify'})
+	const bulletListActive = editor.isActive('bulletList')
+	const orderedListActive = editor.isActive('orderedList')
+	const blockquoteActive = editor.isActive('blockquote')
 
 	return (
 		<div
@@ -308,71 +318,141 @@ const EditorMenu = ({
 				<button
 					type='button'
 					onClick={() => editor.chain().focus().toggleHeading({level: 1}).run()}
-					className='rounded-lg border-2 border-white p-1'
+					className={cN(
+						'group rounded-lg border-2 p-1 disabled:border-transparent',
+						h1Active && 'bg-gray-400',
+						!h1Active && 'border-white'
+					)}
 				>
 					<H1Icon
-						primaryClassName='fill-gray-700'
-						secondaryClassName='fill-gray-400'
+						primaryClassName={cN(
+							'group-disabled:opacity-25',
+							h1Active ? 'fill-gray-900' : 'fill-gray-700'
+						)}
+						secondaryClassName={cN(
+							'group-disabled:opacity-25',
+							h1Active ? 'fill-white' : 'fill-gray-400'
+						)}
 					/>
 				</button>
 				<button
 					type='button'
 					onClick={() => editor.chain().focus().toggleHeading({level: 2}).run()}
-					className='rounded-lg border-2 border-white p-1'
+					className={cN(
+						'group rounded-lg border-2 p-1 disabled:border-transparent',
+						h2Active && 'bg-gray-400',
+						!h2Active && 'border-white'
+					)}
 				>
 					<H2Icon
-						primaryClassName='fill-gray-700'
-						secondaryClassName='fill-gray-400'
+						primaryClassName={cN(
+							'group-disabled:opacity-25',
+							h2Active ? 'fill-gray-900' : 'fill-gray-700'
+						)}
+						secondaryClassName={cN(
+							'group-disabled:opacity-25',
+							h2Active ? 'fill-white' : 'fill-gray-400'
+						)}
 					/>
 				</button>
 				<button
 					type='button'
 					onClick={() => editor.chain().focus().toggleHeading({level: 3}).run()}
-					className='rounded-lg border-2 border-white p-1'
+					className={cN(
+						'group rounded-lg border-2 p-1 disabled:border-transparent',
+						h3Active && 'bg-gray-400',
+						!h3Active && 'border-white'
+					)}
 				>
 					<H3Icon
-						primaryClassName='fill-gray-700'
-						secondaryClassName='fill-gray-400'
+						primaryClassName={cN(
+							'group-disabled:opacity-25',
+							h3Active ? 'fill-gray-900' : 'fill-gray-700'
+						)}
+						secondaryClassName={cN(
+							'group-disabled:opacity-25',
+							h3Active ? 'fill-white' : 'fill-gray-400'
+						)}
 					/>
 				</button>
 				<button
 					type='button'
 					onClick={() => editor.chain().focus().toggleHeading({level: 4}).run()}
-					className='rounded-lg border-2 border-white p-1'
+					className={cN(
+						'group rounded-lg border-2 p-1 disabled:border-transparent',
+						h4Active && 'bg-gray-400',
+						!h4Active && 'border-white'
+					)}
 				>
 					<H4Icon
-						primaryClassName='fill-gray-700'
-						secondaryClassName='fill-gray-400'
+						primaryClassName={cN(
+							'group-disabled:opacity-25',
+							h4Active ? 'fill-gray-900' : 'fill-gray-700'
+						)}
+						secondaryClassName={cN(
+							'group-disabled:opacity-25',
+							h4Active ? 'fill-white' : 'fill-gray-400'
+						)}
 					/>
 				</button>
 				<button
 					type='button'
 					onClick={() => editor.chain().focus().toggleHeading({level: 5}).run()}
-					className='rounded-lg border-2 border-white p-1'
+					className={cN(
+						'group rounded-lg border-2 p-1 disabled:border-transparent',
+						h5Active && 'bg-gray-400',
+						!h5Active && 'border-white'
+					)}
 				>
 					<H5Icon
-						primaryClassName='fill-gray-700'
-						secondaryClassName='fill-gray-400'
+						primaryClassName={cN(
+							'group-disabled:opacity-25',
+							h5Active ? 'fill-gray-900' : 'fill-gray-700'
+						)}
+						secondaryClassName={cN(
+							'group-disabled:opacity-25',
+							h5Active ? 'fill-white' : 'fill-gray-400'
+						)}
 					/>
 				</button>
 				<button
 					type='button'
 					onClick={() => editor.chain().focus().toggleHeading({level: 6}).run()}
-					className='rounded-lg border-2 border-white p-1'
+					className={cN(
+						'group rounded-lg border-2 p-1 disabled:border-transparent',
+						h6Active && 'bg-gray-400',
+						!h6Active && 'border-white'
+					)}
 				>
 					<H6Icon
-						primaryClassName='fill-gray-700'
-						secondaryClassName='fill-gray-400'
+						primaryClassName={cN(
+							'group-disabled:opacity-25',
+							h6Active ? 'fill-gray-900' : 'fill-gray-700'
+						)}
+						secondaryClassName={cN(
+							'group-disabled:opacity-25',
+							h6Active ? 'fill-white' : 'fill-gray-400'
+						)}
 					/>
 				</button>
 				<button
 					type='button'
 					onClick={() => editor.chain().focus().setParagraph().run()}
-					className='rounded-lg border-2 border-white p-1'
+					className={cN(
+						'group rounded-lg border-2 p-1 disabled:border-transparent',
+						paragraphActive && 'bg-gray-400',
+						!paragraphActive && 'border-white'
+					)}
 				>
 					<ParagraphIcon
-						primaryClassName='fill-gray-700'
-						secondaryClassName='fill-gray-400'
+						primaryClassName={cN(
+							'group-disabled:opacity-25',
+							paragraphActive ? 'fill-gray-900' : 'fill-gray-700'
+						)}
+						secondaryClassName={cN(
+							'group-disabled:opacity-25',
+							paragraphActive ? 'fill-white' : 'fill-gray-400'
+						)}
 					/>
 				</button>
 
@@ -462,31 +542,61 @@ const EditorMenu = ({
 				<button
 					type='button'
 					onClick={() => editor.chain().focus().toggleBulletList().run()}
-					className='rounded-lg border-2 border-white p-1'
+					className={cN(
+						'group rounded-lg border-2 p-1 disabled:border-transparent',
+						bulletListActive && 'bg-gray-400',
+						!bulletListActive && 'border-white'
+					)}
 				>
 					<ListUlIcon
-						primaryClassName='fill-gray-700'
-						secondaryClassName='fill-gray-400'
+						primaryClassName={cN(
+							'group-disabled:opacity-25',
+							bulletListActive ? 'fill-gray-900' : 'fill-gray-700'
+						)}
+						secondaryClassName={cN(
+							'group-disabled:opacity-25',
+							bulletListActive ? 'fill-white' : 'fill-gray-400'
+						)}
 					/>
 				</button>
 				<button
 					type='button'
 					onClick={() => editor.chain().focus().toggleOrderedList().run()}
-					className='rounded-lg border-2 border-white p-1'
+					className={cN(
+						'group rounded-lg border-2 p-1 disabled:border-transparent',
+						orderedListActive && 'bg-gray-400',
+						!orderedListActive && 'border-white'
+					)}
 				>
 					<ListOlIcon
-						primaryClassName='fill-gray-700'
-						secondaryClassName='fill-gray-400'
+						primaryClassName={cN(
+							'group-disabled:opacity-25',
+							orderedListActive ? 'fill-gray-900' : 'fill-gray-700'
+						)}
+						secondaryClassName={cN(
+							'group-disabled:opacity-25',
+							orderedListActive ? 'fill-white' : 'fill-gray-400'
+						)}
 					/>
 				</button>
 				<button
 					type='button'
 					onClick={() => editor.chain().focus().toggleBlockquote().run()}
-					className='rounded-lg border-2 border-white p-1'
+					className={cN(
+						'group rounded-lg border-2 p-1 disabled:border-transparent',
+						blockquoteActive && 'bg-gray-400',
+						!blockquoteActive && 'border-white'
+					)}
 				>
 					<QuoteLeftIcon
-						primaryClassName='fill-gray-700'
-						secondaryClassName='fill-gray-400'
+						primaryClassName={cN(
+							'group-disabled:opacity-25',
+							blockquoteActive ? 'fill-gray-900' : 'fill-gray-700'
+						)}
+						secondaryClassName={cN(
+							'group-disabled:opacity-25',
+							blockquoteActive ? 'fill-white' : 'fill-gray-400'
+						)}
 					/>
 				</button>
 				{/* <button type='button'

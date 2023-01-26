@@ -19,6 +19,7 @@ specifiers:
   '@tiptap/extension-image': 2.0.0-beta.209
   '@tiptap/extension-link': 2.0.0-beta.209
   '@tiptap/extension-underline': 2.0.0-beta.209
+  '@tiptap/extension-youtube': 2.0.0-beta.209
   '@tiptap/react': 2.0.0-beta.209
   '@tiptap/starter-kit': 2.0.0-beta.209
   '@trpc/client': ^10.7.0
@@ -78,6 +79,7 @@ dependencies:
   '@tiptap/extension-image': 2.0.0-beta.209_f4ffqkgz5d3wev7su7t7l2rrua
   '@tiptap/extension-link': 2.0.0-beta.209_tasdqzysbe2xhn7sbwmhtfw24q
   '@tiptap/extension-underline': 2.0.0-beta.209_f4ffqkgz5d3wev7su7t7l2rrua
+  '@tiptap/extension-youtube': 2.0.0-beta.209_f4ffqkgz5d3wev7su7t7l2rrua
   '@tiptap/react': 2.0.0-beta.209_q2znjafzmb4pvn25xzm5s3hjsu
   '@tiptap/starter-kit': 2.0.0-beta.209_jgj26fnnjk4k3rbp45rdninixu
   '@trpc/client': 10.7.0_@trpc+server@10.7.0
@@ -2498,6 +2500,14 @@ packages:
 
   /@tiptap/extension-underline/2.0.0-beta.209_f4ffqkgz5d3wev7su7t7l2rrua:
     resolution: {integrity: sha512-xCW0GvCE883l8+YLvDkj5lNdVpqL15uJFMvWP9v79rqlMVZGIFd49saMyAPQworZqepnhnndFOELZ0pHcCV4vQ==}
+    peerDependencies:
+      '@tiptap/core': ^2.0.0-beta.193
+    dependencies:
+      '@tiptap/core': 2.0.0-beta.209_e4dui3qvceatn2cv5jlu2tnmze
+    dev: false
+
+  /@tiptap/extension-youtube/2.0.0-beta.209_f4ffqkgz5d3wev7su7t7l2rrua:
+    resolution: {integrity: sha512-pVB1aJUARbl2bW5K8iY/pxVO3Hok0vZT9RBLK855iDlgDFzQd+kJTDcQW85atWEcM3TYXpH8US6fFEN2D58T0A==}
     peerDependencies:
       '@tiptap/core': ^2.0.0-beta.193
     dependencies:

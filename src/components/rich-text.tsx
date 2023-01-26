@@ -42,6 +42,8 @@ import {
 import {type FieldValuesFromFieldErrors} from '@hookform/error-message'
 import LinkIcon from './svg/link'
 import ImageIcon from './svg/image'
+import Youtube from '@tiptap/extension-youtube'
+import YoutubeIcon from './svg/youtube'
 
 type Props<T extends FieldValues> = {
 	name: Path<T>
@@ -71,6 +73,7 @@ const RichTextEditor = <T extends FieldValues>({
 			Underline,
 			Link.configure({openOnClick: false}),
 			Image,
+			Youtube.configure({}),
 		],
 		onCreate: ({editor}) => editor.commands.setContent(value),
 		onUpdate: ({editor}) => onChange(editor.getHTML()),
@@ -152,6 +155,19 @@ const EditorMenu = ({
 			editor.chain().focus().setImage({src: url}).run()
 		}
 	}, [editor])
+
+	const addYoutubeVideo = () => {
+		if (!editor) return
+		const url = prompt('Enter YouTube URL')
+
+		if (url) {
+			editor.commands.setYoutubeVideo({
+				src: url,
+				// width: Math.max(320, parseInt(widthRef.current.value, 10)) || 640,
+				// height: Math.max(180, parseInt(heightRef.current.value, 10)) || 480,
+			})
+		}
+	}
 
 	if (!editor) return <LoadingPlaceholder label='editor' />
 
@@ -419,6 +435,16 @@ const EditorMenu = ({
 					className='rounded-lg border-2 border-white p-1'
 				>
 					<ImageIcon
+						primaryClassName='fill-gray-700'
+						secondaryClassName='fill-gray-400'
+					/>
+				</button>
+				<button
+					type='button'
+					onClick={addYoutubeVideo}
+					className='rounded-lg border-2 border-white p-1'
+				>
+					<YoutubeIcon
 						primaryClassName='fill-gray-700'
 						secondaryClassName='fill-gray-400'
 					/>

@@ -3,6 +3,7 @@ import {Editor, EditorContent, useEditor} from '@tiptap/react'
 import StarterKit from '@tiptap/starter-kit'
 import Underline from '@tiptap/extension-underline'
 import Link from '@tiptap/extension-link'
+import TextAlign from '@tiptap/extension-text-align'
 import Image from '@tiptap/extension-image'
 import {FieldName, useController} from 'react-hook-form'
 import {ErrorMessage} from '@hookform/error-message'
@@ -21,6 +22,10 @@ import H3Icon from './svg/h3'
 import H4Icon from './svg/h4'
 import H5Icon from './svg/h5'
 import H6Icon from './svg/h6'
+import AlignLeftIcon from './svg/align-left'
+import AlignCenterIcon from './svg/align-center'
+import AlignRightIcon from './svg/align-right'
+import AlignJustifyIcon from './svg/align-justify'
 import ParagraphIcon from './svg/paragraph'
 import ListUlIcon from './svg/list-ul'
 import ListOlIcon from './svg/list-ol'
@@ -72,6 +77,7 @@ const RichTextEditor = <T extends FieldValues>({
 			StarterKit,
 			Underline,
 			Link.configure({openOnClick: false}),
+			TextAlign.configure({types: ['heading', 'paragraph']}),
 			Image,
 			Youtube.configure({}),
 		],
@@ -176,6 +182,10 @@ const EditorMenu = ({
 	const strikeActive = editor.isActive('strike')
 	const underlineActive = editor.isActive('underline')
 	const linkActive = editor.isActive('link')
+	const alignLeftActive = editor.isActive({textAlign: 'left'})
+	const alignCenterActive = editor.isActive({textAlign: 'center'})
+	const alignRightActive = editor.isActive({textAlign: 'right'})
+	const alignJustifyActive = editor.isActive({textAlign: 'justify'})
 
 	return (
 		<div
@@ -369,6 +379,89 @@ const EditorMenu = ({
 						secondaryClassName='fill-gray-400'
 					/>
 				</button>
+
+				<SubDivider />
+				<button
+					type='button'
+					onClick={() => editor.chain().focus().setTextAlign('left').run()}
+					className={cN(
+						'group rounded-lg border-2 p-1 disabled:border-transparent',
+						alignLeftActive && 'bg-gray-400',
+						!alignLeftActive && 'border-white'
+					)}
+				>
+					<AlignLeftIcon
+						primaryClassName={cN(
+							'group-disabled:opacity-25',
+							alignLeftActive ? 'fill-gray-900' : 'fill-gray-700'
+						)}
+						secondaryClassName={cN(
+							'group-disabled:opacity-25',
+							alignLeftActive ? 'fill-white' : 'fill-gray-400'
+						)}
+					/>
+				</button>
+				<button
+					type='button'
+					onClick={() => editor.chain().focus().setTextAlign('center').run()}
+					className={cN(
+						'group rounded-lg border-2 p-1 disabled:border-transparent',
+						alignCenterActive && 'bg-gray-400',
+						!alignCenterActive && 'border-white'
+					)}
+				>
+					<AlignCenterIcon
+						primaryClassName={cN(
+							'group-disabled:opacity-25',
+							alignCenterActive ? 'fill-gray-900' : 'fill-gray-700'
+						)}
+						secondaryClassName={cN(
+							'group-disabled:opacity-25',
+							alignCenterActive ? 'fill-white' : 'fill-gray-400'
+						)}
+					/>
+				</button>
+				<button
+					type='button'
+					onClick={() => editor.chain().focus().setTextAlign('right').run()}
+					className={cN(
+						'group rounded-lg border-2 p-1 disabled:border-transparent',
+						alignRightActive && 'bg-gray-400',
+						!alignRightActive && 'border-white'
+					)}
+				>
+					<AlignRightIcon
+						primaryClassName={cN(
+							'group-disabled:opacity-25',
+							alignRightActive ? 'fill-gray-900' : 'fill-gray-700'
+						)}
+						secondaryClassName={cN(
+							'group-disabled:opacity-25',
+							alignRightActive ? 'fill-white' : 'fill-gray-400'
+						)}
+					/>
+				</button>
+				<button
+					type='button'
+					onClick={() => editor.chain().focus().setTextAlign('justify').run()}
+					className={cN(
+						'group rounded-lg border-2 p-1 disabled:border-transparent',
+						alignJustifyActive && 'bg-gray-400',
+						!alignJustifyActive && 'border-white'
+					)}
+				>
+					<AlignJustifyIcon
+						primaryClassName={cN(
+							'group-disabled:opacity-25',
+							alignJustifyActive ? 'fill-gray-900' : 'fill-gray-700'
+						)}
+						secondaryClassName={cN(
+							'group-disabled:opacity-25',
+							alignJustifyActive ? 'fill-white' : 'fill-gray-400'
+						)}
+					/>
+				</button>
+
 				<SubDivider />
 				<button
 					type='button'

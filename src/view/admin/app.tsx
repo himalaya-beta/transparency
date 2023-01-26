@@ -1,16 +1,17 @@
 /* eslint-disable unicorn/no-null */
 import React from 'react'
 import Image from 'next/image'
+import dynamic from 'next/dynamic'
 import {useSession} from 'next-auth/react'
 import {z} from 'zod'
 import {useForm, useFieldArray, useController} from 'react-hook-form'
 import {zodResolver} from '@hookform/resolvers/zod'
 import dayjs from 'dayjs'
+import cN from 'clsx'
 
 import {trpc} from 'utils/trpc'
 import {useDebounceState} from 'utils/hooks/use-debounce'
 
-import Datepicker from 'react-tailwindcss-datepicker'
 import DivAnimate from 'components/div-animate'
 import QueryWrapper, {
 	EmptyPlaceholder,
@@ -42,7 +43,15 @@ import {
 	type UseFormRegister,
 	type Control,
 } from 'react-hook-form'
-import cN from 'clsx'
+
+const Datepicker = dynamic(() => import('react-tailwindcss-datepicker'), {
+	loading: () => (
+		<div className='h-10 w-full animate-pulse rounded bg-white p-2'>
+			<p className='text-dark-head'>Loading datepicker...</p>
+		</div>
+	),
+	ssr: false,
+})
 
 const criteriaSchema = criteriaUpdateSchema
 	.pick({id: true, type: true, parentId: true})
@@ -759,6 +768,7 @@ const VersionDateInput = ({control}: {control: Control<FormType>}) => {
 				useRange={false}
 				asSingle={true}
 			/>
+
 			<ErrorMessage
 				name='versionDate'
 				errors={errors}

@@ -53,7 +53,7 @@ import {
 } from 'react-hook-form'
 import {type FieldValuesFromFieldErrors} from '@hookform/error-message'
 
-type Props<T extends FieldValues> = {
+export type RichTextProps<T extends FieldValues> = {
 	name: Path<T>
 	control: Control<T>
 	label?: string
@@ -69,7 +69,7 @@ const RichTextEditor = <T extends FieldValues>({
 	containerClassName,
 	editorClassName,
 	menuClassName,
-}: Props<T>) => {
+}: RichTextProps<T>) => {
 	const {
 		field: {onChange, onBlur, value},
 		formState: {errors},

@@ -2,6 +2,7 @@
 import React from 'react'
 import Head from 'next/head'
 import Link from 'next/link'
+import dynamic from 'next/dynamic'
 import {useRouter} from 'next/router'
 import {useSession} from 'next-auth/react'
 import {useForm} from 'react-hook-form'
@@ -21,7 +22,6 @@ import DataInfiniteWrapper from 'components/query-infinite-wrapper'
 import DivAnimate from 'components/div-animate'
 import Modal from 'components/modal'
 import {TextAreaInputNew} from 'components/textarea-input'
-import RichTextEditor from 'components/rich-text'
 import {Button, IconButton} from 'components/button'
 import {
 	PlusIcon,
@@ -39,6 +39,15 @@ import {
 	type ArticleType,
 } from 'types/article'
 import {type SubmitHandler} from 'react-hook-form'
+import {type RichTextProps} from 'components/rich-text'
+
+const RichTextEditor = dynamic<RichTextProps<ArticleCreateType>>(
+	() => import('components/rich-text'),
+	{
+		loading: () => <LoadingPlaceholder label='editor' />,
+		ssr: false,
+	}
+)
 
 const MyArticlePage: NextPageWithLayout = () => {
 	const router = useRouter()
@@ -109,7 +118,12 @@ const MyArticlePage: NextPageWithLayout = () => {
 		}
 	}, [status, router])
 
-	if (status === 'loading') return <p>Loading...</p>
+	if (status === 'loading')
+		return (
+			<main className='container mx-auto max-w-screen-md space-y-8 px-5 pt-8 md:px-8'>
+				<LoadingPlaceholder label='authentication' />
+			</main>
+		)
 	return (
 		<>
 			<Head>

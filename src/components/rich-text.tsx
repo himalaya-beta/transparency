@@ -183,10 +183,6 @@ const EditorMenu = ({
 	const linkActive = editor.isActive('link')
 	const headingActive = editor.isActive('heading')
 	const paragraphActive = editor.isActive('paragraph')
-	const alignLeftActive = editor.isActive({textAlign: 'left'})
-	const alignCenterActive = editor.isActive({textAlign: 'center'})
-	const alignRightActive = editor.isActive({textAlign: 'right'})
-	const alignJustifyActive = editor.isActive({textAlign: 'justify'})
 	const bulletListActive = editor.isActive('bulletList')
 	const orderedListActive = editor.isActive('orderedList')
 	const blockquoteActive = editor.isActive('blockquote')
@@ -196,43 +192,64 @@ const EditorMenu = ({
 			id: 'h1',
 			Icon: H1Icon,
 			isActive: editor.isActive('heading', {level: 1}),
-			disabled: false,
 			onClick: () => editor.chain().focus().toggleHeading({level: 1}).run(),
 		},
 		{
 			id: 'h2',
 			Icon: H2Icon,
 			isActive: editor.isActive('heading', {level: 2}),
-			disabled: false,
 			onClick: () => editor.chain().focus().toggleHeading({level: 2}).run(),
 		},
 		{
 			id: 'h3',
 			Icon: H3Icon,
 			isActive: editor.isActive('heading', {level: 3}),
-			disabled: false,
 			onClick: () => editor.chain().focus().toggleHeading({level: 3}).run(),
 		},
 		{
 			id: 'h4',
 			Icon: H4Icon,
 			isActive: editor.isActive('heading', {level: 4}),
-			disabled: false,
 			onClick: () => editor.chain().focus().toggleHeading({level: 4}).run(),
 		},
 		{
 			id: 'h5',
 			Icon: H5Icon,
 			isActive: editor.isActive('heading', {level: 5}),
-			disabled: false,
 			onClick: () => editor.chain().focus().toggleHeading({level: 5}).run(),
 		},
 		{
 			id: 'h6',
 			Icon: H6Icon,
 			isActive: editor.isActive('heading', {level: 6}),
-			disabled: false,
 			onClick: () => editor.chain().focus().toggleHeading({level: 6}).run(),
+		},
+	]
+
+	const alignList: Array<Item> = [
+		{
+			id: 'align-left',
+			Icon: AlignLeftIcon,
+			isActive: editor.isActive({textAlign: 'left'}),
+			onClick: () => editor.chain().focus().setTextAlign('left').run(),
+		},
+		{
+			id: 'align-center',
+			Icon: AlignCenterIcon,
+			isActive: editor.isActive({textAlign: 'center'}),
+			onClick: () => editor.chain().focus().setTextAlign('center').run(),
+		},
+		{
+			id: 'align-right',
+			Icon: AlignRightIcon,
+			isActive: editor.isActive({textAlign: 'right'}),
+			onClick: () => editor.chain().focus().setTextAlign('right').run(),
+		},
+		{
+			id: 'align-justify',
+			Icon: AlignJustifyIcon,
+			isActive: editor.isActive({textAlign: 'justify'}),
+			onClick: () => editor.chain().focus().setTextAlign('justify').run(),
 		},
 	]
 
@@ -358,8 +375,6 @@ const EditorMenu = ({
 			<Divider />
 
 			<div className='flex items-center gap-1'>
-				<ListBox items={headingList} isActive={headingActive} />
-
 				<button
 					type='button'
 					onClick={() => editor.chain().focus().setParagraph().run()}
@@ -370,100 +385,22 @@ const EditorMenu = ({
 					)}
 				>
 					<ParagraphIcon
-						primaryClassName={cN(
+						secondaryClassName={cN(
 							'group-disabled:opacity-25',
 							paragraphActive ? 'fill-gray-900' : 'fill-gray-700'
 						)}
-						secondaryClassName={cN(
+						primaryClassName={cN(
 							'group-disabled:opacity-25',
 							paragraphActive ? 'fill-white' : 'fill-gray-400'
 						)}
 					/>
 				</button>
-
-				<SubDivider />
-				<button
-					type='button'
-					onClick={() => editor.chain().focus().setTextAlign('left').run()}
-					className={cN(
-						'group rounded-lg border-2 p-1 disabled:border-transparent',
-						alignLeftActive && 'bg-gray-400',
-						!alignLeftActive && 'border-white'
-					)}
-				>
-					<AlignLeftIcon
-						primaryClassName={cN(
-							'group-disabled:opacity-25',
-							alignLeftActive ? 'fill-gray-900' : 'fill-gray-700'
-						)}
-						secondaryClassName={cN(
-							'group-disabled:opacity-25',
-							alignLeftActive ? 'fill-white' : 'fill-gray-400'
-						)}
-					/>
-				</button>
-				<button
-					type='button'
-					onClick={() => editor.chain().focus().setTextAlign('center').run()}
-					className={cN(
-						'group rounded-lg border-2 p-1 disabled:border-transparent',
-						alignCenterActive && 'bg-gray-400',
-						!alignCenterActive && 'border-white'
-					)}
-				>
-					<AlignCenterIcon
-						primaryClassName={cN(
-							'group-disabled:opacity-25',
-							alignCenterActive ? 'fill-gray-900' : 'fill-gray-700'
-						)}
-						secondaryClassName={cN(
-							'group-disabled:opacity-25',
-							alignCenterActive ? 'fill-white' : 'fill-gray-400'
-						)}
-					/>
-				</button>
-				<button
-					type='button'
-					onClick={() => editor.chain().focus().setTextAlign('right').run()}
-					className={cN(
-						'group rounded-lg border-2 p-1 disabled:border-transparent',
-						alignRightActive && 'bg-gray-400',
-						!alignRightActive && 'border-white'
-					)}
-				>
-					<AlignRightIcon
-						primaryClassName={cN(
-							'group-disabled:opacity-25',
-							alignRightActive ? 'fill-gray-900' : 'fill-gray-700'
-						)}
-						secondaryClassName={cN(
-							'group-disabled:opacity-25',
-							alignRightActive ? 'fill-white' : 'fill-gray-400'
-						)}
-					/>
-				</button>
-				<button
-					type='button'
-					onClick={() => editor.chain().focus().setTextAlign('justify').run()}
-					className={cN(
-						'group rounded-lg border-2 p-1 disabled:border-transparent',
-						alignJustifyActive && 'bg-gray-400',
-						!alignJustifyActive && 'border-white'
-					)}
-				>
-					<AlignJustifyIcon
-						primaryClassName={cN(
-							'group-disabled:opacity-25',
-							alignJustifyActive ? 'fill-gray-900' : 'fill-gray-700'
-						)}
-						secondaryClassName={cN(
-							'group-disabled:opacity-25',
-							alignJustifyActive ? 'fill-white' : 'fill-gray-400'
-						)}
-					/>
-				</button>
-
-				<SubDivider />
+				<ListBox
+					items={headingList}
+					isActive={headingActive}
+					Icon={HeadingIcon}
+				/>
+				<ListBox items={alignList} Icon={AlignJustifyIcon} />
 				<button
 					type='button'
 					onClick={() => editor.chain().focus().toggleBulletList().run()}
@@ -638,11 +575,23 @@ type Item = {
 		secondaryClassName?: string
 	}) => JSX.Element
 	isActive: boolean
-	disabled: boolean
+	disabled?: boolean
 	onClick: () => void
 }
 
-function ListBox({items, isActive}: {items: Array<Item>; isActive: boolean}) {
+function ListBox({
+	items,
+	Icon,
+	isActive,
+}: {
+	items: Array<Item>
+	isActive?: boolean
+	Icon: (props: {
+		className?: string
+		primaryClassName?: string
+		secondaryClassName?: string
+	}) => JSX.Element
+}) {
 	// eslint-disable-next-line @typescript-eslint/no-non-null-assertion
 	const [selectedItem, setSelectedItem] = React.useState<Item | undefined>(
 		// eslint-disable-next-line unicorn/no-useless-undefined
@@ -659,7 +608,11 @@ function ListBox({items, isActive}: {items: Array<Item>; isActive: boolean}) {
 						!isActive && 'border-white'
 					)}
 				>
-					<HeadingIcon
+					<Icon
+						primaryClassName={cN(
+							'group-disabled:opacity-25',
+							isActive ? 'fill-white' : 'fill-gray-400'
+						)}
 						secondaryClassName={cN(
 							'group-disabled:opacity-25',
 							isActive ? 'fill-white' : 'fill-gray-400'

@@ -3,6 +3,7 @@ import {Editor, EditorContent, useEditor} from '@tiptap/react'
 import StarterKit from '@tiptap/starter-kit'
 import Underline from '@tiptap/extension-underline'
 import Link from '@tiptap/extension-link'
+import Image from '@tiptap/extension-image'
 import {FieldName, useController} from 'react-hook-form'
 import {ErrorMessage} from '@hookform/error-message'
 import cN from 'clsx'
@@ -40,6 +41,7 @@ import {
 } from 'react-hook-form'
 import {type FieldValuesFromFieldErrors} from '@hookform/error-message'
 import LinkIcon from './svg/link'
+import ImageIcon from './svg/image'
 
 type Props<T extends FieldValues> = {
 	name: Path<T>
@@ -64,7 +66,12 @@ const RichTextEditor = <T extends FieldValues>({
 	} = useController({name, control})
 
 	const editor = useEditor({
-		extensions: [StarterKit, Underline, Link.configure({openOnClick: false})],
+		extensions: [
+			StarterKit,
+			Underline,
+			Link.configure({openOnClick: false}),
+			Image,
+		],
 		onCreate: ({editor}) => editor.commands.setContent(value),
 		onUpdate: ({editor}) => onChange(editor.getHTML()),
 		onBlur: () => onBlur(),
@@ -134,6 +141,16 @@ const EditorMenu = ({
 
 		// update link
 		editor.chain().focus().extendMarkRange('link').setLink({href: url}).run()
+	}, [editor])
+
+	const addImage = React.useCallback(() => {
+		if (!editor) return
+
+		const url = window.prompt('URL')
+
+		if (url) {
+			editor.chain().focus().setImage({src: url}).run()
+		}
 	}, [editor])
 
 	if (!editor) return <LoadingPlaceholder label='editor' />
@@ -394,6 +411,16 @@ const EditorMenu = ({
 					<ArrowToDottedLineIcon
 						secondaryClassName='fill-gray-700'
 						primaryClassName='fill-gray-400'
+					/>
+				</button>
+				<button
+					type='button'
+					onClick={addImage}
+					className='rounded-lg border-2 border-white p-1'
+				>
+					<ImageIcon
+						primaryClassName='fill-gray-700'
+						secondaryClassName='fill-gray-400'
 					/>
 				</button>
 				<SubDivider />

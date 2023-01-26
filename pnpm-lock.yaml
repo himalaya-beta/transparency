@@ -16,6 +16,7 @@ specifiers:
   '@tailwindcss/line-clamp': ^0.4.2
   '@tailwindcss/typography': ^0.5.9
   '@tanstack/react-query': ^4.20.4
+  '@tiptap/extension-image': 2.0.0-beta.209
   '@tiptap/extension-link': 2.0.0-beta.209
   '@tiptap/extension-underline': 2.0.0-beta.209
   '@tiptap/react': 2.0.0-beta.209
@@ -74,6 +75,7 @@ dependencies:
   '@prisma/client': 4.9.0_prisma@4.9.0
   '@svgr/webpack': 6.5.1
   '@tanstack/react-query': 4.20.4_biqbaboplfbrettd7655fr4n2y
+  '@tiptap/extension-image': 2.0.0-beta.209_f4ffqkgz5d3wev7su7t7l2rrua
   '@tiptap/extension-link': 2.0.0-beta.209_tasdqzysbe2xhn7sbwmhtfw24q
   '@tiptap/extension-underline': 2.0.0-beta.209_f4ffqkgz5d3wev7su7t7l2rrua
   '@tiptap/react': 2.0.0-beta.209_q2znjafzmb4pvn25xzm5s3hjsu
@@ -2423,6 +2425,14 @@ packages:
     dependencies:
       '@tiptap/core': 2.0.0-beta.209_e4dui3qvceatn2cv5jlu2tnmze
       prosemirror-state: 1.4.2
+    dev: false
+
+  /@tiptap/extension-image/2.0.0-beta.209_f4ffqkgz5d3wev7su7t7l2rrua:
+    resolution: {integrity: sha512-Erjs9/vRud5TYATt7gJ1cBPNp0LAxtQ4mYZ+6Avpu0FfOWDv9WHXGtV85vJnbqKkRBf031L3dfLnYZPhTkS2sQ==}
+    peerDependencies:
+      '@tiptap/core': ^2.0.0-beta.193
+    dependencies:
+      '@tiptap/core': 2.0.0-beta.209_e4dui3qvceatn2cv5jlu2tnmze
     dev: false
 
   /@tiptap/extension-italic/2.0.0-beta.209_f4ffqkgz5d3wev7su7t7l2rrua:

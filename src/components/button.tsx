@@ -72,7 +72,7 @@ export function Button({
 	return (
 		<button
 			{...props}
-			disabled={isLoading}
+			disabled={isLoading || props.disabled}
 			className={`${className} ${base} ${variantClass}`}
 		>
 			<Children isLoading={isLoading}>{children}</Children>

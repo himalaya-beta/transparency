@@ -235,7 +235,7 @@ const MyArticlePage: NextPageWithLayout = () => {
 									setEdit(undefined)
 									reset()
 								}}
-								isLoading={isCreating || isUpdating}
+								disabled={isCreating || isUpdating}
 							>
 								Cancel <XMarkIcon className='w-5' />
 							</Button>

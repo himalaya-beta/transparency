@@ -6,6 +6,7 @@ import Link from '@tiptap/extension-link'
 import TextAlign from '@tiptap/extension-text-align'
 import Image from '@tiptap/extension-image'
 import Youtube from '@tiptap/extension-youtube'
+import {Listbox} from '@headlessui/react'
 import {FieldName, useController} from 'react-hook-form'
 import {ErrorMessage} from '@hookform/error-message'
 import cN from 'clsx'
@@ -18,6 +19,7 @@ import ItalicIcon from './svg/italic'
 import StrikeThroughIcon from './svg/strikethrough'
 import UnderlineIcon from './svg/underline'
 import LinkIcon from './svg/link'
+import HeadingIcon from './svg/heading'
 import H1Icon from './svg/h1'
 import H2Icon from './svg/h2'
 import H3Icon from './svg/h3'
@@ -40,6 +42,7 @@ import YoutubeIcon from './svg/youtube'
 import EraserIcon from './svg/eraser'
 import ArrowRotateLeftIcon from './svg/arrow-rotate-left'
 import ArrowRotateRightIcon from './svg/arrow-rotate-right'
+import {ChevronDownIcon} from '@heroicons/react/24/outline'
 
 import {
 	type Control,
@@ -178,12 +181,7 @@ const EditorMenu = ({
 	const strikeActive = editor.isActive('strike')
 	const underlineActive = editor.isActive('underline')
 	const linkActive = editor.isActive('link')
-	const h1Active = editor.isActive('heading', {level: 1})
-	const h2Active = editor.isActive('heading', {level: 2})
-	const h3Active = editor.isActive('heading', {level: 3})
-	const h4Active = editor.isActive('heading', {level: 4})
-	const h5Active = editor.isActive('heading', {level: 5})
-	const h6Active = editor.isActive('heading', {level: 6})
+	const headingActive = editor.isActive('heading')
 	const paragraphActive = editor.isActive('paragraph')
 	const alignLeftActive = editor.isActive({textAlign: 'left'})
 	const alignCenterActive = editor.isActive({textAlign: 'center'})
@@ -192,6 +190,51 @@ const EditorMenu = ({
 	const bulletListActive = editor.isActive('bulletList')
 	const orderedListActive = editor.isActive('orderedList')
 	const blockquoteActive = editor.isActive('blockquote')
+
+	const headingList: Array<Item> = [
+		{
+			id: 'h1',
+			Icon: H1Icon,
+			isActive: editor.isActive('heading', {level: 1}),
+			disabled: false,
+			onClick: () => editor.chain().focus().toggleHeading({level: 1}).run(),
+		},
+		{
+			id: 'h2',
+			Icon: H2Icon,
+			isActive: editor.isActive('heading', {level: 2}),
+			disabled: false,
+			onClick: () => editor.chain().focus().toggleHeading({level: 2}).run(),
+		},
+		{
+			id: 'h3',
+			Icon: H3Icon,
+			isActive: editor.isActive('heading', {level: 3}),
+			disabled: false,
+			onClick: () => editor.chain().focus().toggleHeading({level: 3}).run(),
+		},
+		{
+			id: 'h4',
+			Icon: H4Icon,
+			isActive: editor.isActive('heading', {level: 4}),
+			disabled: false,
+			onClick: () => editor.chain().focus().toggleHeading({level: 4}).run(),
+		},
+		{
+			id: 'h5',
+			Icon: H5Icon,
+			isActive: editor.isActive('heading', {level: 5}),
+			disabled: false,
+			onClick: () => editor.chain().focus().toggleHeading({level: 5}).run(),
+		},
+		{
+			id: 'h6',
+			Icon: H6Icon,
+			isActive: editor.isActive('heading', {level: 6}),
+			disabled: false,
+			onClick: () => editor.chain().focus().toggleHeading({level: 6}).run(),
+		},
+	]
 
 	return (
 		<div
@@ -315,126 +358,8 @@ const EditorMenu = ({
 			<Divider />
 
 			<div className='flex items-center gap-1'>
-				<button
-					type='button'
-					onClick={() => editor.chain().focus().toggleHeading({level: 1}).run()}
-					className={cN(
-						'group rounded-lg border-2 p-1 disabled:border-transparent',
-						h1Active && 'bg-gray-400',
-						!h1Active && 'border-white'
-					)}
-				>
-					<H1Icon
-						primaryClassName={cN(
-							'group-disabled:opacity-25',
-							h1Active ? 'fill-gray-900' : 'fill-gray-700'
-						)}
-						secondaryClassName={cN(
-							'group-disabled:opacity-25',
-							h1Active ? 'fill-white' : 'fill-gray-400'
-						)}
-					/>
-				</button>
-				<button
-					type='button'
-					onClick={() => editor.chain().focus().toggleHeading({level: 2}).run()}
-					className={cN(
-						'group rounded-lg border-2 p-1 disabled:border-transparent',
-						h2Active && 'bg-gray-400',
-						!h2Active && 'border-white'
-					)}
-				>
-					<H2Icon
-						primaryClassName={cN(
-							'group-disabled:opacity-25',
-							h2Active ? 'fill-gray-900' : 'fill-gray-700'
-						)}
-						secondaryClassName={cN(
-							'group-disabled:opacity-25',
-							h2Active ? 'fill-white' : 'fill-gray-400'
-						)}
-					/>
-				</button>
-				<button
-					type='button'
-					onClick={() => editor.chain().focus().toggleHeading({level: 3}).run()}
-					className={cN(
-						'group rounded-lg border-2 p-1 disabled:border-transparent',
-						h3Active && 'bg-gray-400',
-						!h3Active && 'border-white'
-					)}
-				>
-					<H3Icon
-						primaryClassName={cN(
-							'group-disabled:opacity-25',
-							h3Active ? 'fill-gray-900' : 'fill-gray-700'
-						)}
-						secondaryClassName={cN(
-							'group-disabled:opacity-25',
-							h3Active ? 'fill-white' : 'fill-gray-400'
-						)}
-					/>
-				</button>
-				<button
-					type='button'
-					onClick={() => editor.chain().focus().toggleHeading({level: 4}).run()}
-					className={cN(
-						'group rounded-lg border-2 p-1 disabled:border-transparent',
-						h4Active && 'bg-gray-400',
-						!h4Active && 'border-white'
-					)}
-				>
-					<H4Icon
-						primaryClassName={cN(
-							'group-disabled:opacity-25',
-							h4Active ? 'fill-gray-900' : 'fill-gray-700'
-						)}
-						secondaryClassName={cN(
-							'group-disabled:opacity-25',
-							h4Active ? 'fill-white' : 'fill-gray-400'
-						)}
-					/>
-				</button>
-				<button
-					type='button'
-					onClick={() => editor.chain().focus().toggleHeading({level: 5}).run()}
-					className={cN(
-						'group rounded-lg border-2 p-1 disabled:border-transparent',
-						h5Active && 'bg-gray-400',
-						!h5Active && 'border-white'
-					)}
-				>
-					<H5Icon
-						primaryClassName={cN(
-							'group-disabled:opacity-25',
-							h5Active ? 'fill-gray-900' : 'fill-gray-700'
-						)}
-						secondaryClassName={cN(
-							'group-disabled:opacity-25',
-							h5Active ? 'fill-white' : 'fill-gray-400'
-						)}
-					/>
-				</button>
-				<button
-					type='button'
-					onClick={() => editor.chain().focus().toggleHeading({level: 6}).run()}
-					className={cN(
-						'group rounded-lg border-2 p-1 disabled:border-transparent',
-						h6Active && 'bg-gray-400',
-						!h6Active && 'border-white'
-					)}
-				>
-					<H6Icon
-						primaryClassName={cN(
-							'group-disabled:opacity-25',
-							h6Active ? 'fill-gray-900' : 'fill-gray-700'
-						)}
-						secondaryClassName={cN(
-							'group-disabled:opacity-25',
-							h6Active ? 'fill-white' : 'fill-gray-400'
-						)}
-					/>
-				</button>
+				<ListBox items={headingList} isActive={headingActive} />
+
 				<button
 					type='button'
 					onClick={() => editor.chain().focus().setParagraph().run()}
@@ -704,5 +629,79 @@ const SubDivider = () => (
 const Divider = () => (
 	<div className='mx-1 h-8 w-0.5 rounded-full bg-gray-600 py-1' />
 )
+
+type Item = {
+	id: string
+	Icon: (props: {
+		className?: string
+		primaryClassName?: string
+		secondaryClassName?: string
+	}) => JSX.Element
+	isActive: boolean
+	disabled: boolean
+	onClick: () => void
+}
+
+function ListBox({items, isActive}: {items: Array<Item>; isActive: boolean}) {
+	// eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+	const [selectedItem, setSelectedItem] = React.useState<Item | undefined>(
+		// eslint-disable-next-line unicorn/no-useless-undefined
+		undefined
+	)
+
+	return (
+		<div className='relative'>
+			<Listbox value={selectedItem} onChange={setSelectedItem}>
+				<Listbox.Button
+					className={cN(
+						'group flex items-center rounded-lg border-2 p-1 disabled:border-transparent',
+						isActive && 'bg-gray-400',
+						!isActive && 'border-white'
+					)}
+				>
+					<HeadingIcon
+						secondaryClassName={cN(
+							'group-disabled:opacity-25',
+							isActive ? 'fill-white' : 'fill-gray-400'
+						)}
+					/>
+					<ChevronDownIcon
+						className={cN(
+							'h-4 w-4 group-disabled:opacity-25',
+							isActive ? 'text-gray-900' : 'text-gray-700'
+						)}
+					/>
+				</Listbox.Button>
+
+				<Listbox.Options className='absolute w-full space-y-0.5 rounded-lg border bg-gray-100 py-1'>
+					{items.map((item) => (
+						<Listbox.Option
+							key={item.id}
+							value={item}
+							disabled={item.disabled}
+							onClick={item.onClick}
+							className={cN(
+								'group mx-auto w-fit rounded-lg border-2 p-1 disabled:border-transparent',
+								item.isActive && 'bg-gray-400',
+								!item.isActive && 'border-white'
+							)}
+						>
+							<item.Icon
+								primaryClassName={cN(
+									'group-disabled:opacity-25',
+									item.isActive ? 'fill-gray-900' : 'fill-gray-700'
+								)}
+								secondaryClassName={cN(
+									'group-disabled:opacity-25',
+									item.isActive ? 'fill-white' : 'fill-gray-400'
+								)}
+							/>
+						</Listbox.Option>
+					))}
+				</Listbox.Options>
+			</Listbox>
+		</div>
+	)
+}
 
 export default RichTextEditor

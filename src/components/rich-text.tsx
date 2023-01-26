@@ -5,6 +5,7 @@ import Underline from '@tiptap/extension-underline'
 import Link from '@tiptap/extension-link'
 import TextAlign from '@tiptap/extension-text-align'
 import Image from '@tiptap/extension-image'
+import Youtube from '@tiptap/extension-youtube'
 import {FieldName, useController} from 'react-hook-form'
 import {ErrorMessage} from '@hookform/error-message'
 import cN from 'clsx'
@@ -16,6 +17,7 @@ import BoldIcon from 'components/svg/bold'
 import ItalicIcon from './svg/italic'
 import StrikeThroughIcon from './svg/strikethrough'
 import UnderlineIcon from './svg/underline'
+import LinkIcon from './svg/link'
 import H1Icon from './svg/h1'
 import H2Icon from './svg/h2'
 import H3Icon from './svg/h3'
@@ -33,6 +35,8 @@ import QuoteLeftIcon from './svg/quote-left'
 // import CodeSimpleIcon from './svg/code-simple'
 // import SquareCodeIcon from './svg/square-code'
 import ArrowToDottedLineIcon from './svg/arrows-to-dotted-line'
+import ImageIcon from './svg/image'
+import YoutubeIcon from './svg/youtube'
 import EraserIcon from './svg/eraser'
 import ArrowRotateLeftIcon from './svg/arrow-rotate-left'
 import ArrowRotateRightIcon from './svg/arrow-rotate-right'
@@ -45,10 +49,6 @@ import {
 	type DeepRequired,
 } from 'react-hook-form'
 import {type FieldValuesFromFieldErrors} from '@hookform/error-message'
-import LinkIcon from './svg/link'
-import ImageIcon from './svg/image'
-import Youtube from '@tiptap/extension-youtube'
-import YoutubeIcon from './svg/youtube'
 
 type Props<T extends FieldValues> = {
 	name: Path<T>
@@ -79,7 +79,7 @@ const RichTextEditor = <T extends FieldValues>({
 			Link.configure({openOnClick: false}),
 			TextAlign.configure({types: ['heading', 'paragraph']}),
 			Image,
-			Youtube.configure({}),
+			Youtube,
 		],
 		onCreate: ({editor}) => editor.commands.setContent(value),
 		onUpdate: ({editor}) => onChange(editor.getHTML()),
@@ -155,7 +155,7 @@ const EditorMenu = ({
 	const addImage = React.useCallback(() => {
 		if (!editor) return
 
-		const url = window.prompt('URL')
+		const url = window.prompt('Enter Image URL')
 
 		if (url) {
 			editor.chain().focus().setImage({src: url}).run()
@@ -167,11 +167,7 @@ const EditorMenu = ({
 		const url = prompt('Enter YouTube URL')
 
 		if (url) {
-			editor.commands.setYoutubeVideo({
-				src: url,
-				// width: Math.max(320, parseInt(widthRef.current.value, 10)) || 640,
-				// height: Math.max(180, parseInt(heightRef.current.value, 10)) || 480,
-			})
+			editor.commands.setYoutubeVideo({src: url})
 		}
 	}
 

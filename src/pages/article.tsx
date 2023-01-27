@@ -78,6 +78,7 @@ const MyArticlePage: NextPageWithLayout = () => {
 		setValue,
 	} = useForm<ArticleCreateType>({
 		resolver: zodResolver(articleCreateSchema),
+		shouldUnregister: true,
 	})
 
 	const {mutate: create, isLoading: isCreating} =

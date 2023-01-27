@@ -51,6 +51,7 @@ module.exports = {
           body: colors.slate[700],
         },
         brand: {
+          50: colors.fuchsia[50],
           100: colors.fuchsia[100],
           200: colors.fuchsia[200],
           300: colors.fuchsia[300],
@@ -67,6 +68,7 @@ module.exports = {
   plugins: [
     require('@tailwindcss/line-clamp'),
     require('@tailwindcss/forms'),
+    require('@tailwindcss/typography'),
 
     plugin(function ({addUtilities, addVariant, matchUtilities, theme}) {
       addVariant('child', '& > *')

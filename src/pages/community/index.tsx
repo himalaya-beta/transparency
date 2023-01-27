@@ -3,8 +3,6 @@ import React from 'react'
 import Link from 'next/link'
 import Image from 'next/image'
 import dayjs from 'dayjs'
-import {useForm} from 'react-hook-form'
-import {zodResolver} from '@hookform/resolvers/zod'
 
 import {trpc} from 'utils/trpc'
 import {slugify, truncate} from 'utils/literal'
@@ -19,27 +17,13 @@ import {
 	LoadingPlaceholder,
 } from 'components/query-wrapper'
 import DataInfiniteWrapper from 'components/query-infinite-wrapper'
-import Modal from 'components/modal'
-import FormWrapper from 'components/form-wrapper'
-import TextAreaInput from 'components/textarea-input'
-import {Button} from 'components/button'
-// import {IconButton} from 'components/button'
-import {SectionSeparator, TriangleSymbol} from 'components/ornaments'
-import {PencilIcon} from '@heroicons/react/24/solid'
-// import {PlusIcon} from '@heroicons/react/24/outline'
+import {TriangleSymbol} from 'components/ornaments'
 
-import {type SubmitHandler} from 'react-hook-form'
-import {
-	articleCreateSchema,
-	type ArticleCreateType,
-	type ArticleType,
-} from 'types/article'
-import {Dialog} from '@headlessui/react'
+import {type ArticleType} from 'types/article'
 
 const PER_PAGE = 9
 
 export default function ArticlePage() {
-	const [isOpen, setIsOpen] = React.useState(false)
 	const [searchQuery, setSearchQuery] = useDebounceState<string>('', 350)
 
 	const {error, refetch, data, hasNextPage, fetchNextPage, isError, isLoading} =
@@ -51,31 +35,6 @@ export default function ArticlePage() {
 			}
 		)
 	const paginationProps = {data, hasNextPage, fetchNextPage}
-
-	const methods = useForm<ArticleCreateType>({
-		mode: 'onTouched',
-		resolver: zodResolver(articleCreateSchema),
-	})
-
-	const {mutate: create, isLoading: isCreateLoading} =
-		trpc.article.create.useMutation({
-			onError: (error) => {
-				let message = error.message
-				if (error.data?.code === 'UNAUTHORIZED') {
-					message = 'You have to logged in to create article.'
-				}
-				alert(message)
-			},
-			onSuccess: () => {
-				refetch()
-				methods.reset()
-				setIsOpen(false)
-			},
-		})
-
-	const onValidSubmit: SubmitHandler<ArticleCreateType> = (data) => {
-		create(data)
-	}
 
 	return (
 		<>
@@ -122,35 +81,6 @@ export default function ArticlePage() {
 						</DataInfiniteWrapper>
 					)}
 				</DivAnimate>
-
-				<Modal
-					isOpen={isOpen}
-					setIsOpen={setIsOpen}
-					className='max-w-screen-md'
-				>
-					<div className='border-6 container max-w-screen-lg space-y-2 rounded-lg border-light-bg/40 bg-gradient-to-br from-brand-700 via-brand-800 to-brand-900 py-6 px-8'>
-						<SectionSeparator>
-							<Dialog.Title as='h2'>Create new</Dialog.Title>
-						</SectionSeparator>
-						<div className=''>
-							<FormWrapper
-								methods={methods}
-								onValidSubmit={onValidSubmit}
-								className='flex flex-col gap-4'
-							>
-								<TextAreaInput<ArticleCreateType> name='title' rows={2} />
-								<TextAreaInput<ArticleCreateType> name='content' rows={8} />
-								<Button
-									type='submit'
-									variant='outlined'
-									isLoading={isCreateLoading}
-								>
-									Create <PencilIcon className='h-4 w-4' />
-								</Button>
-							</FormWrapper>
-						</div>
-					</div>
-				</Modal>
 			</main>
 		</>
 	)
@@ -159,7 +89,7 @@ export default function ArticlePage() {
 const Card = ({
 	id,
 	title,
-	content,
+	contentHighlight,
 	updatedAt,
 	author,
 	className,
@@ -202,8 +132,8 @@ const Card = ({
 				<p className='float-right mr-5 text-sm italic'>by {author.name}</p>
 			</div>
 
-			<p className='pt-3 text-right indent-12 leading-5 text-light-body line-clamp-4'>
-				{content}
+			<p className='pt-3 text-right indent-12 leading-5 text-light-body line-clamp-3'>
+				{contentHighlight}
 			</p>
 		</Link>
 	)

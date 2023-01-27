@@ -20,11 +20,19 @@ export const articleRouter = router({
 		.input(
 			z.object({
 				query: z.string(),
-				dataPerPage: z.number(),
+				dataPerPage: z.number().optional(),
 				cursor: z.string().optional(),
+				own: z.boolean().optional(),
 			})
 		)
 		.query(({ctx, input}) => {
+			if (input.own && !ctx.session?.user) {
+				throw new TRPCError({
+					code: 'FORBIDDEN',
+					message: 'Please login to create or update your articles',
+				})
+			}
+
 			const search = input.query === '' ? undefined : input.query
 			const perPage = input?.dataPerPage ?? PER_PAGE
 			return ctx.prisma.article
@@ -32,11 +40,10 @@ export const articleRouter = router({
 					where: {
 						title: {search},
 						content: {search},
+						...(input?.own && {authorId: ctx.session?.user.id}),
 					},
 					take: perPage + 1,
-					...(input?.cursor && {
-						cursor: {id: input.cursor},
-					}),
+					...(input?.cursor && {cursor: {id: input.cursor}}),
 					include: {author: {select: {name: true, image: true}}},
 					orderBy: {
 						updatedAt: 'desc',
@@ -88,7 +95,6 @@ export const articleRouter = router({
 					data: input,
 				})
 				.then(async (updated) => {
-					// TODO: Revert update on revalidation error
 					await revalidate('article', slugify(updated.title, updated.id))
 					return updated
 				})

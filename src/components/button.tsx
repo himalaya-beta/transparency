@@ -19,7 +19,7 @@ type CustomButtonProps = NativeButtonProps & Extension
 type LinkButtonProps = LinkProps & Extension
 
 const disabled =
-	'disabled:border-gray-600 disabled:border-2 disabled:bg-gray-400'
+	'disabled:border-gray-600 disabled:border-2 disabled:bg-gray-400 disabled:cursor-not-allowed'
 
 const base =
 	'relative whitespace-nowrap text-light-head w-fit rounded-xl shadow-md transition ease-out focus:outline-none focus:ring-2 active:translate-y-2 active:shadow-md active:shadow-brand-400 disabled:pointer-events-none' +
@@ -72,7 +72,7 @@ export function Button({
 	return (
 		<button
 			{...props}
-			disabled={isLoading}
+			disabled={isLoading || props.disabled}
 			className={`${className} ${base} ${variantClass}`}
 		>
 			<Children isLoading={isLoading}>{children}</Children>

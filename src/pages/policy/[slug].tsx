@@ -74,7 +74,7 @@ const AppDetailsPage = ({
 			<DetailsPage>
 				<div className='flex justify-between gap-2'>
 					<div className='relative'>
-						<VerticalHighlighter />
+						<VerticalHighlighter className='-left-6 rounded-r' />
 						<h1 className='text-3xl'>{app.name}</h1>
 						<p className='italic text-opacity-75'>
 							{app.company}

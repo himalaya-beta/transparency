@@ -1,40 +1,22 @@
 import React from 'react'
 import Image from 'next/image'
-import {useRouter} from 'next/router'
-// import {useSession} from 'next-auth/react'
-import {useForm} from 'react-hook-form'
-import {zodResolver} from '@hookform/resolvers/zod'
 import dayjs from 'dayjs'
 
 import {prisma} from 'server/db/client'
-import {trpc} from 'utils/trpc'
 import {extractIdFromSlug, slugify} from 'utils/literal'
 
 import NavbarLayout from 'layouts/navbar'
-import {DetailsPage} from 'layouts/details'
-
 import MetaHead from 'components/meta-head'
-import FormWrapper from 'components/form-wrapper'
-import TextAreaInput from 'components/textarea-input'
-import {Button} from 'components/button'
+import {DetailsPage} from 'layouts/details'
 import {VerticalHighlighter} from 'components/ornaments'
-import {
-	PencilSquareIcon,
-	// TrashIcon,
-	XMarkIcon,
-} from '@heroicons/react/24/outline'
 
 import {
 	type GetStaticPaths,
 	type GetStaticProps,
 	type InferGetStaticPropsType,
 } from 'next'
-import {type SubmitHandler} from 'react-hook-form'
-import {
-	articleUpdateSchema,
-	type ArticleUpdateType,
-	type ArticleType,
-} from 'types/article'
+import {type NextPageWithLayout} from 'pages/_app'
+import {type ArticleType} from 'types/article'
 
 export const getStaticProps: GetStaticProps<{
 	article: ArticleType
@@ -68,154 +50,54 @@ export const getStaticPaths: GetStaticPaths = async () => {
 	}
 }
 
-const ArticleDetailsPage = ({
-	article,
-}: InferGetStaticPropsType<typeof getStaticProps>) => {
-	const router = useRouter()
-	const [isEdit, setIsEdit] = React.useState(false)
-
-	const query = trpc.useContext().article.fetchAll
-
-	// const {mutate: deleteArticle, isLoading: isDeleteLoading} =
-	// 	trpc.article.delete.useMutation({
-	// 		onError: (err) => alert(err.message),
-	// 		onSuccess: () => {
-	// 			query.invalidate()
-	// 			router.push('/community')
-	// 		},
-	// 	})
-
-	const {mutate: updateArticle, isLoading: isUpdateLoading} =
-		trpc.article.update.useMutation({
-			onError: (err) => alert(err.message),
-			onSuccess: () => {
-				query.invalidate()
-				router.push('/community')
-			},
-		})
-
-	const defaultValues = {
-		id: article.id,
-		title: article.title,
-		content: article.content,
-		authorId: article.authorId,
-	}
-
-	const methods = useForm<ArticleUpdateType>({
-		resolver: zodResolver(articleUpdateSchema),
-		defaultValues,
-	})
-
-	const onValidSubmit: SubmitHandler<ArticleUpdateType> = (data) => {
-		updateArticle(data)
-	}
-
-	const onCancel = () => {
-		methods.reset()
-		setIsEdit(false)
-	}
-
-	// const {status, data} = useSession()
-
+const ArticleDetailsPage: NextPageWithLayout<
+	InferGetStaticPropsType<typeof getStaticProps>
+> = ({article}) => {
 	return (
 		<>
 			<MetaHead
 				title={article.title}
-				description={article.content}
-				imageUrl={`https://${process.env.NEXT_PUBLIC_VERCEL_URL}/images/articles.jpg`}
+				description={article.contentHighlight}
+				imageUrl={
+					article.headerImage ??
+					`https://${process.env.NEXT_PUBLIC_VERCEL_URL}/images/articles.jpg`
+				}
 			/>
-			<DetailsPage>
-				{isEdit ? (
-					<FormWrapper
-						methods={methods}
-						onValidSubmit={onValidSubmit}
-						className='col-span-full flex flex-col gap-4 md:col-span-2'
-					>
-						<TextAreaInput<ArticleUpdateType> name='title' />
-						<TextAreaInput<ArticleUpdateType> name='content' rows={10} />
-
-						<div className='flex gap-4'>
-							<Button
-								type='submit'
-								variant='filled'
-								isLoading={isUpdateLoading}
-							>
-								Update <PencilSquareIcon className='h-4 w-4' />
-							</Button>
-							<Button
-								variant='outlined'
-								type='reset'
-								onClick={() => onCancel()}
-							>
-								Cancel <XMarkIcon className='h-4 w-4' />
-							</Button>
-						</div>
-					</FormWrapper>
-				) : (
-					<>
-						<div className='relative space-y-2'>
-							<VerticalHighlighter />
-							<h1 className='text-3xl'>{article.title}</h1>
-							<div className='flex items-end justify-between'>
-								<div className='flex items-center gap-3'>
-									{article.author.image && (
-										<div className='z-10 h-10 w-10 shadow-xl'>
-											<Image
-												className='h-full w-full rounded-l-lg border-0 border-l-0 border-brand-300 object-cover'
-												src={article.author.image}
-												alt='author picture'
-												width={48}
-												height={48}
-											/>
-										</div>
-									)}
-									<p className='rounded-lg border-r-2 border-brand-300 pr-4 italic leading-5 text-opacity-90'>
-										<span className='italic'>written by</span>
-										<br />
-										<span className='font-bold'>{article.author.name}</span>
-									</p>
-								</div>
-								<p className='text-right text-sm italic md:text-base'>
-									{dayjs(article.updatedAt).format('D MMMM YYYY')}
-								</p>
+			<DetailsPage className='md:px-12'>
+				<div className='relative py-2 lg:mt-2'>
+					<VerticalHighlighter className='-left-6 top-1 rounded-r md:-left-12' />
+					<h1 className='text-2xl md:text-3xl lg:text-4xl'>{article.title}</h1>
+					<div className='mt-4 flex items-center gap-3'>
+						{article.author.image && (
+							<div className='z-10 h-10 w-10 shadow-xl'>
+								<Image
+									className='h-full w-full rounded-l-lg border-0 border-l-0 border-brand-300 object-cover'
+									src={article.author.image}
+									alt='author picture'
+									width={48}
+									height={48}
+								/>
 							</div>
-						</div>
+						)}
+						<p className='rounded-lg border-r-2 border-brand-300 pr-4 italic leading-5 text-opacity-90'>
+							<span className='italic'>
+								{dayjs(article.updatedAt).format('D MMMM YYYY')}
+							</span>
+							<br />
+							<span className='font-bold'>by {article.author.name}</span>
+						</p>
+					</div>
+				</div>
 
-						<div className='mt-6'>
-							<p className='whitespace-pre-wrap md:text-lg'>
-								{article.content}
-							</p>
-						</div>
-						{/* {status === 'authenticated' &&
-							(data.user.role === 'ADMIN' ||
-								data.user.id === article.authorId) && (
-								<div className='flex gap-4'>
-									<Button
-										variant='filled'
-										isLoading={isDeleteLoading}
-										onClick={() => deleteArticle(defaultValues)}
-										className='bg-light-bg px-4 text-red-500 hover:bg-red-500 hover:text-light-body'
-									>
-										Delete <TrashIcon className='h-4 w-4' />
-									</Button>
-									<Button
-										variant='filled'
-										onClick={() => setIsEdit(true)}
-										className='bg-light-bg px-4 text-violet-500 hover:bg-violet-500 hover:text-light-body'
-									>
-										Update <PencilSquareIcon className='h-4 w-4' />
-									</Button>
-								</div>
-							)} */}
-					</>
-				)}
+				<article
+					className='prose prose-invert mt-6 w-full max-w-none prose-blockquote:border-brand-300 prose-hr:border-brand-600 md:mt-8 md:prose-lg lg:mt-12 lg:prose-lg'
+					dangerouslySetInnerHTML={{__html: article.content}}
+				/>
 			</DetailsPage>
 		</>
 	)
 }
 
-export default ArticleDetailsPage
+ArticleDetailsPage.getLayout = (page) => <NavbarLayout>{page}</NavbarLayout>
 
-ArticleDetailsPage.getLayout = (page: React.ReactElement) => (
-	<NavbarLayout>{page}</NavbarLayout>
-)
+export default ArticleDetailsPage

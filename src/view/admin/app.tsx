@@ -1,16 +1,17 @@
 /* eslint-disable unicorn/no-null */
 import React from 'react'
 import Image from 'next/image'
+import dynamic from 'next/dynamic'
 import {useSession} from 'next-auth/react'
 import {z} from 'zod'
 import {useForm, useFieldArray, useController} from 'react-hook-form'
 import {zodResolver} from '@hookform/resolvers/zod'
 import dayjs from 'dayjs'
+import cN from 'clsx'
 
 import {trpc} from 'utils/trpc'
 import {useDebounceState} from 'utils/hooks/use-debounce'
 
-import Datepicker from 'react-tailwindcss-datepicker'
 import DivAnimate from 'components/div-animate'
 import QueryWrapper, {
 	EmptyPlaceholder,
@@ -42,7 +43,15 @@ import {
 	type UseFormRegister,
 	type Control,
 } from 'react-hook-form'
-import cN from 'clsx'
+
+const Datepicker = dynamic(() => import('react-tailwindcss-datepicker'), {
+	loading: () => (
+		<div className='h-10 w-full animate-pulse rounded bg-white p-2'>
+			<p className='text-dark-head'>Loading datepicker...</p>
+		</div>
+	),
+	ssr: false,
+})
 
 const criteriaSchema = criteriaUpdateSchema
 	.pick({id: true, type: true, parentId: true})
@@ -454,7 +463,13 @@ const AppItem = ({appData: appP}: {appData: AppType}) => {
 	}
 
 	return (
-		<DivAnimate className='flex flex-1 flex-col justify-start overflow-clip rounded-lg bg-dark-bg/25'>
+		<DivAnimate
+			className={cN(
+				'flex flex-1 flex-col justify-start overflow-clip rounded-lg bg-dark-bg/25 transition-transform',
+				!isExpanded &&
+					'from-brand-900 to-brand-800 hover:scale-105 hover:bg-gradient-to-br hover:shadow-lg'
+			)}
+		>
 			<div
 				className={cN(
 					'flex items-center justify-between pl-2',
@@ -573,7 +588,7 @@ const AppItem = ({appData: appP}: {appData: AppType}) => {
 						<div
 							className={cN(
 								'w-full divide-y divide-gray-500/50',
-								isExpanded && 'border-l border-brand-600/75',
+								isExpanded && 'border-l border-brand-600/75 ',
 								isDirty && 'rounded-bl-lg border-b'
 							)}
 						>
@@ -584,7 +599,10 @@ const AppItem = ({appData: appP}: {appData: AppType}) => {
 								return (
 									<DivAnimate
 										key={`${appP.id}_${criteria.id}`}
-										className='flex flex-col items-start py-2'
+										className={cN(
+											'flex flex-col items-start py-2',
+											!isChecked && 'from-brand-700 hover:bg-gradient-to-r'
+										)}
 									>
 										<input
 											type='hidden'
@@ -610,10 +628,15 @@ const AppItem = ({appData: appP}: {appData: AppType}) => {
 												<div className='absolute -top-3 h-full w-px bg-brand-300' />
 												{criteria.children.map((item) => {
 													const idx = data.findIndex((c) => c.id === item.id)
+													const isChecked = criteriaF[idx]?.checked
 													return (
 														<DivAnimate
 															key={`${appP.id}_${item.id}`}
-															className='flex w-full items-center'
+															className={cN(
+																'flex w-full items-center',
+																!isChecked &&
+																	'from-brand-700 hover:bg-gradient-to-r'
+															)}
 														>
 															<div className='h-px w-3 bg-brand-300' />
 															<div className='flex w-full flex-col pr-2'>
@@ -745,6 +768,7 @@ const VersionDateInput = ({control}: {control: Control<FormType>}) => {
 				useRange={false}
 				asSingle={true}
 			/>
+
 			<ErrorMessage
 				name='versionDate'
 				errors={errors}

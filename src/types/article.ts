@@ -8,7 +8,16 @@ export const articleCreateSchema = z.object({
 		.refine((input) => input.trim().split(' ').length > 1, {
 			message: 'Describe title more clearly',
 		}),
-	content: z.string().min(200, 'Description is not long enough'),
+	content: z.string().min(1000, 'Too short. Create more informative article'),
+	headerImage: z
+		.string()
+		.url('Provide valid image url')
+		.max(255, 'Image url is too long')
+		.nullable(),
+	contentHighlight: z
+		.string()
+		.min(1, 'Highlight required')
+		.max(255, 'Highlight is too long'),
 })
 
 export const articleUpdateSchema = articleCreateSchema.extend({

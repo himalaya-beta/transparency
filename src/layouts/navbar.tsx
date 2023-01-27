@@ -18,12 +18,12 @@ import {
 	DocumentTextIcon as ArticleSolidIcon,
 	UserIcon,
 	LockOpenIcon,
+	KeyIcon,
 } from '@heroicons/react/24/solid'
 
 import {capFirstChar} from 'utils/literal'
 import {Menu, Transition} from '@headlessui/react'
-
-type Icon = (props: React.ComponentProps<'svg'>) => JSX.Element
+import clsx from 'clsx'
 
 export default function NavbarLayout({children}: {children: React.ReactNode}) {
 	const {data} = useSession()
@@ -73,7 +73,7 @@ export default function NavbarLayout({children}: {children: React.ReactNode}) {
 					href='/'
 					className='ml-2 flex items-center justify-center rounded-full bg-brand-200/30 p-0.5 md:hidden'
 				>
-					<button className='h-8 w-8 rounded-full bg-dark-bg/50 p-1'>
+					<button className='h-8 w-8 rounded-full bg-gradient-to-br from-brand-700 to-brand-900 p-1 shadow'>
 						<HomeOutlineIcon className='h-full w-full text-brand-100' />
 					</button>
 				</Link>
@@ -130,6 +130,8 @@ export default function NavbarLayout({children}: {children: React.ReactNode}) {
 
 function AuthButton({className}: {className?: string}) {
 	const {status, data} = useSession()
+	const router = useRouter()
+	const myArticleActive = router.pathname === '/article'
 
 	return (
 		<div className={className}>
@@ -163,80 +165,68 @@ function AuthButton({className}: {className?: string}) {
 						leaveFrom='transform opacity-100 scale-100'
 						leaveTo='transform opacity-0 scale-95'
 					>
-						<Menu.Items
-							className={`absolute -top-24 right-0 -mt-3 w-48 origin-top-right divide-y-0 divide-brand-600/75 rounded-md bg-light-head py-1.5 px-2 shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none md:top-full md:mt-2`}
-						>
-							<div className='flex justify-between p-1 font-body font-medium text-dark-body'>
-								<span className='truncate'>
-									{data.user.name?.split(' ')[0]}
-								</span>
-								<div className='flex gap-2'>
+						<Menu.Items className='absolute -top-28 right-0 -mt-3 w-44 origin-top-right rounded-lg font-body text-sm shadow-md shadow-brand-100/75 ring-2 ring-brand-900 ring-opacity-10 focus:outline-none md:top-full md:mt-2 md:w-52 md:text-base'>
+							<div className='flex gap-2 rounded-t-lg bg-gradient-to-br from-brand-700 to-brand-800 p-2 text-brand-50 shadow-md'>
+								<div className='h-fit rounded-full border-2 border-brand-100 bg-gradient-to-br from-brand-400 to-brand-600 p-2'>
+									{data.user.role === 'ADMIN' ? (
+										<KeyIcon className='w-5 text-brand-100 md:w-7' />
+									) : (
+										<UserIcon className='w-5 text-brand-100 md:w-7' />
+									)}
+								</div>
+								<div className='flex-col'>
+									<span className='w-full line-clamp-1'>{data.user.name}</span>
 									<span className='italic'>
-										{data.user.role.toLocaleLowerCase()}
+										{capFirstChar(data.user.role.toLocaleLowerCase())}
 									</span>
-									<UserIcon className='w-5 text-brand-800' />
 								</div>
 							</div>
-							<MenuItem
-								className='pt-1'
-								label='Sign out'
-								Icon={LogoutIcon}
-								onClick={() => signOut()}
-							/>
+							<div className='rounded-b-lg bg-gradient-to-br from-white via-white to-brand-200 px-1 py-1 md:py-3 md:px-2'>
+								<Menu.Item>
+									<button
+										disabled={myArticleActive}
+										onClick={() => router.push('/article')}
+										className='group flex w-full gap-4 rounded from-brand-500 to-brand-700 py-2 pl-3 enabled:hover:bg-gradient-to-br md:gap-5'
+									>
+										{myArticleActive ? (
+											<ArticleSolidIcon className='w-6 text-brand-600 enabled:group-hover:text-brand-50' />
+										) : (
+											<ArticleOutlineIcon className='w-6 text-brand-600 group-hover:text-brand-50' />
+										)}
+										<span
+											className={clsx(
+												'group-enabled:group-hover:text-light-head',
+												myArticleActive && 'font-bold text-brand-900 underline'
+											)}
+										>
+											My Articles
+										</span>
+									</button>
+								</Menu.Item>
+								<Menu.Item>
+									<button
+										className='group flex w-full gap-4 rounded from-brand-500 to-brand-700 py-2 pl-3 hover:bg-gradient-to-br md:gap-5'
+										onClick={() => signOut()}
+									>
+										<LogoutIcon className='w-6 text-brand-600 group-hover:text-brand-50' />
+										<span className='group-hover:text-light-head'>
+											Sign out
+										</span>
+									</button>
+								</Menu.Item>
+							</div>
 						</Menu.Items>
 					</Transition>
 				</Menu>
 			) : (
-				<div className='flex items-center justify-center rounded-full bg-brand-200 bg-opacity-30 p-0.5 transition-all hover:bg-opacity-60 md:rounded-xl'>
-					<button
-						className='h-8 w-8 items-center rounded-full bg-dark-bg bg-opacity-60 p-1 transition-all hover:bg-opacity-80 md:flex md:w-fit md:rounded-xl'
-						onClick={() => signIn()}
-					>
-						<LoginIcon className='h-full w-full rotate-180 text-brand-100 md:ml-0.5' />
-						<span className='mx-1 hidden text-light-head md:block'>Signin</span>
-					</button>
-				</div>
+				<button
+					className='h-9 items-center rounded-full bg-gradient-to-br from-brand-700 via-brand-800 to-brand-900 p-1.5 shadow transition-all hover:bg-opacity-80 hover:shadow-brand-100 md:flex md:w-fit md:rounded-lg'
+					onClick={() => signIn()}
+				>
+					<LoginIcon className='h-full w-full rotate-180 text-brand-100 md:ml-0.5' />
+					<span className='mx-1 hidden text-light-head md:block'>Signin</span>
+				</button>
 			)}
-		</div>
-	)
-}
-
-const MenuItem = ({
-	label,
-	Icon,
-	onClick,
-	className,
-	buttonClassName,
-}: {
-	label: string
-	Icon: Icon
-	onClick: () => void
-	className?: string
-	buttonClassName?: string
-}) => {
-	return (
-		<div className={className}>
-			<Menu.Item>
-				{({active}) => (
-					<button
-						onClick={onClick}
-						className={`
-							group flex w-full items-center justify-between whitespace-nowrap rounded-md bg-brand-600 bg-opacity-75 px-1 py-2 text-light-head transition-colors hover:bg-brand-500
-							${active ? 'bg-brand-400 text-light-head' : 'text-light-body'}
-							${buttonClassName}
-						`}
-					>
-						{label}
-						<Icon
-							className={`
-								h-5 w-5 
-								${active ? 'text-brand-100' : 'text-brand-200'}
-							`}
-							aria-hidden='true'
-						/>
-					</button>
-				)}
-			</Menu.Item>
 		</div>
 	)
 }

@@ -30,6 +30,7 @@ import {
 	ArrowPathIcon,
 	XMarkIcon,
 	ArrowTopRightOnSquareIcon,
+	PhotoIcon,
 } from '@heroicons/react/24/outline'
 
 import {type NextPageWithLayout} from './_app'
@@ -76,10 +77,14 @@ const MyArticlePage: NextPageWithLayout = () => {
 		handleSubmit,
 		reset,
 		setValue,
+		watch,
 	} = useForm<ArticleCreateType>({
 		resolver: zodResolver(articleCreateSchema),
 		shouldUnregister: true,
 	})
+	const titleF = watch('title')
+	const contentHighlightF = watch('contentHighlight')
+	const headerImageF = watch('headerImage')
 
 	const {mutate: create, isLoading: isCreating} =
 		trpc.article.create.useMutation({
@@ -159,7 +164,14 @@ const MyArticlePage: NextPageWithLayout = () => {
 							keys={[auth?.user.id ?? '']}
 							{...{hasNextPage, fetchNextPage, data}}
 						>
-							{({id, title, content, authorId}) => (
+							{({
+								id,
+								title,
+								content,
+								authorId,
+								contentHighlight,
+								headerImage,
+							}) => (
 								<div
 									key={id}
 									className='flex items-center justify-between gap-2 rounded-lg rounded-t-lg bg-dark-bg/25 from-brand-900 to-brand-800 py-3 pl-5 pr-4 shadow transition-all hover:scale-105 hover:bg-gradient-to-br hover:shadow-lg'
@@ -179,6 +191,8 @@ const MyArticlePage: NextPageWithLayout = () => {
 											onClick={() => {
 												setValue('title', title)
 												setValue('content', content)
+												setValue('contentHighlight', contentHighlight)
+												setValue('headerImage', headerImage)
 
 												setEdit({id, authorId, title, content})
 											}}
@@ -221,10 +235,54 @@ const MyArticlePage: NextPageWithLayout = () => {
 						<RichTextEditor
 							control={control}
 							name='content'
-							containerClassName='max-h-[70vh] overflow-y-auto rounded'
+							containerClassName='max-h-[75vh] overflow-y-auto rounded'
 							menuClassName='sticky top-0 z-10'
 							editorClassName='w-full'
 						/>
+						<div className='grid grid-cols-2 gap-4'>
+							<div className='space-y-4'>
+								<TextAreaInputNew
+									name='contentHighlight'
+									label='Content highlight (summary)'
+									rows={4}
+									autoGrow={false}
+									register={register}
+									errors={errors}
+								/>
+								<TextAreaInputNew
+									name='headerImage'
+									label='Image for header & link share preview'
+									autoGrow={false}
+									register={register}
+									errors={errors}
+								/>
+							</div>
+							<div className='flex px-8'>
+								<div className='flex w-full flex-col rounded-xl border-2 border-gray-300 bg-white '>
+									<div className='flex  flex-1 items-center justify-center rounded-t-lg bg-gray-200'>
+										{headerImageF ? (
+											// eslint-disable-next-line @next/next/no-img-element
+											<img
+												src={headerImageF}
+												alt='Image'
+												className='h-36 w-full rounded-t-lg object-cover'
+											/>
+										) : (
+											<PhotoIcon className='w-12' />
+										)}
+									</div>
+									<div className='h-24 border-t border-gray-300 p-3 text-sm'>
+										<p className='text-dark-body/75'>
+											{process.env.NEXT_PUBLIC_VERCEL_URL ?? 'transparency.com'}
+										</p>
+										<p className='text-black line-clamp-1'>{titleF}</p>
+										<p className='leading-4 text-dark-body/75 line-clamp-2'>
+											{contentHighlightF ?? 'Fill the content highlight'}
+										</p>
+									</div>
+								</div>
+							</div>
+						</div>
 						<div className='flex gap-2'>
 							<Button
 								type='submit'

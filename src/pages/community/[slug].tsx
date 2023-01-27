@@ -57,9 +57,11 @@ const ArticleDetailsPage: NextPageWithLayout<
 		<>
 			<MetaHead
 				title={article.title}
-				description={''}
-				// description={article.content}
-				imageUrl={`https://${process.env.NEXT_PUBLIC_VERCEL_URL}/images/articles.jpg`}
+				description={article.contentHighlight}
+				imageUrl={
+					article.headerImage ??
+					`https://${process.env.NEXT_PUBLIC_VERCEL_URL}/images/articles.jpg`
+				}
 			/>
 			<DetailsPage className='md:px-12'>
 				<div className='relative py-2 lg:mt-2'>
